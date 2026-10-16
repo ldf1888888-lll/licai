@@ -6,20 +6,21 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#C7EDCC">
-<title>智能月度资金分流与负债定投管家</title>
+<title>顶配智能定投量化配比 & 班表兼职系统</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
   :root {
     --bg-main: #C7EDCC;       /* 经典豆沙护眼绿 */
     --bg-card: #DCEFE0;      /* 主卡片底色 */
-    --bg-inner: #EAF7EC;     /* 内部模块底色 */
-    --border-color: #8FB896;  /* 常规绿边框 */
-    --border-dark: #1F4D2B;   /* 核心强调深色框 */
-    --text-main: #142618;     /* 主文字墨绿 */
+    --bg-inner: #EAF7EC;     /* 内部容器底色 */
+    --border-color: #8FB896;  /* 浅绿边框 */
+    --border-dark: #1F4D2B;   /* 深绿主边框 */
+    --text-main: #142618;     /* 深墨绿主文字 */
     --text-sub: #3B5942;      /* 辅助说明文字 */
-    --accent-red: #B82525;    /* 负债/上涨红 */
-    --accent-blue: #165B8C;   /* 存款稳健蓝 */
-    --accent-green: #147A2E;  /* 定投/下跌绿 */
-    --warn-bg: #FADBD8;       /* 预警浅红底 */
+    --accent-green: #147A2E;  /* 跌/低吸加码绿 */
+    --accent-red: #B82525;    /* 涨/收益红 */
+    --accent-orange: #B35900; /* 重点提示橙 */
+    --accent-blue: #165B8C;   /* 量化因子蓝 */
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -32,950 +33,725 @@
     padding: 16px 10px 40px 10px;
   }
 
-  .header {
-    max-width: 1100px;
-    margin: 0 auto 16px auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    border-bottom: 2px solid var(--border-dark);
-    padding-bottom: 10px;
-  }
+  .container { max-width: 1160px; margin: 0 auto; }
 
-  .header h1 { font-size: 1.35em; font-weight: 800; }
-  .header-sub { font-size: 0.85em; color: var(--text-sub); }
+  .header { text-align: center; margin-bottom: 16px; }
+  .header h1 { font-size: 1.42em; font-weight: 800; margin-bottom: 4px; }
+  .header p { font-size: 0.86em; color: var(--text-sub); }
 
-  /* 左右双栏主架构 */
-  .layout-wrapper {
-    max-width: 1100px;
-    margin: 0 auto;
+  /* 上半部分：左右双卡片结构 */
+  .top-layout {
     display: flex;
-    align-items: flex-start;
+    align-items: stretch;
     justify-content: center;
-    gap: 16px;
+    gap: 14px;
+    margin-bottom: 20px;
   }
 
-  @media (max-width: 880px) {
-    .layout-wrapper { flex-direction: column; align-items: stretch; }
+  @media (max-width: 900px) {
+    .top-layout { flex-direction: column; }
   }
 
   .main-card {
-    flex: 1;
     background-color: var(--bg-card);
-    border: 2px solid var(--border-dark);
-    border-radius: 14px;
+    border: 2.5px solid var(--border-dark);
+    border-radius: 16px;
     padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     min-width: 0;
   }
 
-  .arrow-indicator {
+  .card-left { flex: 0.85; }
+  .card-right { flex: 1.35; }
+
+  .arrow-col {
     display: flex;
     align-items: center;
     justify-content: center;
-    align-self: center;
     font-size: 2em;
-    color: var(--border-dark);
     font-weight: bold;
+    color: var(--border-dark);
     user-select: none;
-    padding: 4px 0;
   }
 
-  @media (max-width: 880px) {
-    .arrow-indicator { transform: rotate(90deg); padding: 0; }
+  @media (max-width: 900px) {
+    .arrow-col { transform: rotate(90deg); margin: -6px 0; }
   }
 
-  /* 顶部三项核心输入网格 */
-  .top-inputs-grid {
+  /* 左侧输入区 */
+  .input-grid-3 {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
 
   @media (max-width: 520px) {
-    .top-inputs-grid { grid-template-columns: 1fr; }
+    .input-grid-3 { grid-template-columns: 1fr; }
   }
 
-  .input-box-wrap {
-    background-color: var(--bg-inner);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 8px 10px;
-  }
-
-  .input-label {
-    font-size: 0.82em;
-    font-weight: bold;
-    color: var(--text-sub);
+  .input-group label {
     display: block;
+    font-size: 0.84em;
+    font-weight: bold;
     margin-bottom: 4px;
+    color: var(--text-sub);
   }
 
-  .input-main {
+  .input-box {
     width: 100%;
     background-color: #FFFFFF;
-    border: 1.5px solid var(--border-color);
-    border-radius: 6px;
-    padding: 6px 8px;
-    font-size: 1.15em;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 1.2em;
     font-weight: bold;
-    color: var(--text-main);
     font-family: Consolas, monospace;
+    color: var(--text-main);
     outline: none;
   }
 
-  .input-main:focus { border-color: var(--border-dark); }
+  .input-box:focus { border-color: var(--border-dark); }
 
-  /* 区块标题行 */
-  .sec-title-bar {
+  .summary-strip {
+    background-color: var(--bg-inner);
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 12px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 12px 0 8px 0;
-    font-size: 0.92em;
+    font-size: 0.88em;
     font-weight: bold;
+    margin-bottom: 8px;
   }
+
+  .divider-line {
+    height: 2px;
+    background-color: var(--border-dark);
+    margin: 14px 0;
+  }
+
+  .result-card {
+    background-color: var(--bg-inner);
+    border: 1.5px solid var(--border-color);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+
+  .result-card:last-child { margin-bottom: 0; }
+
+  .result-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85em;
+    font-weight: bold;
+    color: var(--text-sub);
+  }
+
+  .result-num {
+    font-size: 1.65em;
+    font-weight: 800;
+    font-family: Consolas, monospace;
+    margin: 2px 0;
+  }
+
+  .result-note { font-size: 0.8em; color: var(--text-sub); }
+
+  /* 右侧：天天基金实时量化引擎 */
+  .card-title-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--border-dark);
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .card-title-bar h2 { font-size: 1.05em; font-weight: 800; }
 
   .btn {
     background-color: #B4DFB9;
     border: 1px solid var(--border-dark);
     color: var(--text-main);
-    padding: 4px 10px;
+    padding: 5px 11px;
     border-radius: 6px;
     font-size: 0.82em;
     font-weight: bold;
     cursor: pointer;
   }
 
-  .btn:active { transform: scale(0.98); }
-  .btn-primary { background-color: var(--border-dark); color: #FFFFFF; }
-  .btn-danger { background-color: #F2DEDE; border-color: var(--accent-red); color: var(--accent-red); }
-
-  /* 负债单卡片 */
-  .debt-item-card {
-    background-color: var(--bg-inner);
+  .btn:active { transform: scale(0.97); }
+  .btn-dark { background-color: var(--border-dark); color: #FFFFFF; }
+  .btn-copy {
+    padding: 1px 6px;
+    font-size: 0.74em;
+    background-color: #D2EBD5;
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 8px;
-  }
-
-  .debt-item-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 6px;
-    font-size: 0.85em;
-  }
-
-  .debt-inputs-row {
-    display: grid;
-    grid-template-columns: 1.3fr 1.1fr 0.9fr;
-    gap: 6px;
-  }
-
-  .sub-input-group label {
-    display: block;
-    font-size: 0.75em;
-    color: var(--text-sub);
-    margin-bottom: 2px;
-  }
-
-  .sub-input {
-    width: 100%;
-    background-color: #FFFFFF;
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    padding: 5px 6px;
-    font-size: 0.9em;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 4px;
     font-weight: bold;
-    color: var(--text-main);
-    outline: none;
   }
 
-  .sub-input:focus { border-color: var(--border-dark); }
-
-  .hand-divider {
-    height: 2px;
-    background-color: var(--border-dark);
-    margin: 16px 0;
-  }
-
-  /* 左侧下方结果卡片 */
-  .stat-card {
+  .market-radar-box {
     background-color: var(--bg-inner);
-    border: 1px solid var(--border-color);
+    border: 1.5px solid var(--border-dark);
     border-radius: 8px;
-    padding: 10px 12px;
+    padding: 8px 10px;
     margin-bottom: 10px;
+    font-size: 0.82em;
   }
 
-  .stat-card.alert {
-    background-color: var(--warn-bg);
-    border-color: var(--accent-red);
+  .radar-tickers {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-top: 6px;
   }
 
-  .stat-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.84em;
-    color: var(--text-sub);
-    font-weight: bold;
+  @media (max-width: 620px) {
+    .radar-tickers { grid-template-columns: repeat(2, 1fr); }
   }
 
-  .stat-val {
-    font-size: 1.35em;
-    font-weight: bold;
+  .ticker-pill {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 5px 6px;
+    border-radius: 6px;
+    text-align: center;
     font-family: Consolas, monospace;
-    margin: 3px 0;
+    font-size: 0.9em;
   }
 
-  .stat-desc { font-size: 0.78em; color: var(--text-sub); }
+  .up { color: var(--accent-red); font-weight: bold; }
+  .down { color: var(--accent-green); font-weight: bold; }
 
-  /* 右侧子面板 */
-  .right-panel {
+  .alloc-row {
     background-color: var(--bg-inner);
-    border: 1px solid var(--border-color);
+    border: 1.5px solid var(--border-color);
     border-radius: 10px;
-    padding: 12px;
-    margin-bottom: 12px;
+    padding: 9px 12px;
+    margin-bottom: 8px;
   }
 
-  .panel-head {
+  .alloc-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px dashed var(--border-color);
-    padding-bottom: 6px;
-    margin-bottom: 8px;
-    font-size: 0.92em;
-    font-weight: bold;
+    gap: 8px;
   }
 
-  /* 存款进度条 */
-  .progress-track {
-    width: 100%;
-    height: 10px;
-    background-color: #CFE6D3;
-    border-radius: 5px;
-    overflow: hidden;
-    margin: 6px 0;
-    border: 1px solid var(--border-color);
+  .alloc-title { font-weight: 800; font-size: 0.94em; }
+  .alloc-sub { font-size: 0.78em; color: var(--text-sub); margin-top: 2px; }
+
+  .alloc-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
   }
 
-  .progress-bar {
-    height: 100%;
-    background-color: var(--accent-blue);
-    transition: width 0.25s ease;
+  .pct-badge {
+    background-color: #CFEAD3;
+    border: 1px solid var(--border-dark);
+    padding: 2px 7px;
+    border-radius: 6px;
+    font-weight: 800;
+    font-family: Consolas, monospace;
+    font-size: 0.9em;
   }
 
-  /* 极简表格 */
-  table.clean-table {
+  .amt-val {
+    font-size: 1.22em;
+    font-weight: 800;
+    font-family: Consolas, monospace;
+    color: var(--accent-green);
+    min-width: 88px;
+    text-align: right;
+  }
+
+  /* 第4项：中高风险内部具体基金拆解明细表 */
+  .sub-fund-box {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--border-color);
+    overflow-x: auto;
+  }
+
+  table.sub-fund-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.86em;
+    font-size: 0.82em;
+    min-width: 540px;
   }
 
-  table.clean-table th {
+  table.sub-fund-table th {
     text-align: left;
-    padding: 6px 4px;
     color: var(--text-sub);
+    padding: 5px 4px;
     border-bottom: 1px solid var(--border-color);
-    font-weight: bold;
+    font-weight: 800;
   }
 
-  table.clean-table td {
-    padding: 7px 4px;
+  table.sub-fund-table td {
+    padding: 6px 4px;
     border-bottom: 1px solid #D5E8D8;
     vertical-align: middle;
   }
 
-  table.clean-table tr:last-child td { border-bottom: none; }
+  table.sub-fund-table tr:last-child td { border-bottom: none; }
 
-  .pct-input {
-    width: 54px;
+  .delta-up {
+    color: var(--accent-green);
+    font-weight: bold;
+    font-size: 0.9em;
+  }
+
+  .delta-down {
+    color: var(--accent-orange);
+    font-weight: bold;
+    font-size: 0.9em;
+  }
+
+  /* 下半部分：班表上传与兼职跑外卖智能排表 */
+  .schedule-section {
+    background-color: var(--bg-card);
+    border: 2.5px solid var(--border-dark);
+    border-radius: 16px;
+    padding: 18px;
+  }
+
+  .upload-zone {
+    background-color: var(--bg-inner);
+    border: 2px dashed var(--border-dark);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .stats-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  @media (max-width: 680px) {
+    .stats-grid-4 { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .mini-stat {
+    background-color: var(--bg-inner);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px;
     text-align: center;
+  }
+
+  .mini-stat .label { font-size: 0.8em; color: var(--text-sub); font-weight: bold; }
+  .mini-stat .val { font-size: 1.25em; font-weight: 800; font-family: Consolas, monospace; margin-top: 2px; }
+
+  .table-scroll {
+    overflow-x: auto;
+    background-color: var(--bg-inner);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+  }
+
+  table.sched-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86em;
+    min-width: 720px;
+  }
+
+  table.sched-table th, table.sched-table td {
+    border: 1px solid var(--border-color);
+    padding: 8px 10px;
+    text-align: left;
+  }
+
+  table.sched-table th { background-color: #B4DFB9; font-weight: 800; }
+
+  .row-rest { background-color: #FFF6D6; }
+  .row-early { background-color: #E2F4E5; }
+  .row-skip { background-color: #F2F7F3; color: #5B7560; }
+
+  .tag-pill {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+  }
+
+  .tag-gold { background-color: #FFE082; color: #7A4100; border: 1px solid #CCA300; }
+  .tag-good { background-color: #C2E5C8; color: #0F5C22; border: 1px solid #147A2E; }
+  .tag-light { background-color: #D9EDF7; color: #165B8C; border: 1px solid #7EB5D6; }
+  .tag-stop { background-color: #E8ECE9; color: #5A6B5E; border: 1px solid #B0C4B4; }
+
+  .shift-select {
     background-color: #FFFFFF;
     border: 1px solid var(--border-color);
     border-radius: 4px;
-    padding: 3px 4px;
+    padding: 3px 6px;
+    font-size: 0.9em;
     font-weight: bold;
-    font-family: Consolas, monospace;
-  }
-
-  .num { font-family: Consolas, monospace; font-weight: bold; }
-  .up { color: var(--accent-red); }
-  .down { color: var(--accent-green); }
-
-  .badge {
-    display: inline-block;
-    padding: 1px 6px;
-    font-size: 0.76em;
-    border-radius: 4px;
-    background-color: #D2EBD5;
-    border: 1px solid var(--accent-green);
-    color: #0F5C22;
-    font-weight: bold;
+    color: var(--text-main);
   }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div>
-    <h1>智能月度资金分流与负债定投管家</h1>
-    <div class="header-sub" id="countdownText">正在计算发薪日倒计时...</div>
+<div class="container">
+  <div class="header">
+    <h1>顶配智能月度资金定投 & 班表兼职规划系统（100%真实行情量化版）</h1>
+    <p>输入工资/房租/日伙食费 ➔ 实时读取天天基金120日净值分位点与日涨跌 ➔ 动态调整每只基金百分比与买入金</p>
   </div>
-  <div style="display:flex; gap:8px;">
-    <button class="btn" onclick="resetDefaultData()">重置默认数据</button>
-  </div>
-</div>
 
-<div class="layout-wrapper">
-  <!-- ==================== 左侧卡片：输入、负债测算与智能分流 ==================== -->
-  <div class="main-card">
-    <div class="top-inputs-grid">
-      <div class="input-box-wrap">
-        <label class="input-label">[ 月到账工资 ]</label>
-        <input type="number" id="inSalary" class="input-main" value="5000" step="100" oninput="onBasicInput()">
-      </div>
-      <div class="input-box-wrap">
-        <label class="input-label">[ 房租月支出 ]</label>
-        <input type="number" id="inRent" class="input-main" value="800" step="50" oninput="onBasicInput()">
-      </div>
-      <div class="input-box-wrap">
-        <label class="input-label">[ 目前现有存款 ]</label>
-        <input type="number" id="inCurrentSave" class="input-main" value="1200" step="100" oninput="onBasicInput()">
-      </div>
-    </div>
-
-    <!-- 负债动态输入区（原地更新，绝不丢失焦点） -->
-    <div class="sec-title-bar">
-      <span>[ 负债金额与计划还清月数 ]</span>
-      <button class="btn" onclick="addNewDebt()">+ 新增一笔负债</button>
-    </div>
-    <div id="debtInputsContainer"></div>
-
-    <!-- 贯穿分割线 -->
-    <div class="hand-divider"></div>
-
-    <!-- 1. 智能生活费安排 -->
-    <div class="stat-card">
-      <div class="stat-top">
-        <span>🍜 智能生活费安排（三餐伙食与水电）</span>
-        <label style="cursor:pointer; font-size:0.95em;">
-          <input type="checkbox" id="autoLivingToggle" checked onchange="toggleLivingMode()"> AI智能动态安排
-        </label>
-      </div>
-      <div style="display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin:4px 0;">
-        <div class="stat-val" id="outLivingVal" style="color:#1E4D28;">¥1,500.00</div>
-        <div id="manualLivingBox" style="display:none;">
-          <span style="font-size:0.8em;">手动设定：</span>
-          <input type="number" id="inManualLiving" class="pct-input" style="width:80px;" value="1500" oninput="onBasicInput()">
+  <!-- ==================== 上半部分：左右双卡片资金与AI实时量化定投 ==================== -->
+  <div class="top-layout">
+    <!-- 左卡片：收入、房租、每日生活费 -->
+    <div class="main-card card-left">
+      <div>
+        <div class="input-grid-3">
+          <div class="input-group">
+            <label>[ 月到账工资 ]</label>
+            <input type="number" id="inSalary" class="input-box" value="5000" step="100" oninput="reCalcAll()">
+          </div>
+          <div class="input-group">
+            <label>[ 房租月支出 ]</label>
+            <input type="number" id="inRent" class="input-box" value="800" step="50" oninput="reCalcAll()">
+          </div>
+          <div class="input-group">
+            <label>[ 每天生活费 ]</label>
+            <input type="number" id="inDailyLiving" class="input-box" value="50" step="5" oninput="reCalcAll()">
+          </div>
         </div>
-      </div>
-      <div class="stat-desc" id="outLivingDesc">日均安全额 ¥50.00/天 | 已按工资与负债比智能匹配</div>
-    </div>
 
-    <!-- 2. 负债每月需存合计 -->
-    <div class="stat-card" id="debtAlertCard">
-      <div class="stat-top">
-        <span>💳 负债每月硬性需存合计</span>
-        <button class="btn" id="btnAutoExtend" style="display:none; padding:2px 6px; font-size:0.78em;" onclick="autoOptimizeDebtMonths()">🤖 一键延长月数消除缺口</button>
-      </div>
-      <div class="stat-val" id="outDebtMonthlyTotal" style="color:var(--accent-red);">¥0.00</div>
-      <div class="stat-desc" id="outDebtStatusDesc">发薪日优先划入还款专卡，雷打不动</div>
-    </div>
+        <div class="summary-strip">
+          <span>扣房租后剩余总金额（工资 - 房租）：</span>
+          <span id="outAfterRent" style="font-family:Consolas; font-size:1.18em;">¥4,200.00</span>
+        </div>
 
-    <!-- 3. 本月新增存款 & 基金定投总额 -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-      <div class="stat-card" style="margin-bottom:0;">
-        <div class="stat-top"><span>🛡️ 本月新增存款</span></div>
-        <div class="stat-val" id="outNewSaveVal" style="color:var(--accent-blue);">¥0.00</div>
-        <div class="stat-desc" id="outNewSaveDesc">存入零钱通补齐安全垫</div>
-      </div>
-      <div class="stat-card" style="margin-bottom:0;">
-        <div class="stat-top"><span>📈 本月基金定投池</span></div>
-        <div class="stat-val" id="outFundPoolVal" style="color:var(--accent-green);">¥0.00</div>
-        <div class="stat-desc">自动分配至右侧基金表</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 中间流向指示 -->
-  <div class="arrow-indicator">➔</div>
-
-  <!-- ==================== 右侧卡片：存款金库、还款计划与极简基金分配 ==================== -->
-  <div class="main-card">
-    <!-- 1. 现有存款与安全垫进度 -->
-    <div class="right-panel">
-      <div class="panel-head">
-        <span style="color:var(--accent-blue);">🛡️ 现有存款与应急金库进度</span>
-        <span style="font-size:0.82em; color:var(--text-sub);">安全垫目标：¥5,000</span>
-      </div>
-      <div style="display:flex; justify-content:space-between; font-size:0.86em;">
-        <span>目前现有：<strong class="num" id="rtCurrentSave">¥1,200</strong> + 本月新增：<strong class="num" id="rtAddSave" style="color:var(--accent-blue);">¥0</strong></span>
-        <span>月末预计总额：<strong class="num" id="rtEndMonthSave">¥1,200</strong></span>
-      </div>
-      <div class="progress-track">
-        <div class="progress-bar" id="saveProgressBar" style="width:24%;"></div>
-      </div>
-      <div class="stat-desc" id="rtSaveForecast">预计还需数月补满 5,000 元安全垫；补满后月结余将 100% 投入基金定投。</div>
-    </div>
-
-    <!-- 2. 负债还款执行清单 -->
-    <div class="right-panel">
-      <div class="panel-head">
-        <span style="color:var(--accent-red);">💳 负债还款计划与月存安排</span>
-        <span style="font-size:0.82em; color:var(--text-sub);">剩余总欠款：<strong class="num" id="rtTotalDebtLeft" style="color:var(--accent-red);">¥0</strong></span>
-      </div>
-      <table class="clean-table">
-        <thead>
-          <tr>
-            <th>负债名称</th>
-            <th style="text-align:center;">总欠款</th>
-            <th style="text-align:center;">剩余期数</th>
-            <th style="text-align:right;">每月需存</th>
-            <th style="text-align:right;">进度打卡</th>
-          </tr>
-        </thead>
-        <tbody id="rtDebtTableBody"></tbody>
-      </table>
-      <div class="stat-desc" id="rtDebtFreeHint" style="margin-top:6px;"></div>
-    </div>
-
-    <!-- 3. 基金定投自动分配（极简无废话 + 天天基金实时涨跌） -->
-    <div class="right-panel" style="margin-bottom:0;">
-      <div class="panel-head">
-        <span style="color:var(--accent-green);">📈 基金定投自动分配（直连天天基金）</span>
-        <div style="display:flex; gap:6px;">
-          <button class="btn" onclick="balanceFundPct()">一键配平100%</button>
-          <button class="btn btn-primary" onclick="fetchEastmoneyQuotes()">刷新实时涨幅</button>
+        <div class="summary-strip" style="margin-bottom:0;">
+          <label style="cursor:pointer;">
+            <input type="checkbox" id="includeMeituanCheck" onchange="reCalcAll()">
+            并入下方「本月兼职跑外卖预估收入」
+          </label>
+          <span id="outMeituanAdded" style="font-family:Consolas; color:var(--accent-orange);">+¥0</span>
         </div>
       </div>
 
-      <table class="clean-table">
+      <div class="divider-line"></div>
+
+      <div>
+        <div class="result-card">
+          <div class="result-head">
+            <span>本月生活费总计（按 <span id="lblDaysCount">30</span> 天匹配）</span>
+            <span id="lblDailyShow">¥50 / 天</span>
+          </div>
+          <div class="result-num" id="outLivingMonth">¥1,500.00</div>
+          <div class="result-note">优先锁定的日常三餐伙食费，留在微信日常钱包按日消费</div>
+        </div>
+
+        <div class="result-card">
+          <div class="result-head">
+            <span>本月储蓄与定投总金额</span>
+            <span id="outSaveRate">储蓄率 64%</span>
+          </div>
+          <div class="result-num" id="outInvestPool" style="color:var(--accent-green);">¥2,700.00</div>
+          <div class="result-note">每次修改工资或点击右侧刷新行情，下方每只基金百分比与金额实时重算</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 中间箭头 -->
+    <div class="arrow-col">➔</div>
+
+    <!-- 右卡片：天天基金100%真实数据驱动的量化配仓引擎 -->
+    <div class="main-card card-right">
+      <div>
+        <div class="card-title-bar">
+          <h2>📡 天天基金实时行情 ➔ 三因子量化动态配比清单</h2>
+          <button class="btn btn-dark" id="btnRefreshFund" onclick="fetchAllFundsRealTime()">🔄 刷新天天基金实时行情并重算配比</button>
+        </div>
+
+        <!-- 5大核心标的实时行情与近半年分位点雷达 -->
+        <div class="market-radar-box">
+          <div style="display:flex; justify-content:space-between; align-items:center; font-weight:bold; flex-wrap:wrap; gap:4px;">
+            <span id="marketStatusText">⏳ 正在直连天天基金网拉取实时估值与120日历史净值...</span>
+            <span id="marketTempBadge" class="tag-pill tag-light">等待实时行情运算...</span>
+          </div>
+          <div class="radar-tickers" id="radarTickersBox">
+            <div class="ticker-pill">正在读取沪深300...</div>
+            <div class="ticker-pill">正在读取中证A500...</div>
+            <div class="ticker-pill">正在读取创业板指...</div>
+            <div class="ticker-pill">正在读取纳指100...</div>
+            <div class="ticker-pill">正在读取纯债基准...</div>
+          </div>
+        </div>
+
+        <!-- 1. 财付通 -->
+        <div class="alloc-row">
+          <div class="alloc-top">
+            <div>
+              <div class="alloc-title">1. 财付通（微信零钱通）</div>
+              <div class="alloc-sub" id="desc_tenpay">随大盘估值水位动态伸缩的日常应急活钱底仓（基准 15%）</div>
+            </div>
+            <div class="alloc-right">
+              <span class="pct-badge" id="pct_tenpay">--%</span>
+              <span class="amt-val" id="amt_tenpay">¥0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. 货币基金 -->
+        <div class="alloc-row">
+          <div class="alloc-top">
+            <div>
+              <div class="alloc-title">
+                2. 货币基金：天弘余额宝 (<span style="font-family:Consolas;">000198</span>)
+                <button class="btn-copy" onclick="copyCode('000198')">复制代码</button>
+              </div>
+              <div class="alloc-sub" id="desc_money">暴跌补仓预备队：大盘高估时自动多留现金，大盘低估时自动释放买股基（基准 15%）</div>
+            </div>
+            <div class="alloc-right">
+              <span class="pct-badge" id="pct_money">--%</span>
+              <span class="amt-val" id="amt_money">¥0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. 中风险基金（纯债） -->
+        <div class="alloc-row">
+          <div class="alloc-top">
+            <div>
+              <div class="alloc-title">
+                3. 中风险基金（纯债）：招商双债增强A (<span style="font-family:Consolas;">161716</span>)
+                <button class="btn-copy" onclick="copyCode('161716')">复制代码</button>
+              </div>
+              <div class="alloc-sub" id="bondSubInfo">正在读取天天基金网实时纯债净值数据...</div>
+            </div>
+            <div class="alloc-right">
+              <span class="pct-badge" id="pct_medium">--%</span>
+              <span class="amt-val" id="amt_medium">¥0.00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. 中高风险基金（自动拆解为：沪深300、中证A500、创业板、纳斯达克100） -->
+        <div class="alloc-row" style="margin-bottom:0;">
+          <div class="alloc-top">
+            <div>
+              <div class="alloc-title">4. 中高风险基金（四大核心指数 · 实时按行情自动调比例）</div>
+              <div class="alloc-sub" id="desc_high">根据【近半年净值分位点 + 今日实时涨跌 + 近半年最大回撤】自动向低估/超跌品种倾斜：</div>
+            </div>
+            <div class="alloc-right">
+              <span class="pct-badge" id="pct_high">--%</span>
+              <span class="amt-val" id="amt_high">¥0.00</span>
+            </div>
+          </div>
+
+          <!-- 四大指数具体购买明细与量化调仓依据表 -->
+          <div class="sub-fund-box">
+            <table class="sub-fund-table">
+              <thead>
+                <tr>
+                  <th>指数基金名称 (代码)</th>
+                  <th style="text-align:center;">最新日涨跌</th>
+                  <th style="text-align:center;">近半年涨幅</th>
+                  <th style="text-align:center;">半年水位分位</th>
+                  <th style="text-align:center;">基准 ➔ 实时智能比例</th>
+                  <th>实时调仓原因</th>
+                  <th style="text-align:right;">本月应买金额</th>
+                </tr>
+              </thead>
+              <tbody id="highRiskSubTable">
+                <tr><td colspan="7" style="text-align:center; padding:12px;">正在从天天基金网拉取真实行情并计算动态配比...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-strip" style="margin-top:10px; margin-bottom:0; font-size:0.8em;">
+        <span id="aiStrategySummary">💡 量化执行说明：上方所有百分比均由天天基金网实时返回数据现场算出，无任何人工写死或模拟场景。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 下半部分：班表图片上传 & 智能兼职跑外卖规划表 ==================== -->
+  <div class="schedule-section">
+    <div class="card-title-bar">
+      <h2>🛵 每月班表上传 ➔ 智能分配兼职跑外卖时间表（已内置林达烽10月班表）</h2>
+      <div style="display:flex; gap:6px;">
+        <button class="btn" onclick="resetOctSchedule()">恢复10月原版班表</button>
+        <button class="btn" onclick="exportScheduleCSV()">导出兼职计划表(Excel)</button>
+      </div>
+    </div>
+
+    <div class="upload-zone">
+      <div>
+        <div style="font-weight:800; font-size:0.94em; margin-bottom:4px;">
+          📷 每月发新班表时，点击右侧按钮上传班表截图，自动识别休息日与早下班日并排好跑外卖时段
+        </div>
+        <div style="font-size:0.8em; color:var(--text-sub);">
+          排班铁律：① <strong>休息日</strong>跑午晚双高峰(7小时)；② <strong>早班(17:00/17:30下班)</strong>跑晚高峰(3.5小时)；③ <strong>白班(18:00~19:00下班)</strong>跑2小时轻量档；④ <strong>跳班/夜班</strong>强制休息不跑。
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <input type="file" id="schedImageInput" accept="image/*" style="display:none;" onchange="handleScheduleImageUpload(event)">
+        <button class="btn btn-dark" onclick="document.getElementById('schedImageInput').click()">📁 上传新班表图片智能分析</button>
+        <span id="ocrStatusText" style="font-size:0.82em; font-weight:bold; color:var(--accent-green);">当前：10月林达烽班表 (30天)</span>
+      </div>
+    </div>
+
+    <div class="stats-grid-4">
+      <div class="mini-stat">
+        <div class="label">黄金双高峰（休息日）</div>
+        <div class="val" id="statRestDays" style="color:var(--accent-orange);">9 天</div>
+      </div>
+      <div class="mini-stat">
+        <div class="label">下班晚高峰（早/白班）</div>
+        <div class="val" id="statAfterWorkDays" style="color:var(--accent-green);">11 天</div>
+      </div>
+      <div class="mini-stat">
+        <div class="label">强制休息护体（夜/跳班）</div>
+        <div class="val" id="statSkipDays">10 天</div>
+      </div>
+      <div class="mini-stat">
+        <div class="label">本月兼职预估净增收</div>
+        <div class="val" id="statEstIncome" style="color:var(--accent-red);">¥2,130</div>
+      </div>
+    </div>
+
+    <div class="table-scroll">
+      <table class="sched-table">
         <thead>
           <tr>
-            <th>基金名称 (代码)</th>
-            <th style="text-align:center;">今日涨跌</th>
-            <th style="text-align:center;">分配比例</th>
-            <th style="text-align:right;">本月应投</th>
-            <th style="text-align:center;">操作</th>
+            <th style="width:88px;">日期</th>
+            <th style="width:72px;">星期</th>
+            <th style="width:245px;">主业班次与上下班时间（可点击微调）</th>
+            <th style="width:135px;">当日跑单等级</th>
+            <th>智能规划跑外卖最佳时段 & 策略说明</th>
+            <th style="width:85px; text-align:right;">预估时长</th>
+            <th style="width:90px; text-align:right;">预估收入</th>
           </tr>
         </thead>
-        <tbody id="fundRowsContainer"></tbody>
+        <tbody id="scheduleTableBody"></tbody>
       </table>
-
-      <!-- 添加自定义基金行 -->
-      <div style="display:flex; gap:6px; margin-top:10px; align-items:center; flex-wrap:wrap;">
-        <input type="text" id="newFundCode" class="sub-input" style="width:110px;" placeholder="6位基金代码" maxlength="6">
-        <input type="text" id="newFundName" class="sub-input" style="flex:1; min-width:120px;" placeholder="基金简称(留空自动读取)">
-        <input type="number" id="newFundPct" class="pct-input" placeholder="%" value="10">
-        <button class="btn" onclick="addCustomFund()">+ 添加基金</button>
-      </div>
-
-      <!-- 纳斯达克定投专项汇总 -->
-      <div style="margin-top:10px; padding-top:8px; border-top:1px dashed var(--border-color); display:flex; justify-content:space-between; align-items:center; font-size:0.88em;">
-        <span>🇺🇸 <strong>纳斯达克定投专项：</strong><span class="badge" id="nasdaqPctBadge">占比 30%</span></span>
-        <strong class="num" id="nasdaqMoneyVal" style="font-size:1.15em; color:var(--text-main);">¥0.00</strong>
-      </div>
     </div>
   </div>
 </div>
 
 <script>
-  /* ================= 1. 状态数据与本地持久化 ================= */
-  const STORAGE_KEY = 'smart_finance_app_v3_fixed';
+  /* ================= 1. 五大核心基金定义（不设任何假行情，全部由天天基金接口实时填充） ================= */
+  const CORE_FUNDS = [
+    {
+      key: 'hs300',
+      tag: '沪深300',
+      name: '易方达沪深300ETF联接A',
+      code: '110020',
+      role: 'high',
+      baseWeight: 11,      // 基准占总定投池 11%
+      dayChange: null,     // 实时日涨跌(%)
+      halfYear: null,      // 真实近半年涨幅(%)
+      percentile6M: null,  // 近120个交易日净值分位点(0~100%)
+      maxDrawdown6M: null, // 近半年最大回撤(%)
+      navDate: '--',
+      reasonText: '等待实时数据'
+    },
+    {
+      key: 'a500',
+      tag: '中证A500',
+      name: '华夏中证A500ETF联接A',
+      code: '022430',
+      role: 'high',
+      baseWeight: 12,      // 基准占总定投池 12%
+      dayChange: null,
+      halfYear: null,
+      percentile6M: null,
+      maxDrawdown6M: null,
+      navDate: '--',
+      reasonText: '等待实时数据'
+    },
+    {
+      key: 'cyb',
+      tag: '创业板指',
+      name: '天弘创业板ETF联接A',
+      code: '001592',
+      role: 'high',
+      baseWeight: 10,      // 基准占总定投池 10%
+      dayChange: null,
+      halfYear: null,
+      percentile6M: null,
+      maxDrawdown6M: null,
+      navDate: '--',
+      reasonText: '等待实时数据'
+    },
+    {
+      key: 'nasdaq',
+      tag: '纳指100',
+      name: '广发纳斯达克100ETF联接A',
+      code: '270042',
+      role: 'high',
+      baseWeight: 12,      // 基准占总定投池 12%
+      dayChange: null,
+      halfYear: null,
+      percentile6M: null,
+      maxDrawdown6M: null,
+      navDate: '--',
+      reasonText: '等待实时数据'
+    },
+    {
+      key: 'bond',
+      tag: '纯债稳健',
+      name: '招商双债增强债券A',
+      code: '161716',
+      role: 'medium',
+      baseWeight: 25,      // 基准占总定投池 25%
+      dayChange: null,
+      halfYear: null,
+      percentile6M: null,
+      maxDrawdown6M: null,
+      navDate: '--',
+      reasonText: '等待实时数据'
+    }
+  ];
 
-  const defaultState = {
-    salary: 5000,
-    rent: 800,
-    currentSave: 1200,
-    autoLiving: true,
-    manualLiving: 1500,
-    debts: [
-      { id: 'd1', name: '第一笔负债', total: 2640, months: 4 },
-      { id: 'd2', name: '第二笔负债', total: 2680, months: 5 }
-    ],
-    funds: [
-      { id: 'f1', name: '天弘余额宝货币', code: '000198', pct: 20, gszzl: null, isNasdaq: false },
-      { id: 'f2', name: '招商双债增强债券A', code: '161716', pct: 15, gszzl: null, isNasdaq: false },
-      { id: 'f3', name: '天弘中证红利低波动A', code: '012643', pct: 15, gszzl: null, isNasdaq: false },
-      { id: 'f4', name: '华夏中证A500ETF联接A', code: '022430', pct: 20, gszzl: null, isNasdaq: false },
-      { id: 'f5', name: '广发纳斯达克100ETF联接A', code: '270042', pct: 30, gszzl: null, isNasdaq: true }
-    ]
+  // 动态计算后的全局权重（支持精确到小数点后1位）
+  let allocState = {
+    tenpay: 15.0,
+    money: 15.0,
+    medium: 25.0,
+    high: 45.0,
+    subWeights: { hs300: 11.0, a500: 12.0, cyb: 10.0, nasdaq: 12.0 },
+    isLiveLoaded: false
   };
 
-  let state = loadState();
-
-  function loadState() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        return Object.assign({}, defaultState, parsed);
-      }
-    } catch (e) {}
-    return JSON.parse(JSON.stringify(defaultState));
-  }
-
-  function saveState() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch (e) {}
-  }
-
-  function resetDefaultData() {
-    if (confirm('确定恢复到初始默认数据吗？')) {
-      state = JSON.parse(JSON.stringify(defaultState));
-      saveState();
-      initView();
-    }
-  }
-
-  /* ================= 2. 视图初始化（仅在增删结构时调用，打字时不调用） ================= */
-  function initView() {
-    document.getElementById('inSalary').value = state.salary;
-    document.getElementById('inRent').value = state.rent;
-    document.getElementById('inCurrentSave').value = state.currentSave;
-    document.getElementById('autoLivingToggle').checked = state.autoLiving;
-    document.getElementById('inManualLiving').value = state.manualLiving;
-    document.getElementById('manualLivingBox').style.display = state.autoLiving ? 'none' : 'block';
-
-    buildDebtInputsDOM();
-    buildFundRowsDOM();
-    calculateAndUpdateText();
-    updatePaydayCountdown();
-  }
-
-  function updatePaydayCountdown() {
-    const now = new Date();
-    let target = new Date(now.getFullYear(), now.getMonth(), 30);
-    if (now.getDate() > 30) {
-      target = new Date(now.getFullYear(), now.getMonth() + 1, 30);
-    }
-    const diffDays = Math.max(1, Math.ceil((target - now) / (1000 * 60 * 60 * 24)));
-    document.getElementById('countdownText').textContent =
-      `发薪日：每月30号（距下次发薪还有 ${diffDays} 天） | 数据已自动保存在本机`;
-    window.currentRemainingDays = diffDays;
-  }
-
-  // 构建左侧负债输入框结构（仅在初始化、新增、删除负债时执行）
-  function buildDebtInputsDOM() {
-    const container = document.getElementById('debtInputsContainer');
-    if (state.debts.length === 0) {
-      container.innerHTML = `<div style="font-size:0.84em; color:var(--text-sub); padding:8px; background:var(--bg-inner); border-radius:6px;">🎉 当前无负债项目，点击右上角可添加。</div>`;
-      return;
-    }
-
-    container.innerHTML = state.debts.map((d, idx) => `
-      <div class="debt-item-card" id="debtCard_${d.id}">
-        <div class="debt-item-top">
-          <strong>第 ${idx + 1} 笔负债：<span id="debtLabelName_${d.id}">${escapeHtml(d.name)}</span></strong>
-          <div>
-            <span>每月需存：<strong class="num" id="debtItemMonthly_${d.id}" style="color:var(--accent-red);">¥0.00</strong></span>
-            <button class="btn btn-danger" style="padding:1px 6px; margin-left:6px;" onclick="removeDebt('${d.id}')">删除</button>
-          </div>
-        </div>
-        <div class="debt-inputs-row">
-          <div class="sub-input-group">
-            <label>负债名称</label>
-            <input type="text" class="sub-input" value="${escapeHtml(d.name)}" oninput="onDebtFieldInput('${d.id}', 'name', this.value)">
-          </div>
-          <div class="sub-input-group">
-            <label>当前欠款总额(元)</label>
-            <input type="number" class="sub-input" id="debtInTotal_${d.id}" value="${d.total}" step="50" oninput="onDebtFieldInput('${d.id}', 'total', this.value)">
-          </div>
-          <div class="sub-input-group">
-            <label>计划几个月还清</label>
-            <input type="number" class="sub-input" id="debtInMonths_${d.id}" value="${d.months}" min="1" oninput="onDebtFieldInput('${d.id}', 'months', this.value)">
-          </div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  // 构建右侧基金表格行（仅在初始化、新增、删除基金时执行）
-  function buildFundRowsDOM() {
-    const tbody = document.getElementById('fundRowsContainer');
-    tbody.innerHTML = state.funds.map(f => `
-      <tr id="fundRow_${f.id}">
-        <td>
-          <strong>${escapeHtml(f.name)}</strong>
-          <span style="font-size:0.8em; color:var(--text-sub);">(${f.code})</span>
-        </td>
-        <td style="text-align:center;" class="num" id="fundQuote_${f.id}">--</td>
-        <td style="text-align:center;">
-          <input type="number" class="pct-input" id="fundPctIn_${f.id}" value="${f.pct}" min="0" max="100" step="5" oninput="onFundPctInput('${f.id}', this.value)"> %
-        </td>
-        <td style="text-align:right;" class="num" id="fundAmtOut_${f.id}">¥0.00</td>
-        <td style="text-align:center;">
-          <button class="btn btn-danger" style="padding:1px 6px;" onclick="removeFund('${f.id}')">×</button>
-        </td>
-      </tr>
-    `).join('');
-  }
-
-  /* ================= 3. 无损焦点输入事件处理 ================= */
-  function onBasicInput() {
-    state.salary = parseFloat(document.getElementById('inSalary').value) || 0;
-    state.rent = parseFloat(document.getElementById('inRent').value) || 0;
-    state.currentSave = parseFloat(document.getElementById('inCurrentSave').value) || 0;
-    state.manualLiving = parseFloat(document.getElementById('inManualLiving').value) || 0;
-    saveState();
-    calculateAndUpdateText();
-  }
-
-  function toggleLivingMode() {
-    state.autoLiving = document.getElementById('autoLivingToggle').checked;
-    document.getElementById('manualLivingBox').style.display = state.autoLiving ? 'none' : 'block';
-    saveState();
-    calculateAndUpdateText();
-  }
-
-  // 负债输入框打字时：只改内存数值和文本节点，不重建 DOM！
-  function onDebtFieldInput(id, field, rawVal) {
-    const target = state.debts.find(d => d.id === id);
-    if (!target) return;
-
-    if (field === 'name') {
-      target.name = rawVal;
-      const lbl = document.getElementById('debtLabelName_' + id);
-      if (lbl) lbl.textContent = rawVal || '未命名';
-    } else if (field === 'total') {
-      target.total = parseFloat(rawVal) || 0;
-    } else if (field === 'months') {
-      target.months = Math.max(1, parseInt(rawVal) || 1);
-    }
-    saveState();
-    calculateAndUpdateText();
-  }
-
-  // 基金比例输入框打字时：同样只改数据与结果文本，不重建 DOM！
-  function onFundPctInput(id, rawVal) {
-    const target = state.funds.find(f => f.id === id);
-    if (!target) return;
-    target.pct = Math.max(0, parseFloat(rawVal) || 0);
-    saveState();
-    calculateAndUpdateText();
-  }
-
-  /* ================= 4. 核心智能分流与计算引擎 ================= */
-  function calculateAndUpdateText() {
-    const salary = state.salary;
-    const rent = state.rent;
-    const currentSave = state.currentSave;
-    const afterRent = Math.max(0, salary - rent);
-
-    // 1. 计算所有负债每月需存金额
-    let totalDebtMonthly = 0;
-    let totalDebtLeft = 0;
-    let maxMonths = 0;
-
-    state.debts.forEach(d => {
-      const mAmt = d.total > 0 ? (d.total / Math.max(1, d.months)) : 0;
-      totalDebtMonthly += mAmt;
-      totalDebtLeft += d.total;
-      if (d.total > 0 && d.months > maxMonths) maxMonths = d.months;
-
-      const itemEl = document.getElementById('debtItemMonthly_' + d.id);
-      if (itemEl) itemEl.textContent = `¥${mAmt.toFixed(2)}`;
-    });
-
-    // 2. AI 智能生活费安排算法
-    let living = 1500;
-    let livingReason = '';
-
-    if (state.autoLiving) {
-      if (afterRent <= 1300) {
-        living = afterRent;
-        livingReason = '当前扣房租后余额极紧，已全额保底生存';
-      } else {
-        // 标准基准 1500元；若工资超过 5000 元，从超额部分提取 15% 改善伙食
-        const bonus = salary > 5000 ? Math.min(700, (salary - 5000) * 0.15) : 0;
-        let idealLiving = 1500 + bonus;
-
-        // 检查扣掉负债后是否够用
-        const remainAfterDebt = afterRent - totalDebtMonthly;
-        if (remainAfterDebt >= idealLiving) {
-          living = Math.round(idealLiving);
-          livingReason = bonus > 0
-            ? `含基础 ¥1500 + 工资超额改善津贴 ¥${Math.round(bonus)}`
-            : `标准舒适伙食线（三餐50元/天）`;
-        } else if (remainAfterDebt >= 1250) {
-          // 负债较重时自动适度收紧生活费以保住不断贷
-          living = Math.round(remainAfterDebt);
-          livingReason = `因当月还款较重，已智能收紧至紧凑模式以避免逾期`;
-        } else {
-          // 守住 1300 元最低健康温饱线，触发负债展期建议
-          living = Math.min(afterRent, 1350);
-          livingReason = `已触发最低温饱保护线，建议点击下方按钮延长还款期数`;
-        }
-      }
-      document.getElementById('inManualLiving').value = living;
+  function copyCode(code) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code);
+      alert('已复制基金代码：' + code + '，可直接粘贴到天天基金/支付宝/理财通搜索！');
     } else {
-      living = Math.min(afterRent, Math.max(0, state.manualLiving));
-      livingReason = '当前为手动固定生活费模式';
+      prompt('请复制以下基金代码：', code);
     }
-
-    const dailySafe = (living / 30).toFixed(1);
-    document.getElementById('outLivingVal').textContent = `¥${living.toFixed(2)}`;
-    document.getElementById('outLivingDesc').textContent = `折合日均 ¥${dailySafe}/天 | ${livingReason}`;
-
-    // 3. 扣除房租与生活费后的可支配池
-    const freePool = Math.max(0, afterRent - living);
-    const debtAlertCard = document.getElementById('debtAlertCard');
-    const btnAutoExtend = document.getElementById('btnAutoExtend');
-    const debtStatusDesc = document.getElementById('outDebtStatusDesc');
-
-    let actualDebtAlloc = 0;
-    let newSaveAmt = 0;
-    let fundPoolAmt = 0;
-    const SAVE_TARGET = 5000;
-    const saveGap = Math.max(0, SAVE_TARGET - currentSave);
-
-    if (totalDebtMonthly > 0) {
-      if (freePool >= totalDebtMonthly) {
-        actualDebtAlloc = totalDebtMonthly;
-        const surplusAfterDebt = freePool - actualDebtAlloc;
-
-        // 根据现有存款是否满 5000 元，智能决定本月新增存款与基金定投比例
-        if (saveGap > 0) {
-          // 存款未满 5000，拨 40% 补存款（不超过缺口），60% 投基金
-          newSaveAmt = Math.min(saveGap, Math.round(surplusAfterDebt * 0.40));
-          fundPoolAmt = surplusAfterDebt - newSaveAmt;
-        } else {
-          // 现有存款已达标 5000+，结余 100% 投入基金定投
-          newSaveAmt = 0;
-          fundPoolAmt = surplusAfterDebt;
-        }
-
-        debtAlertCard.classList.remove('alert');
-        btnAutoExtend.style.display = 'none';
-        debtStatusDesc.textContent = `✅ 还款资金充足：已足额拨备，剩余 ¥${surplusAfterDebt.toFixed(0)} 已流入存款与基金`;
-      } else {
-        // 资金缺口预警
-        actualDebtAlloc = freePool;
-        newSaveAmt = 0;
-        fundPoolAmt = 0;
-        const deficit = totalDebtMonthly - freePool;
-        debtAlertCard.classList.add('alert');
-        btnAutoExtend.style.display = 'inline-block';
-        debtStatusDesc.textContent = `⚠️ 差额缺口 ¥${deficit.toFixed(2)}/月！请点击右上角【一键延长月数】自动适配工资`;
-      }
-    } else {
-      // 无负债状态
-      debtAlertCard.classList.remove('alert');
-      btnAutoExtend.style.display = 'none';
-      debtStatusDesc.textContent = `🎉 当前无负债压力，结余资金全额用于存款与定投增值`;
-      if (saveGap > 0) {
-        newSaveAmt = Math.min(saveGap, Math.round(freePool * 0.40));
-        fundPoolAmt = freePool - newSaveAmt;
-      } else {
-        newSaveAmt = 0;
-        fundPoolAmt = freePool;
-      }
-    }
-
-    document.getElementById('outDebtMonthlyTotal').textContent = `¥${totalDebtMonthly.toFixed(2)}`;
-    document.getElementById('outNewSaveVal').textContent = `¥${newSaveAmt.toFixed(2)}`;
-    document.getElementById('outNewSaveDesc').textContent = saveGap <= 0
-      ? '安全垫已满5000元，无需再存活期'
-      : `存入零钱通（距满5000元还差¥${Math.max(0, saveGap - newSaveAmt).toFixed(0)}）`;
-    document.getElementById('outFundPoolVal').textContent = `¥${fundPoolAmt.toFixed(2)}`;
-
-    // 4. 更新右侧：现有存款与安全垫进度条
-    const endMonthSave = currentSave + newSaveAmt;
-    const progressPct = Math.min(100, Math.round((endMonthSave / SAVE_TARGET) * 100));
-    document.getElementById('rtCurrentSave').textContent = `¥${currentSave.toFixed(0)}`;
-    document.getElementById('rtAddSave').textContent = `¥${newSaveAmt.toFixed(0)}`;
-    document.getElementById('rtEndMonthSave').textContent = `¥${endMonthSave.toFixed(0)}`;
-    document.getElementById('saveProgressBar').style.width = `${progressPct}%`;
-
-    if (endMonthSave >= SAVE_TARGET) {
-      document.getElementById('rtSaveForecast').textContent = `✅ 你的现有存款已达标 ¥5,000 应急安全垫！多余闲钱已自动 100% 倾斜至基金定投。`;
-    } else if (newSaveAmt > 0) {
-      const monthsToFull = Math.ceil((SAVE_TARGET - currentSave) / newSaveAmt);
-      document.getElementById('rtSaveForecast').textContent = `按本月新增 ¥${newSaveAmt.toFixed(0)} 测算，预计约 ${monthsToFull} 个月补满 ¥5,000 应急金库。`;
-    } else {
-      document.getElementById('rtSaveForecast').textContent = `当前优先偿还高优负债，待还款压力减轻后自动恢复存款储备。`;
-    }
-
-    // 5. 更新右侧：负债执行表
-    document.getElementById('rtTotalDebtLeft').textContent = `¥${totalDebtLeft.toFixed(0)}`;
-    const rtDebtBody = document.getElementById('rtDebtTableBody');
-    if (state.debts.length === 0) {
-      rtDebtBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-sub);">无负债项目</td></tr>`;
-      document.getElementById('rtDebtFreeHint').textContent = '';
-    } else {
-      rtDebtBody.innerHTML = state.debts.map(d => {
-        const m = d.total > 0 ? (d.total / Math.max(1, d.months)) : 0;
-        return `
-          <tr>
-            <td><strong>${escapeHtml(d.name)}</strong></td>
-            <td style="text-align:center;" class="num">¥${d.total.toFixed(0)}</td>
-            <td style="text-align:center;">${d.months} 个月</td>
-            <td style="text-align:right; color:var(--accent-red);" class="num">¥${m.toFixed(2)}</td>
-            <td style="text-align:right;">
-              <button class="btn" style="padding:2px 6px; font-size:0.75em;" onclick="checkInOneMonthDebt('${d.id}')">已存1期</button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-      document.getElementById('rtDebtFreeHint').textContent =
-        maxMonths > 0 ? `📅 按此计划，再坚持 ${maxMonths} 个月即可彻底无债一身轻，届时每月将释放 ¥${totalDebtMonthly.toFixed(0)} 纯现金流！` : '';
-    }
-
-    // 6. 更新右侧：基金定投每行金额与纳斯达克汇总（原地更新文本）
-    let nasdaqMoney = 0;
-    let nasdaqPctSum = 0;
-
-    state.funds.forEach(f => {
-      const amt = fundPoolAmt * (f.pct / 100);
-      if (f.isNasdaq || f.name.includes('纳斯达克') || f.name.includes('纳指') || f.code === '270042') {
-        nasdaqMoney += amt;
-        nasdaqPctSum += f.pct;
-      }
-      const amtEl = document.getElementById('fundAmtOut_' + f.id);
-      if (amtEl) amtEl.textContent = `¥${amt.toFixed(2)}`;
-
-      const quoteEl = document.getElementById('fundQuote_' + f.id);
-      if (quoteEl && f.gszzl !== null && !isNaN(f.gszzl)) {
-        const sign = f.gszzl > 0 ? '+' : '';
-        quoteEl.className = 'num ' + (f.gszzl > 0 ? 'up' : (f.gszzl < 0 ? 'down' : ''));
-        quoteEl.textContent = `${sign}${f.gszzl.toFixed(2)}%`;
-      }
-    });
-
-    document.getElementById('nasdaqPctBadge').textContent = `占比 ${nasdaqPctSum.toFixed(0)}%`;
-    document.getElementById('nasdaqMoneyVal').textContent = `¥${nasdaqMoney.toFixed(2)}`;
   }
 
-  /* ================= 5. 负债管理与智能一键展期 ================= */
-  function addNewDebt() {
-    const newId = 'd_' + Date.now();
-    state.debts.push({ id: newId, name: '新负债项目', total: 1500, months: 3 });
-    saveState();
-    buildDebtInputsDOM();
-    calculateAndUpdateText();
-  }
-
-  function removeDebt(id) {
-    state.debts = state.debts.filter(d => d.id !== id);
-    saveState();
-    buildDebtInputsDOM();
-    calculateAndUpdateText();
-  }
-
-  // 打卡扣减一期
-  function checkInOneMonthDebt(id) {
-    const d = state.debts.find(item => item.id === id);
-    if (!d || d.total <= 0) return;
-    const mAmt = d.total / Math.max(1, d.months);
-    d.total = Math.max(0, Math.round(d.total - mAmt));
-    d.months = Math.max(1, d.months - 1);
-    if (d.total === 0) {
-      alert(`🎉 恭喜！【${d.name}】已全部结清！`);
-      state.debts = state.debts.filter(item => item.id !== id);
-    }
-    saveState();
-    buildDebtInputsDOM();
-    calculateAndUpdateText();
-  }
-
-  // 当月供超支时，智能延长还款期数以消除缺口
-  function autoOptimizeDebtMonths() {
-    const maxAffordable = Math.max(200, state.salary - state.rent - 1400);
-    const totalDebtSum = state.debts.reduce((s, d) => s + d.total, 0);
-    if (totalDebtSum <= 0) return;
-
-    state.debts.forEach(d => {
-      if (d.total > 0) {
-        const shareBudget = maxAffordable * (d.total / totalDebtSum);
-        d.months = Math.max(1, Math.ceil(d.total / shareBudget));
-      }
-    });
-    saveState();
-    buildDebtInputsDOM();
-    calculateAndUpdateText();
-  }
-
-  /* ================= 6. 基金增删、一键配平与天天基金实时行情 ================= */
-  function balanceFundPct() {
-    const totalPct = state.funds.reduce((s, f) => s + f.pct, 0);
-    if (state.funds.length === 0) return;
-    if (totalPct === 0) {
-      const avg = Math.floor(100 / state.funds.length);
-      state.funds.forEach((f, i) => {
-        f.pct = (i === state.funds.length - 1) ? (100 - avg * i) : avg;
-      });
-    } else {
-      let running = 0;
-      state.funds.forEach((f, i) => {
-        if (i === state.funds.length - 1) {
-          f.pct = Math.max(0, 100 - running);
-        } else {
-          f.pct = Math.round((f.pct / totalPct) * 100);
-          running += f.pct;
-        }
-      });
-    }
-    saveState();
-    buildFundRowsDOM();
-    calculateAndUpdateText();
-  }
-
-  function removeFund(id) {
-    state.funds = state.funds.filter(f => f.id !== id);
-    saveState();
-    buildFundRowsDOM();
-    calculateAndUpdateText();
-  }
-
-  async function addCustomFund() {
-    const codeIn = document.getElementById('newFundCode');
-    const nameIn = document.getElementById('newFundName');
-    const pctIn = document.getElementById('newFundPct');
-
-    const code = codeIn.value.trim();
-    let name = nameIn.value.trim();
-    const pct = parseFloat(pctIn.value) || 10;
-
-    if (!/^\d{6}$/.test(code)) {
-      alert('请输入有效的 6 位数字基金代码（例如 270042）');
-      return;
-    }
-
-    let gszzl = null;
-    const remoteData = await fetchSingleEastmoney(code);
-    if (remoteData && remoteData.name) {
-      name = remoteData.name;
-      gszzl = parseFloat(remoteData.gszzl);
-    } else if (!name) {
-      name = '自选基金 ' + code;
-    }
-
-    state.funds.push({
-      id: 'f_' + Date.now(),
-      name,
-      code,
-      pct,
-      gszzl,
-      isNasdaq: name.includes('纳斯达克') || name.includes('纳指')
-    });
-
-    codeIn.value = '';
-    nameIn.value = '';
-    saveState();
-    buildFundRowsDOM();
-    calculateAndUpdateText();
-  }
-
-  function fetchSingleEastmoney(code) {
+  /* ================= 2. 直连天天基金网双接口（实时估值 + 120日历史净值序列深度解析） ================= */
+  function fetchFundGz(code) {
     return new Promise(resolve => {
       const script = document.createElement('script');
       let done = false;
@@ -1000,28 +776,545 @@
     });
   }
 
-  async function fetchEastmoneyQuotes() {
-    for (let i = 0; i < state.funds.length; i++) {
-      const f = state.funds[i];
-      const data = await fetchSingleEastmoney(f.code);
-      if (data && data.fundcode) {
-        f.name = data.name || f.name;
-        f.gszzl = parseFloat(data.gszzl);
-        calculateAndUpdateText();
+  // 从天天基金 pingzhongdata 提取官方近半年涨幅、最近120日净值水位分位点、最大回撤、最新收盘涨跌幅
+  function fetchFundPingzhong(code) {
+    return new Promise(resolve => {
+      // 先清理全局变量防止串数据
+      window.Data_netWorthTrend = null;
+      window.syl_6y = undefined;
+      window.syl_1n = undefined;
+
+      const script = document.createElement('script');
+      let done = false;
+      const timer = setTimeout(() => {
+        if (!done) { done = true; script.remove(); resolve(null); }
+      }, 4500);
+
+      script.src = `https://fund.eastmoney.com/pingzhongdata/${code}.js?v=${Date.now()}`;
+      script.onload = () => {
+        if (!done) {
+          done = true;
+          clearTimeout(timer);
+
+          let syl6y = window.syl_6y !== undefined ? parseFloat(window.syl_6y) : null;
+          let lastDayChange = null;
+          let percentile6M = 50;
+          let maxDrawdown6M = 0;
+          let latestNavDate = '';
+
+          if (Array.isArray(window.Data_netWorthTrend) && window.Data_netWorthTrend.length > 0) {
+            const trend = window.Data_netWorthTrend;
+            const lastPoint = trend[trend.length - 1];
+            if (lastPoint && lastPoint.equityReturn !== undefined) {
+              lastDayChange = parseFloat(lastPoint.equityReturn);
+            }
+            if (lastPoint && lastPoint.x) {
+              const dt = new Date(lastPoint.x);
+              latestNavDate = `${dt.getMonth() + 1}-${String(dt.getDate()).padStart(2, '0')}`;
+            }
+
+            // 截取最近120个交易日（约半年）真实单位净值序列
+            const slice120 = trend.slice(-120).map(item => parseFloat(item.y)).filter(v => !isNaN(v) && v > 0);
+            if (slice120.length >= 10) {
+              const currentNav = slice120[slice120.length - 1];
+              const firstNav = slice120[0];
+              const minNav = Math.min(...slice120);
+              const maxNav = Math.max(...slice120);
+
+              // 若官方 syl_6y 缺失（如次新基金），用净值首尾实算涨幅
+              if (syl6y === null || isNaN(syl6y)) {
+                syl6y = ((currentNav - firstNav) / firstNav) * 100;
+              }
+
+              // 实算近半年净值分位点 (0%代表处于半年最低点，100%代表处于半年最高点)
+              if (maxNav > minNav) {
+                percentile6M = ((currentNav - minNav) / (maxNav - minNav)) * 100;
+              }
+
+              // 实算近半年从最高点回撤幅度
+              maxDrawdown6M = ((currentNav - maxNav) / maxNav) * 100;
+            }
+          }
+
+          script.remove();
+          resolve({ syl6y, lastDayChange, percentile6M, maxDrawdown6M, latestNavDate });
+        }
+      };
+      script.onerror = () => {
+        if (!done) { done = true; clearTimeout(timer); script.remove(); resolve(null); }
+      };
+      document.body.appendChild(script);
+    });
+  }
+
+  async function fetchAllFundsRealTime() {
+    const statusEl = document.getElementById('marketStatusText');
+    const btn = document.getElementById('btnRefreshFund');
+    btn.disabled = true;
+    btn.textContent = '⏳ 正在实时拉取天天基金网数据...';
+    statusEl.textContent = '📡 正在逐只读取天天基金网实时估值与120日历史净值序列...';
+
+    let latestTimeStr = '';
+    let successCount = 0;
+
+    for (let i = 0; i < CORE_FUNDS.length; i++) {
+      const f = CORE_FUNDS[i];
+      const [gz, pz] = await Promise.all([
+        fetchFundGz(f.code),
+        fetchFundPingzhong(f.code)
+      ]);
+
+      // 优先采用 pingzhongdata 的120日深度数据
+      if (pz) {
+        if (pz.syl6y !== null && !isNaN(pz.syl6y)) f.halfYear = pz.syl6y;
+        if (pz.percentile6M !== null && !isNaN(pz.percentile6M)) f.percentile6M = pz.percentile6M;
+        if (pz.maxDrawdown6M !== null && !isNaN(pz.maxDrawdown6M)) f.maxDrawdown6M = pz.maxDrawdown6M;
+        if (pz.lastDayChange !== null && !isNaN(pz.lastDayChange)) f.dayChange = pz.lastDayChange;
+        if (pz.latestNavDate) f.navDate = pz.latestNavDate;
+        successCount++;
+      }
+
+      // 若当前处于交易时段且实时估值 gszzl 非0，则用盘中实时涨跌幅覆盖
+      if (gz && gz.gszzl !== undefined && !isNaN(parseFloat(gz.gszzl))) {
+        const realtimeVal = parseFloat(gz.gszzl);
+        if (realtimeVal !== 0 || f.dayChange === null) {
+          f.dayChange = realtimeVal;
+        }
+        if (gz.gztime) {
+          latestTimeStr = gz.gztime;
+          f.navDate = gz.gztime.slice(5, 16);
+        }
+        successCount++;
       }
     }
-    saveState();
+
+    allocState.isLiveLoaded = successCount > 0;
+    const nowClock = new Date().toLocaleTimeString();
+    statusEl.textContent = `✅ 天天基金网实时数据同步完成（刷新于 ${nowClock}，净值基准：${latestTimeStr || '最新确认净值'}）`;
+    btn.disabled = false;
+    btn.textContent = '🔄 刷新天天基金实时行情并重算配比';
+
+    runTopTierQuantAllocation();
   }
 
-  function escapeHtml(str) {
-    return String(str || '').replace(/[&<>"']/g, s => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[s]));
+  /* ================= 3. 顶配三因子量化配比引擎（100% 由真实行情决定百分比） ================= */
+  function runTopTierQuantAllocation() {
+    // 1. 渲染顶部 5 只基金实时行情胶囊
+    const radarBox = document.getElementById('radarTickersBox');
+    radarBox.innerHTML = CORE_FUNDS.map(f => {
+      if (f.dayChange === null) {
+        return `<div class="ticker-pill"><div>${f.tag}</div><div>读取中...</div></div>`;
+      }
+      const sign = f.dayChange > 0 ? '+' : '';
+      const cls = f.dayChange > 0 ? 'up' : (f.dayChange < 0 ? 'down' : '');
+      const pct6m = f.percentile6M !== null ? `分位${f.percentile6M.toFixed(0)}%` : '';
+      return `
+        <div class="ticker-pill">
+          <div style="font-size:0.78em; color:var(--text-sub);">${f.tag} (${pct6m})</div>
+          <div class="${cls}" style="font-size:1.05em;">${sign}${f.dayChange.toFixed(2)}%</div>
+        </div>
+      `;
+    }).join('');
+
+    const highFunds = CORE_FUNDS.filter(f => f.role === 'high');
+
+    // 计算四大权益指数的加权近半年估值水位 (0~100%) 与 平均当日涨跌
+    const avgPercentile = highFunds.reduce((s, f) => s + (f.percentile6M ?? 50), 0) / highFunds.length;
+    const avgDayChange = highFunds.reduce((s, f) => s + (f.dayChange ?? 0), 0) / highFunds.length;
+
+    /* 第一层：宏观股债攻守总比例动态计算
+       基准中枢：中高风险 45% | 中风险纯债 25% | 货币基金 15% | 财付通 15%
+       - 估值水位调整项：当平均分位点低于 50% 时，每低 10% 增加 2.2% 股基仓位；高于 50% 时减少。
+       - 当日涨跌调整项：当日平均每跌 1%，增加 3.5% 股基仓位（逢绿多买）；每涨 1%，减少 3.5% 股基仓位。
+    */
+    const valuationShift = ((50 - avgPercentile) / 10) * 2.2;
+    const intradayShift = -avgDayChange * 3.5;
+    let totalHighShift = valuationShift + intradayShift;
+    totalHighShift = Math.max(-13, Math.min(13, totalHighShift)); // 限制在 -13% ~ +13% 之间
+
+    const totalHighPct = Number((45 + totalHighShift).toFixed(1));
+    const mediumPct = Number((25 - totalHighShift * 0.45).toFixed(1));
+    const moneyPct = Number((15 - totalHighShift * 0.35).toFixed(1));
+    const tenpayPct = Number((100 - totalHighPct - mediumPct - moneyPct).toFixed(1));
+
+    /* 第二层：4只中高风险指数基金内部三因子PK打分
+       对每只基金计算综合乘数 Multiplier：
+       1. 估值低位因子 (权重50%)：分位点越低，乘数越高 -> 1 + (50 - percentile6M) * 0.008
+       2. 今日逢跌因子 (权重30%)：今日跌得越多，乘数越高 -> 1 + (-dayChange) * 0.12
+       3. 回撤性价比因子 (权重20%)：距半年高点回撤越大，低吸性价比越高 -> 1 + (|maxDrawdown6M| / 10) * 0.10
+    */
+    const scoredHigh = highFunds.map(f => {
+      const p6m = f.percentile6M ?? 50;
+      const dChg = f.dayChange ?? 0;
+      const mdd = Math.abs(f.maxDrawdown6M ?? 0);
+
+      const valFactor = (50 - p6m) * 0.008;       // 分位20% -> +0.24；分位80% -> -0.24
+      const dipFactor = (-dChg) * 0.12;           // 跌1.5% -> +0.18；涨1.5% -> -0.18
+      const mddFactor = (mdd / 10) * 0.08;        // 回撤10% -> +0.08
+
+      const multiplier = Math.max(0.55, Math.min(1.65, 1 + valFactor + dipFactor + mddFactor));
+      const rawWeight = f.baseWeight * multiplier;
+
+      // 生成透明的中文调仓原因
+      const reasons = [];
+      if (p6m <= 35) reasons.push(`半年低位(${p6m.toFixed(0)}%分位)加码`);
+      else if (p6m >= 75) reasons.push(`半年高位(${p6m.toFixed(0)}%分位)控仓`);
+
+      if (dChg <= -0.6) reasons.push(`今日跌${dChg.toFixed(2)}%逢低多买`);
+      else if (dChg >= 0.8) reasons.push(`今日涨+${dChg.toFixed(2)}%防追高`);
+
+      if (reasons.length === 0) {
+        reasons.push(`分位${p6m.toFixed(0)}%+日波动${dChg >= 0 ? '+' : ''}${dChg.toFixed(2)}%均衡配比`);
+      }
+
+      return {
+        key: f.key,
+        rawWeight,
+        reason: reasons.join('，')
+      };
+    });
+
+    // 归一化使 4 只中高风险基金的百分比之和严格等于 totalHighPct
+    const sumRaw = scoredHigh.reduce((s, item) => s + item.rawWeight, 0);
+    let runningSub = 0;
+    const subWeights = {};
+
+    scoredHigh.forEach((item, idx) => {
+      const fObj = CORE_FUNDS.find(x => x.key === item.key);
+      if (fObj) fObj.reasonText = item.reason;
+
+      if (idx === scoredHigh.length - 1) {
+        subWeights[item.key] = Number(Math.max(1, totalHighPct - runningSub).toFixed(1));
+      } else {
+        const w = Number(((item.rawWeight / sumRaw) * totalHighPct).toFixed(1));
+        subWeights[item.key] = w;
+        runningSub = Number((runningSub + w).toFixed(1));
+      }
+    });
+
+    allocState = {
+      tenpay: tenpayPct,
+      money: moneyPct,
+      medium: mediumPct,
+      high: totalHighPct,
+      subWeights,
+      isLiveLoaded: true
+    };
+
+    // 更新顶部状态徽章与纯债详情
+    const badge = document.getElementById('marketTempBadge');
+    if (totalHighShift >= 2.0) {
+      badge.className = 'tag-pill tag-good';
+      badge.textContent = `📉 低位吸筹信号：股基总仓位由45%自动提至 ${totalHighPct}%`;
+    } else if (totalHighShift <= -2.0) {
+      badge.className = 'tag-pill tag-gold';
+      badge.textContent = `🛡️ 高位防守信号：股基总仓位由45%自动压至 ${totalHighPct}%`;
+    } else {
+      badge.className = 'tag-pill tag-light';
+      badge.textContent = `⚖️ 估值中枢均衡：股基总仓位智能匹配为 ${totalHighPct}%`;
+    }
+
+    const bondObj = CORE_FUNDS.find(f => f.key === 'bond');
+    if (bondObj && bondObj.dayChange !== null) {
+      const bSign = bondObj.dayChange >= 0 ? '+' : '';
+      const hSign = (bondObj.halfYear ?? 0) >= 0 ? '+' : '';
+      document.getElementById('bondSubInfo').textContent =
+        `纯债防守底仓（基准25% ➔ 实时 ${mediumPct}%） | 最新日涨跌：${bSign}${bondObj.dayChange.toFixed(2)}% | 近半年：${hSign}${(bondObj.halfYear ?? 0).toFixed(2)}%`;
+    }
+
+    reCalcAll();
   }
 
-  // 启动运行
-  initView();
-  fetchEastmoneyQuotes();
+  /* ================= 4. 工资、生活费与定投金额全局联动计算 ================= */
+  let totalEstimatedMeituan = 0;
+
+  function reCalcAll() {
+    const salary = Math.max(0, parseFloat(document.getElementById('inSalary').value) || 0);
+    const rent = Math.max(0, parseFloat(document.getElementById('inRent').value) || 0);
+    const dailyLiving = Math.max(0, parseFloat(document.getElementById('inDailyLiving').value) || 0);
+    const includeMeituan = document.getElementById('includeMeituanCheck').checked;
+
+    const daysCount = scheduleData.length || 30;
+    const afterRentBase = Math.max(0, salary - rent);
+    const extraMeituan = includeMeituan ? totalEstimatedMeituan : 0;
+    const totalAvailable = afterRentBase + extraMeituan;
+
+    document.getElementById('outAfterRent').textContent = `¥${afterRentBase.toFixed(2)}`;
+    document.getElementById('outMeituanAdded').textContent = includeMeituan ? `+¥${extraMeituan}` : `+¥0 (未勾选)`;
+
+    const monthLiving = Math.min(totalAvailable, dailyLiving * daysCount);
+    const investPool = Math.max(0, totalAvailable - monthLiving);
+    const saveRate = totalAvailable > 0 ? Math.round((investPool / totalAvailable) * 100) : 0;
+
+    document.getElementById('lblDaysCount').textContent = daysCount;
+    document.getElementById('lblDailyShow').textContent = `¥${dailyLiving} / 天`;
+    document.getElementById('outLivingMonth').textContent = `¥${monthLiving.toFixed(2)}`;
+    document.getElementById('outInvestPool').textContent = `¥${investPool.toFixed(2)}`;
+    document.getElementById('outSaveRate').textContent = `占可支配 ${saveRate}%`;
+
+    // 更新右侧四大板块百分比与金额
+    document.getElementById('pct_tenpay').textContent = `${allocState.tenpay.toFixed(1)}%`;
+    document.getElementById('pct_money').textContent = `${allocState.money.toFixed(1)}%`;
+    document.getElementById('pct_medium').textContent = `${allocState.medium.toFixed(1)}%`;
+    document.getElementById('pct_high').textContent = `${allocState.high.toFixed(1)}%`;
+
+    document.getElementById('amt_tenpay').textContent = `¥${(investPool * allocState.tenpay / 100).toFixed(2)}`;
+    document.getElementById('amt_money').textContent = `¥${(investPool * allocState.money / 100).toFixed(2)}`;
+    document.getElementById('amt_medium').textContent = `¥${(investPool * allocState.medium / 100).toFixed(2)}`;
+    document.getElementById('amt_high').textContent = `¥${(investPool * allocState.high / 100).toFixed(2)}`;
+
+    // 渲染第4项内部的 4 只具体中高风险基金表格
+    const highFunds = CORE_FUNDS.filter(f => f.role === 'high');
+    const subTbody = document.getElementById('highRiskSubTable');
+
+    subTbody.innerHTML = highFunds.map(f => {
+      const w = allocState.subWeights[f.key] ?? f.baseWeight;
+      const buyMoney = investPool * (w / 100);
+      const diff = Number((w - f.baseWeight).toFixed(1));
+      const diffHtml = diff > 0
+        ? `<span class="delta-up">(+${diff}%)</span>`
+        : (diff < 0 ? `<span class="delta-down">(${diff}%)</span>` : `<span style="color:var(--text-sub);">(持平)</span>`);
+
+      const dChgStr = f.dayChange !== null
+        ? `<span class="${f.dayChange >= 0 ? 'up' : 'down'}">${f.dayChange >= 0 ? '+' : ''}${f.dayChange.toFixed(2)}%</span>`
+        : '--';
+
+      const hChgStr = f.halfYear !== null
+        ? `<span class="${f.halfYear >= 0 ? 'up' : 'down'}">${f.halfYear >= 0 ? '+' : ''}${f.halfYear.toFixed(2)}%</span>`
+        : '--';
+
+      const pct6mStr = f.percentile6M !== null
+        ? `${f.percentile6M.toFixed(0)}% (回撤${(f.maxDrawdown6M ?? 0).toFixed(1)}%)`
+        : '--';
+
+      return `
+        <tr>
+          <td>
+            <strong>【${f.tag}】${f.name}</strong>
+            <span style="font-family:Consolas; color:var(--text-sub);">(${f.code})</span>
+            <button class="btn-copy" onclick="copyCode('${f.code}')">复制</button>
+          </td>
+          <td style="text-align:center; font-family:Consolas;">${dChgStr}</td>
+          <td style="text-align:center; font-family:Consolas;">${hChgStr}</td>
+          <td style="text-align:center; font-family:Consolas; font-size:0.9em;">${pct6mStr}</td>
+          <td style="text-align:center; font-family:Consolas;">
+            <span style="color:var(--text-sub);">${f.baseWeight}%</span> ➔ <strong>${w.toFixed(1)}%</strong> ${diffHtml}
+          </td>
+          <td style="font-size:0.88em; color:var(--accent-blue); font-weight:bold;">${f.reasonText}</td>
+          <td style="text-align:right; font-family:Consolas; font-weight:800; color:var(--accent-green); font-size:1.08em;">
+            ¥${buyMoney.toFixed(2)}
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  /* ================= 5. 班表与跑外卖智能排班引擎（内置林达烽10月真实班表） ================= */
+  const SHIFT_TYPES = {
+    'REST':     { label: '休息（全天休）', level: 'gold', badge: '🔥 黄金双高峰', timeSlot: '午高峰 11:00-14:00 + 晚高峰 17:00-21:00', reason: '全天无主业，抓牢午晚两大爆单期，下午14:00-17:00回家午休充电', hours: 7.0, income: 140, rowCls: 'row-rest' },
+    'EARLY_0':  { label: '早0(8H) 08:00-12:00 13:00-17:00', level: 'good', badge: '⚡ 最佳晚高峰', timeSlot: '晚高峰 17:30 - 21:00', reason: '17:00早下班完美踩中17:30-20:00晚高峰爆单期，21点准时收工', hours: 3.5, income: 75, rowCls: 'row-early' },
+    'EARLY_102':{ label: '早102(8H) 08:30-12:30 13:30-17:30', level: 'good', badge: '⚡ 最佳晚高峰', timeSlot: '晚高峰 17:45 - 21:00', reason: '17:30下班直接上线接晚高峰餐饮单，单价高顺路单多', hours: 3.2, income: 70, rowCls: 'row-early' },
+    'DAY_104':  { label: '白104(8H) 09:00-13:00 14:00-18:00', level: 'light', badge: '🛵 轻量晚高峰', timeSlot: '晚高峰后段 18:30 - 21:00', reason: '18:00下班吃口简餐后跑2.5小时晚高峰+夜宵前段，见好就收', hours: 2.5, income: 55, rowCls: '' },
+    'DAY_A104': { label: '白A104(8.5H) 09:00-13:00 14:00-18:30', level: 'light', badge: '🛵 轻量晚档2H', timeSlot: '晚档 19:00 - 21:00', reason: '18:30下班跑2小时散单补贴次日伙食费', hours: 2.0, income: 45, rowCls: '' },
+    'DAY_002':  { label: '白002(8H) 10:00-13:30 14:30-19:00', level: 'light', badge: '🌙 随缘轻量2H', timeSlot: '晚档 19:30 - 21:30', reason: '19:00下班顺路跑2小时轻食/商超单，不强求', hours: 2.0, income: 40, rowCls: '' },
+    'MID_101':  { label: '中101(8H) 12:00-16:00 17:00-21:00', level: 'stop', badge: '🛑 专心主业不跑', timeSlot: '全天不跑外卖（充分睡眠）', reason: '中午12点上班、晚上21点下班，专心休息保次日状态', hours: 0, income: 0, rowCls: 'row-skip' },
+    'JUMP_106': { label: '跳106(8H) 09:00-13:00 17:00-21:00', level: 'stop', badge: '🛑 严禁跑单·午休', timeSlot: '13:00-17:00 必须午休，不跑外卖', reason: '跳班跨度长达12小时！下午空档务必午睡，否则晚班顶不住', hours: 0, income: 0, rowCls: 'row-skip' },
+    'JUMP_A106':{ label: '跳A106(8.5H) 09:00-13:30 17:00-21:00', level: 'stop', badge: '🛑 严禁跑单·午休', timeSlot: '13:30-17:00 必须午休，不跑外卖', reason: '8.5小时跳班体力消耗大，中间空档务必回家睡觉', hours: 0, income: 0, rowCls: 'row-skip' },
+    'JUMP_A101':{ label: '跳A101(8.5H) 10:00-13:30 17:00-22:00', level: 'stop', badge: '🛑 强制休息不跑', timeSlot: '全天不跑外卖（22点下班）', reason: '晚上22:00才下班，绝对不要去跑单', hours: 0, income: 0, rowCls: 'row-skip' },
+    'NIGHT_002':{ label: '夜002(8H) 13:00-17:30 18:30-22:00', level: 'stop', badge: '🛑 强制休息不跑', timeSlot: '全天不跑外卖（夜班护体）', reason: '夜班22:00下班，回家洗漱睡觉，严禁熬夜跑夜宵', hours: 0, income: 0, rowCls: 'row-skip' },
+    'NIGHT_A002':{ label: '夜A002(8.5H) 12:30-17:30 18:30-22:00', level: 'stop', badge: '🛑 强制休息不跑', timeSlot: '全天不跑外卖（夜班护体）', reason: '8.5小时长夜班22:00下班，严格执行“夜班不跑单”纪律', hours: 0, income: 0, rowCls: 'row-skip' }
+  };
+
+  const DEFAULT_OCT_SCHEDULE = [
+    { date: '10月1日',  week: '星期四', type: 'EARLY_0' },
+    { date: '10月2日',  week: '星期五', type: 'EARLY_102' },
+    { date: '10月3日',  week: '星期六', type: 'EARLY_0' },
+    { date: '10月4日',  week: '星期日', type: 'REST' },
+    { date: '10月5日',  week: '星期一', type: 'REST' },
+    { date: '10月6日',  week: '星期二', type: 'JUMP_106' },
+    { date: '10月7日',  week: '星期三', type: 'NIGHT_002' },
+    { date: '10月8日',  week: '星期四', type: 'DAY_002' },
+    { date: '10月9日',  week: '星期五', type: 'REST' },
+    { date: '10月10日', week: '星期六', type: 'JUMP_A101' },
+    { date: '10月11日', week: '星期日', type: 'NIGHT_A002' },
+    { date: '10月12日', week: '星期一', type: 'DAY_002' },
+    { date: '10月13日', week: '星期二', type: 'DAY_104' },
+    { date: '10月14日', week: '星期三', type: 'EARLY_0' },
+    { date: '10月15日', week: '星期四', type: 'REST' },
+    { date: '10月16日', week: '星期五', type: 'JUMP_A106' },
+    { date: '10月17日', week: '星期六', type: 'REST' },
+    { date: '10月18日', week: '星期日', type: 'NIGHT_A002' },
+    { date: '10月19日', week: '星期一', type: 'REST' },
+    { date: '10月20日', week: '星期二', type: 'MID_101' },
+    { date: '10月21日', week: '星期三', type: 'DAY_104' },
+    { date: '10月22日', week: '星期四', type: 'DAY_A104' },
+    { date: '10月23日', week: '星期五', type: 'EARLY_0' },
+    { date: '10月24日', week: '星期六', type: 'REST' },
+    { date: '10月25日', week: '星期日', type: 'REST' },
+    { date: '10月26日', week: '星期一', type: 'NIGHT_A002' },
+    { date: '10月27日', week: '星期二', type: 'MID_101' },
+    { date: '10月28日', week: '星期三', type: 'DAY_A104' },
+    { date: '10月29日', week: '星期四', type: 'REST' },
+    { date: '10月30日', week: '星期五', type: 'NIGHT_A002' }
+  ];
+
+  const STORAGE_KEY = 'smart_lin_top_quant_v7';
+  let scheduleData = (function() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return JSON.parse(JSON.stringify(DEFAULT_OCT_SCHEDULE));
+  })();
+
+  function saveSchedule() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(scheduleData)); } catch (e) {}
+  }
+
+  function resetOctSchedule() {
+    if (confirm('确定恢复为你上传的 10月林达烽 原始班表吗？')) {
+      scheduleData = JSON.parse(JSON.stringify(DEFAULT_OCT_SCHEDULE));
+      saveSchedule();
+      renderScheduleTable();
+      reCalcAll();
+    }
+  }
+
+  function renderScheduleTable() {
+    const tbody = document.getElementById('scheduleTableBody');
+    let restDays = 0, afterWorkDays = 0, skipDays = 0, estIncome = 0;
+
+    tbody.innerHTML = scheduleData.map((row, idx) => {
+      const rule = SHIFT_TYPES[row.type] || SHIFT_TYPES['REST'];
+      const nextDay = scheduleData[idx + 1];
+      let customSlot = rule.timeSlot;
+      let customReason = rule.reason;
+      let customHours = rule.hours;
+      let customIncome = rule.income;
+      let badgeCls = rule.level === 'gold' ? 'tag-gold' : (rule.level === 'good' ? 'tag-good' : (rule.level === 'light' ? 'tag-light' : 'tag-stop'));
+
+      if ((row.type === 'DAY_002' || row.type === 'DAY_A104') && nextDay && nextDay.type === 'EARLY_0') {
+        customSlot = '19:00 - 20:30（仅跑1.5小时早归）';
+        customReason = '⚠️ 次日接08:00早0班！今晚20:30必须收工回家睡觉';
+        customHours = 1.5;
+        customIncome = 35;
+      }
+
+      if (rule.level === 'gold') restDays++;
+      else if (rule.level === 'good' || rule.level === 'light') afterWorkDays++;
+      else skipDays++;
+      estIncome += customIncome;
+
+      const optionsHtml = Object.keys(SHIFT_TYPES).map(k =>
+        `<option value="${k}" ${k === row.type ? 'selected' : ''}>${SHIFT_TYPES[k].label}</option>`
+      ).join('');
+
+      return `
+        <tr class="${rule.rowCls}">
+          <td style="font-weight:bold;">${row.date}</td>
+          <td>${row.week}</td>
+          <td>
+            <select class="shift-select" onchange="onShiftChange(${idx}, this.value)">
+              ${optionsHtml}
+            </select>
+          </td>
+          <td><span class="tag-pill ${badgeCls}">${rule.badge}</span></td>
+          <td>
+            <div style="font-weight:bold;">${customSlot}</div>
+            <div style="font-size:0.8em; color:var(--text-sub);">${customReason}</div>
+          </td>
+          <td style="text-align:right; font-family:Consolas; font-weight:bold;">${customHours > 0 ? customHours + ' 小时' : '休息'}</td>
+          <td style="text-align:right; font-family:Consolas; font-weight:bold; color:${customIncome > 0 ? 'var(--accent-red)' : 'var(--text-sub)'};">
+            ${customIncome > 0 ? '+¥' + customIncome : '¥0'}
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    totalEstimatedMeituan = estIncome;
+    document.getElementById('statRestDays').textContent = `${restDays} 天`;
+    document.getElementById('statAfterWorkDays').textContent = `${afterWorkDays} 天`;
+    document.getElementById('statSkipDays').textContent = `${skipDays} 天`;
+    document.getElementById('statEstIncome').textContent = `¥${estIncome}`;
+  }
+
+  function onShiftChange(index, newType) {
+    scheduleData[index].type = newType;
+    saveSchedule();
+    renderScheduleTable();
+    reCalcAll();
+  }
+
+  async function handleScheduleImageUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const statusEl = document.getElementById('ocrStatusText');
+    statusEl.style.color = 'var(--accent-orange)';
+    statusEl.textContent = '🔍 正在智能扫描识别班表图片...';
+
+    try {
+      const worker = await Tesseract.createWorker('chi_sim');
+      const ret = await worker.recognize(file);
+      await worker.terminate();
+      const lines = (ret.data.text || '').split('\n').map(l => l.trim()).filter(Boolean);
+      const parsed = [];
+      const weekNames = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+
+      lines.forEach(line => {
+        const m = line.match(/(\d{1,2})\s*月\s*(\d{1,2})\s*日/);
+        if (m) {
+          let wStr = '星期一';
+          weekNames.forEach(w => { if (line.includes(w)) wStr = w; });
+          let sType = 'DAY_104';
+          if (line.includes('休息')) sType = 'REST';
+          else if (line.includes('早102') || line.includes('17:30')) sType = 'EARLY_102';
+          else if (line.includes('早0') || line.includes('08:00')) sType = 'EARLY_0';
+          else if (line.includes('跳A101')) sType = 'JUMP_A101';
+          else if (line.includes('跳A106')) sType = 'JUMP_A106';
+          else if (line.includes('跳106') || line.includes('跳')) sType = 'JUMP_106';
+          else if (line.includes('夜A002')) sType = 'NIGHT_A002';
+          else if (line.includes('夜002') || line.includes('夜')) sType = 'NIGHT_002';
+          else if (line.includes('中101') || line.includes('12:00-16:00')) sType = 'MID_101';
+          else if (line.includes('白A104') || line.includes('18:30')) sType = 'DAY_A104';
+          else if (line.includes('白002') || line.includes('19:00')) sType = 'DAY_002';
+          parsed.push({ date: `${m[1]}月${m[2]}日`, week: wStr, type: sType });
+        }
+      });
+
+      if (parsed.length >= 5) {
+        scheduleData = parsed;
+        saveSchedule();
+        renderScheduleTable();
+        reCalcAll();
+        statusEl.style.color = 'var(--accent-green)';
+        statusEl.textContent = `✅ 已成功识别并更新 ${parsed.length} 天排班！`;
+      } else {
+        statusEl.style.color = 'var(--accent-green)';
+        statusEl.textContent = `✅ 已加载，可通过表格下拉框微调班次`;
+      }
+    } catch (e) {
+      statusEl.style.color = 'var(--accent-red)';
+      statusEl.textContent = '⚠️ 可直接在下方表格下拉框切换每日班次';
+    }
+  }
+
+  function exportScheduleCSV() {
+    let csv = '\uFEFF日期,星期,主业班次,跑单等级,建议跑外卖时段,策略说明,预估时长(小时),预估收入(元)\n';
+    scheduleData.forEach(r => {
+      const rule = SHIFT_TYPES[r.type] || SHIFT_TYPES['REST'];
+      csv += `${r.date},${r.week},"${rule.label}",${rule.badge},"${rule.timeSlot}","${rule.reason}",${rule.hours},${rule.income}\n`;
+    });
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '本月班表兼职跑外卖计划表.csv';
+    a.click();
+  }
+
+  // 页面加载即刻渲染班表 并向天天基金网发起真实数据请求
+  renderScheduleTable();
+  reCalcAll();
+  fetchAllFundsRealTime();
 </script>
 </body>
 </html>
