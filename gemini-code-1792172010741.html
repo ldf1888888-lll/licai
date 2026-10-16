@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#C7EDCC">
+<title>智能月度资金分流与负债定投管家</title>
+<style>
+  :root {
+    --bg-main: #C7EDCC;       /* 经典豆沙护眼绿 */
+    --bg-card: #DCEFE0;      /* 主卡片底色 */
+    --bg-inner: #EAF7EC;     /* 内部模块底色 */
+    --border-color: #8FB896;  /* 常规绿边框 */
+    --border-dark: #1F4D2B;   /* 核心强调深色框 */
+    --text-main: #142618;     /* 主文字墨绿 */
+    --text-sub: #3B5942;      /* 辅助说明文字 */
+    --accent-red: #B82525;    /* 负债/上涨红 */
+    --accent-blue: #165B8C;   /* 存款稳健蓝 */
+    --accent-green: #147A2E;  /* 定投/下跌绿 */
+    --warn-bg: #FADBD8;       /* 预警浅红底 */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.5;
+    padding: 16px 10px 40px 10px;
+  }
+
+  .header {
+    max-width: 1100px;
+    margin: 0 auto 16px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    border-bottom: 2px solid var(--border-dark);
+    padding-bottom: 10px;
+  }
+
+  .header h1 { font-size: 1.35em; font-weight: 800; }
+  .header-sub { font-size: 0.85em; color: var(--text-sub); }
+
+  /* 左右双栏主架构 */
+  .layout-wrapper {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  @media (max-width: 880px) {
+    .layout-wrapper { flex-direction: column; align-items: stretch; }
+  }
+
+  .main-card {
+    flex: 1;
+    background-color: var(--bg-card);
+    border: 2px solid var(--border-dark);
+    border-radius: 14px;
+    padding: 16px;
+    min-width: 0;
+  }
+
+  .arrow-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    font-size: 2em;
+    color: var(--border-dark);
+    font-weight: bold;
+    user-select: none;
+    padding: 4px 0;
+  }
+
+  @media (max-width: 880px) {
+    .arrow-indicator { transform: rotate(90deg); padding: 0; }
+  }
+
+  /* 顶部三项核心输入网格 */
+  .top-inputs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  @media (max-width: 520px) {
+    .top-inputs-grid { grid-template-columns: 1fr; }
+  }
+
+  .input-box-wrap {
+    background-color: var(--bg-inner);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+
+  .input-label {
+    font-size: 0.82em;
+    font-weight: bold;
+    color: var(--text-sub);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .input-main {
+    width: 100%;
+    background-color: #FFFFFF;
+    border: 1.5px solid var(--border-color);
+    border-radius: 6px;
+    padding: 6px 8px;
+    font-size: 1.15em;
+    font-weight: bold;
+    color: var(--text-main);
+    font-family: Consolas, monospace;
+    outline: none;
+  }
+
+  .input-main:focus { border-color: var(--border-dark); }
+
+  /* 区块标题行 */
+  .sec-title-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 12px 0 8px 0;
+    font-size: 0.92em;
+    font-weight: bold;
+  }
+
+  .btn {
+    background-color: #B4DFB9;
+    border: 1px solid var(--border-dark);
+    color: var(--text-main);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.82em;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background-color: var(--border-dark); color: #FFFFFF; }
+  .btn-danger { background-color: #F2DEDE; border-color: var(--accent-red); color: var(--accent-red); }
+
+  /* 负债单卡片 */
+  .debt-item-card {
+    background-color: var(--bg-inner);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 8px;
+  }
+
+  .debt-item-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+    font-size: 0.85em;
+  }
+
+  .debt-inputs-row {
+    display: grid;
+    grid-template-columns: 1.3fr 1.1fr 0.9fr;
+    gap: 6px;
+  }
+
+  .sub-input-group label {
+    display: block;
+    font-size: 0.75em;
+    color: var(--text-sub);
+    margin-bottom: 2px;
+  }
+
+  .sub-input {
+    width: 100%;
+    background-color: #FFFFFF;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    padding: 5px 6px;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: var(--text-main);
+    outline: none;
+  }
+
+  .sub-input:focus { border-color: var(--border-dark); }
+
+  .hand-divider {
+    height: 2px;
+    background-color: var(--border-dark);
+    margin: 16px 0;
+  }
+
+  /* 左侧下方结果卡片 */
+  .stat-card {
+    background-color: var(--bg-inner);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+
+  .stat-card.alert {
+    background-color: var(--warn-bg);
+    border-color: var(--accent-red);
+  }
+
+  .stat-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.84em;
+    color: var(--text-sub);
+    font-weight: bold;
+  }
+
+  .stat-val {
+    font-size: 1.35em;
+    font-weight: bold;
+    font-family: Consolas, monospace;
+    margin: 3px 0;
+  }
+
+  .stat-desc { font-size: 0.78em; color: var(--text-sub); }
+
+  /* 右侧子面板 */
+  .right-panel {
+    background-color: var(--bg-inner);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+
+  .panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 6px;
+    margin-bottom: 8px;
+    font-size: 0.92em;
+    font-weight: bold;
+  }
+
+  /* 存款进度条 */
+  .progress-track {
+    width: 100%;
+    height: 10px;
+    background-color: #CFE6D3;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 6px 0;
+    border: 1px solid var(--border-color);
+  }
+
+  .progress-bar {
+    height: 100%;
+    background-color: var(--accent-blue);
+    transition: width 0.25s ease;
+  }
+
+  /* 极简表格 */
+  table.clean-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86em;
+  }
+
+  table.clean-table th {
+    text-align: left;
+    padding: 6px 4px;
+    color: var(--text-sub);
+    border-bottom: 1px solid var(--border-color);
+    font-weight: bold;
+  }
+
+  table.clean-table td {
+    padding: 7px 4px;
+    border-bottom: 1px solid #D5E8D8;
+    vertical-align: middle;
+  }
+
+  table.clean-table tr:last-child td { border-bottom: none; }
+
+  .pct-input {
+    width: 54px;
+    text-align: center;
+    background-color: #FFFFFF;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 3px 4px;
+    font-weight: bold;
+    font-family: Consolas, monospace;
+  }
+
+  .num { font-family: Consolas, monospace; font-weight: bold; }
+  .up { color: var(--accent-red); }
+  .down { color: var(--accent-green); }
+
+  .badge {
+    display: inline-block;
+    padding: 1px 6px;
+    font-size: 0.76em;
+    border-radius: 4px;
+    background-color: #D2EBD5;
+    border: 1px solid var(--accent-green);
+    color: #0F5C22;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>智能月度资金分流与负债定投管家</h1>
+    <div class="header-sub" id="countdownText">正在计算发薪日倒计时...</div>
+  </div>
+  <div style="display:flex; gap:8px;">
+    <button class="btn" onclick="resetDefaultData()">重置默认数据</button>
+  </div>
+</div>
+
+<div class="layout-wrapper">
+  <!-- ==================== 左侧卡片：输入、负债测算与智能分流 ==================== -->
+  <div class="main-card">
+    <div class="top-inputs-grid">
+      <div class="input-box-wrap">
+        <label class="input-label">[ 月到账工资 ]</label>
+        <input type="number" id="inSalary" class="input-main" value="5000" step="100" oninput="onBasicInput()">
+      </div>
+      <div class="input-box-wrap">
+        <label class="input-label">[ 房租月支出 ]</label>
+        <input type="number" id="inRent" class="input-main" value="800" step="50" oninput="onBasicInput()">
+      </div>
+      <div class="input-box-wrap">
+        <label class="input-label">[ 目前现有存款 ]</label>
+        <input type="number" id="inCurrentSave" class="input-main" value="1200" step="100" oninput="onBasicInput()">
+      </div>
+    </div>
+
+    <!-- 负债动态输入区（原地更新，绝不丢失焦点） -->
+    <div class="sec-title-bar">
+      <span>[ 负债金额与计划还清月数 ]</span>
+      <button class="btn" onclick="addNewDebt()">+ 新增一笔负债</button>
+    </div>
+    <div id="debtInputsContainer"></div>
+
+    <!-- 贯穿分割线 -->
+    <div class="hand-divider"></div>
+
+    <!-- 1. 智能生活费安排 -->
+    <div class="stat-card">
+      <div class="stat-top">
+        <span>🍜 智能生活费安排（三餐伙食与水电）</span>
+        <label style="cursor:pointer; font-size:0.95em;">
+          <input type="checkbox" id="autoLivingToggle" checked onchange="toggleLivingMode()"> AI智能动态安排
+        </label>
+      </div>
+      <div style="display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin:4px 0;">
+        <div class="stat-val" id="outLivingVal" style="color:#1E4D28;">¥1,500.00</div>
+        <div id="manualLivingBox" style="display:none;">
+          <span style="font-size:0.8em;">手动设定：</span>
+          <input type="number" id="inManualLiving" class="pct-input" style="width:80px;" value="1500" oninput="onBasicInput()">
+        </div>
+      </div>
+      <div class="stat-desc" id="outLivingDesc">日均安全额 ¥50.00/天 | 已按工资与负债比智能匹配</div>
+    </div>
+
+    <!-- 2. 负债每月需存合计 -->
+    <div class="stat-card" id="debtAlertCard">
+      <div class="stat-top">
+        <span>💳 负债每月硬性需存合计</span>
+        <button class="btn" id="btnAutoExtend" style="display:none; padding:2px 6px; font-size:0.78em;" onclick="autoOptimizeDebtMonths()">🤖 一键延长月数消除缺口</button>
+      </div>
+      <div class="stat-val" id="outDebtMonthlyTotal" style="color:var(--accent-red);">¥0.00</div>
+      <div class="stat-desc" id="outDebtStatusDesc">发薪日优先划入还款专卡，雷打不动</div>
+    </div>
+
+    <!-- 3. 本月新增存款 & 基金定投总额 -->
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div class="stat-card" style="margin-bottom:0;">
+        <div class="stat-top"><span>🛡️ 本月新增存款</span></div>
+        <div class="stat-val" id="outNewSaveVal" style="color:var(--accent-blue);">¥0.00</div>
+        <div class="stat-desc" id="outNewSaveDesc">存入零钱通补齐安全垫</div>
+      </div>
+      <div class="stat-card" style="margin-bottom:0;">
+        <div class="stat-top"><span>📈 本月基金定投池</span></div>
+        <div class="stat-val" id="outFundPoolVal" style="color:var(--accent-green);">¥0.00</div>
+        <div class="stat-desc">自动分配至右侧基金表</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 中间流向指示 -->
+  <div class="arrow-indicator">➔</div>
+
+  <!-- ==================== 右侧卡片：存款金库、还款计划与极简基金分配 ==================== -->
+  <div class="main-card">
+    <!-- 1. 现有存款与安全垫进度 -->
+    <div class="right-panel">
+      <div class="panel-head">
+        <span style="color:var(--accent-blue);">🛡️ 现有存款与应急金库进度</span>
+        <span style="font-size:0.82em; color:var(--text-sub);">安全垫目标：¥5,000</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; font-size:0.86em;">
+        <span>目前现有：<strong class="num" id="rtCurrentSave">¥1,200</strong> + 本月新增：<strong class="num" id="rtAddSave" style="color:var(--accent-blue);">¥0</strong></span>
+        <span>月末预计总额：<strong class="num" id="rtEndMonthSave">¥1,200</strong></span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-bar" id="saveProgressBar" style="width:24%;"></div>
+      </div>
+      <div class="stat-desc" id="rtSaveForecast">预计还需数月补满 5,000 元安全垫；补满后月结余将 100% 投入基金定投。</div>
+    </div>
+
+    <!-- 2. 负债还款执行清单 -->
+    <div class="right-panel">
+      <div class="panel-head">
+        <span style="color:var(--accent-red);">💳 负债还款计划与月存安排</span>
+        <span style="font-size:0.82em; color:var(--text-sub);">剩余总欠款：<strong class="num" id="rtTotalDebtLeft" style="color:var(--accent-red);">¥0</strong></span>
+      </div>
+      <table class="clean-table">
+        <thead>
+          <tr>
+            <th>负债名称</th>
+            <th style="text-align:center;">总欠款</th>
+            <th style="text-align:center;">剩余期数</th>
+            <th style="text-align:right;">每月需存</th>
+            <th style="text-align:right;">进度打卡</th>
+          </tr>
+        </thead>
+        <tbody id="rtDebtTableBody"></tbody>
+      </table>
+      <div class="stat-desc" id="rtDebtFreeHint" style="margin-top:6px;"></div>
+    </div>
+
+    <!-- 3. 基金定投自动分配（极简无废话 + 天天基金实时涨跌） -->
+    <div class="right-panel" style="margin-bottom:0;">
+      <div class="panel-head">
+        <span style="color:var(--accent-green);">📈 基金定投自动分配（直连天天基金）</span>
+        <div style="display:flex; gap:6px;">
+          <button class="btn" onclick="balanceFundPct()">一键配平100%</button>
+          <button class="btn btn-primary" onclick="fetchEastmoneyQuotes()">刷新实时涨幅</button>
+        </div>
+      </div>
+
+      <table class="clean-table">
+        <thead>
+          <tr>
+            <th>基金名称 (代码)</th>
+            <th style="text-align:center;">今日涨跌</th>
+            <th style="text-align:center;">分配比例</th>
+            <th style="text-align:right;">本月应投</th>
+            <th style="text-align:center;">操作</th>
+          </tr>
+        </thead>
+        <tbody id="fundRowsContainer"></tbody>
+      </table>
+
+      <!-- 添加自定义基金行 -->
+      <div style="display:flex; gap:6px; margin-top:10px; align-items:center; flex-wrap:wrap;">
+        <input type="text" id="newFundCode" class="sub-input" style="width:110px;" placeholder="6位基金代码" maxlength="6">
+        <input type="text" id="newFundName" class="sub-input" style="flex:1; min-width:120px;" placeholder="基金简称(留空自动读取)">
+        <input type="number" id="newFundPct" class="pct-input" placeholder="%" value="10">
+        <button class="btn" onclick="addCustomFund()">+ 添加基金</button>
+      </div>
+
+      <!-- 纳斯达克定投专项汇总 -->
+      <div style="margin-top:10px; padding-top:8px; border-top:1px dashed var(--border-color); display:flex; justify-content:space-between; align-items:center; font-size:0.88em;">
+        <span>🇺🇸 <strong>纳斯达克定投专项：</strong><span class="badge" id="nasdaqPctBadge">占比 30%</span></span>
+        <strong class="num" id="nasdaqMoneyVal" style="font-size:1.15em; color:var(--text-main);">¥0.00</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ================= 1. 状态数据与本地持久化 ================= */
+  const STORAGE_KEY = 'smart_finance_app_v3_fixed';
+
+  const defaultState = {
+    salary: 5000,
+    rent: 800,
+    currentSave: 1200,
+    autoLiving: true,
+    manualLiving: 1500,
+    debts: [
+      { id: 'd1', name: '第一笔负债', total: 2640, months: 4 },
+      { id: 'd2', name: '第二笔负债', total: 2680, months: 5 }
+    ],
+    funds: [
+      { id: 'f1', name: '天弘余额宝货币', code: '000198', pct: 20, gszzl: null, isNasdaq: false },
+      { id: 'f2', name: '招商双债增强债券A', code: '161716', pct: 15, gszzl: null, isNasdaq: false },
+      { id: 'f3', name: '天弘中证红利低波动A', code: '012643', pct: 15, gszzl: null, isNasdaq: false },
+      { id: 'f4', name: '华夏中证A500ETF联接A', code: '022430', pct: 20, gszzl: null, isNasdaq: false },
+      { id: 'f5', name: '广发纳斯达克100ETF联接A', code: '270042', pct: 30, gszzl: null, isNasdaq: true }
+    ]
+  };
+
+  let state = loadState();
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return Object.assign({}, defaultState, parsed);
+      }
+    } catch (e) {}
+    return JSON.parse(JSON.stringify(defaultState));
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch (e) {}
+  }
+
+  function resetDefaultData() {
+    if (confirm('确定恢复到初始默认数据吗？')) {
+      state = JSON.parse(JSON.stringify(defaultState));
+      saveState();
+      initView();
+    }
+  }
+
+  /* ================= 2. 视图初始化（仅在增删结构时调用，打字时不调用） ================= */
+  function initView() {
+    document.getElementById('inSalary').value = state.salary;
+    document.getElementById('inRent').value = state.rent;
+    document.getElementById('inCurrentSave').value = state.currentSave;
+    document.getElementById('autoLivingToggle').checked = state.autoLiving;
+    document.getElementById('inManualLiving').value = state.manualLiving;
+    document.getElementById('manualLivingBox').style.display = state.autoLiving ? 'none' : 'block';
+
+    buildDebtInputsDOM();
+    buildFundRowsDOM();
+    calculateAndUpdateText();
+    updatePaydayCountdown();
+  }
+
+  function updatePaydayCountdown() {
+    const now = new Date();
+    let target = new Date(now.getFullYear(), now.getMonth(), 30);
+    if (now.getDate() > 30) {
+      target = new Date(now.getFullYear(), now.getMonth() + 1, 30);
+    }
+    const diffDays = Math.max(1, Math.ceil((target - now) / (1000 * 60 * 60 * 24)));
+    document.getElementById('countdownText').textContent =
+      `发薪日：每月30号（距下次发薪还有 ${diffDays} 天） | 数据已自动保存在本机`;
+    window.currentRemainingDays = diffDays;
+  }
+
+  // 构建左侧负债输入框结构（仅在初始化、新增、删除负债时执行）
+  function buildDebtInputsDOM() {
+    const container = document.getElementById('debtInputsContainer');
+    if (state.debts.length === 0) {
+      container.innerHTML = `<div style="font-size:0.84em; color:var(--text-sub); padding:8px; background:var(--bg-inner); border-radius:6px;">🎉 当前无负债项目，点击右上角可添加。</div>`;
+      return;
+    }
+
+    container.innerHTML = state.debts.map((d, idx) => `
+      <div class="debt-item-card" id="debtCard_${d.id}">
+        <div class="debt-item-top">
+          <strong>第 ${idx + 1} 笔负债：<span id="debtLabelName_${d.id}">${escapeHtml(d.name)}</span></strong>
+          <div>
+            <span>每月需存：<strong class="num" id="debtItemMonthly_${d.id}" style="color:var(--accent-red);">¥0.00</strong></span>
+            <button class="btn btn-danger" style="padding:1px 6px; margin-left:6px;" onclick="removeDebt('${d.id}')">删除</button>
+          </div>
+        </div>
+        <div class="debt-inputs-row">
+          <div class="sub-input-group">
+            <label>负债名称</label>
+            <input type="text" class="sub-input" value="${escapeHtml(d.name)}" oninput="onDebtFieldInput('${d.id}', 'name', this.value)">
+          </div>
+          <div class="sub-input-group">
+            <label>当前欠款总额(元)</label>
+            <input type="number" class="sub-input" id="debtInTotal_${d.id}" value="${d.total}" step="50" oninput="onDebtFieldInput('${d.id}', 'total', this.value)">
+          </div>
+          <div class="sub-input-group">
+            <label>计划几个月还清</label>
+            <input type="number" class="sub-input" id="debtInMonths_${d.id}" value="${d.months}" min="1" oninput="onDebtFieldInput('${d.id}', 'months', this.value)">
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // 构建右侧基金表格行（仅在初始化、新增、删除基金时执行）
+  function buildFundRowsDOM() {
+    const tbody = document.getElementById('fundRowsContainer');
+    tbody.innerHTML = state.funds.map(f => `
+      <tr id="fundRow_${f.id}">
+        <td>
+          <strong>${escapeHtml(f.name)}</strong>
+          <span style="font-size:0.8em; color:var(--text-sub);">(${f.code})</span>
+        </td>
+        <td style="text-align:center;" class="num" id="fundQuote_${f.id}">--</td>
+        <td style="text-align:center;">
+          <input type="number" class="pct-input" id="fundPctIn_${f.id}" value="${f.pct}" min="0" max="100" step="5" oninput="onFundPctInput('${f.id}', this.value)"> %
+        </td>
+        <td style="text-align:right;" class="num" id="fundAmtOut_${f.id}">¥0.00</td>
+        <td style="text-align:center;">
+          <button class="btn btn-danger" style="padding:1px 6px;" onclick="removeFund('${f.id}')">×</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  /* ================= 3. 无损焦点输入事件处理 ================= */
+  function onBasicInput() {
+    state.salary = parseFloat(document.getElementById('inSalary').value) || 0;
+    state.rent = parseFloat(document.getElementById('inRent').value) || 0;
+    state.currentSave = parseFloat(document.getElementById('inCurrentSave').value) || 0;
+    state.manualLiving = parseFloat(document.getElementById('inManualLiving').value) || 0;
+    saveState();
+    calculateAndUpdateText();
+  }
+
+  function toggleLivingMode() {
+    state.autoLiving = document.getElementById('autoLivingToggle').checked;
+    document.getElementById('manualLivingBox').style.display = state.autoLiving ? 'none' : 'block';
+    saveState();
+    calculateAndUpdateText();
+  }
+
+  // 负债输入框打字时：只改内存数值和文本节点，不重建 DOM！
+  function onDebtFieldInput(id, field, rawVal) {
+    const target = state.debts.find(d => d.id === id);
+    if (!target) return;
+
+    if (field === 'name') {
+      target.name = rawVal;
+      const lbl = document.getElementById('debtLabelName_' + id);
+      if (lbl) lbl.textContent = rawVal || '未命名';
+    } else if (field === 'total') {
+      target.total = parseFloat(rawVal) || 0;
+    } else if (field === 'months') {
+      target.months = Math.max(1, parseInt(rawVal) || 1);
+    }
+    saveState();
+    calculateAndUpdateText();
+  }
+
+  // 基金比例输入框打字时：同样只改数据与结果文本，不重建 DOM！
+  function onFundPctInput(id, rawVal) {
+    const target = state.funds.find(f => f.id === id);
+    if (!target) return;
+    target.pct = Math.max(0, parseFloat(rawVal) || 0);
+    saveState();
+    calculateAndUpdateText();
+  }
+
+  /* ================= 4. 核心智能分流与计算引擎 ================= */
+  function calculateAndUpdateText() {
+    const salary = state.salary;
+    const rent = state.rent;
+    const currentSave = state.currentSave;
+    const afterRent = Math.max(0, salary - rent);
+
+    // 1. 计算所有负债每月需存金额
+    let totalDebtMonthly = 0;
+    let totalDebtLeft = 0;
+    let maxMonths = 0;
+
+    state.debts.forEach(d => {
+      const mAmt = d.total > 0 ? (d.total / Math.max(1, d.months)) : 0;
+      totalDebtMonthly += mAmt;
+      totalDebtLeft += d.total;
+      if (d.total > 0 && d.months > maxMonths) maxMonths = d.months;
+
+      const itemEl = document.getElementById('debtItemMonthly_' + d.id);
+      if (itemEl) itemEl.textContent = `¥${mAmt.toFixed(2)}`;
+    });
+
+    // 2. AI 智能生活费安排算法
+    let living = 1500;
+    let livingReason = '';
+
+    if (state.autoLiving) {
+      if (afterRent <= 1300) {
+        living = afterRent;
+        livingReason = '当前扣房租后余额极紧，已全额保底生存';
+      } else {
+        // 标准基准 1500元；若工资超过 5000 元，从超额部分提取 15% 改善伙食
+        const bonus = salary > 5000 ? Math.min(700, (salary - 5000) * 0.15) : 0;
+        let idealLiving = 1500 + bonus;
+
+        // 检查扣掉负债后是否够用
+        const remainAfterDebt = afterRent - totalDebtMonthly;
+        if (remainAfterDebt >= idealLiving) {
+          living = Math.round(idealLiving);
+          livingReason = bonus > 0
+            ? `含基础 ¥1500 + 工资超额改善津贴 ¥${Math.round(bonus)}`
+            : `标准舒适伙食线（三餐50元/天）`;
+        } else if (remainAfterDebt >= 1250) {
+          // 负债较重时自动适度收紧生活费以保住不断贷
+          living = Math.round(remainAfterDebt);
+          livingReason = `因当月还款较重，已智能收紧至紧凑模式以避免逾期`;
+        } else {
+          // 守住 1300 元最低健康温饱线，触发负债展期建议
+          living = Math.min(afterRent, 1350);
+          livingReason = `已触发最低温饱保护线，建议点击下方按钮延长还款期数`;
+        }
+      }
+      document.getElementById('inManualLiving').value = living;
+    } else {
+      living = Math.min(afterRent, Math.max(0, state.manualLiving));
+      livingReason = '当前为手动固定生活费模式';
+    }
+
+    const dailySafe = (living / 30).toFixed(1);
+    document.getElementById('outLivingVal').textContent = `¥${living.toFixed(2)}`;
+    document.getElementById('outLivingDesc').textContent = `折合日均 ¥${dailySafe}/天 | ${livingReason}`;
+
+    // 3. 扣除房租与生活费后的可支配池
+    const freePool = Math.max(0, afterRent - living);
+    const debtAlertCard = document.getElementById('debtAlertCard');
+    const btnAutoExtend = document.getElementById('btnAutoExtend');
+    const debtStatusDesc = document.getElementById('outDebtStatusDesc');
+
+    let actualDebtAlloc = 0;
+    let newSaveAmt = 0;
+    let fundPoolAmt = 0;
+    const SAVE_TARGET = 5000;
+    const saveGap = Math.max(0, SAVE_TARGET - currentSave);
+
+    if (totalDebtMonthly > 0) {
+      if (freePool >= totalDebtMonthly) {
+        actualDebtAlloc = totalDebtMonthly;
+        const surplusAfterDebt = freePool - actualDebtAlloc;
+
+        // 根据现有存款是否满 5000 元，智能决定本月新增存款与基金定投比例
+        if (saveGap > 0) {
+          // 存款未满 5000，拨 40% 补存款（不超过缺口），60% 投基金
+          newSaveAmt = Math.min(saveGap, Math.round(surplusAfterDebt * 0.40));
+          fundPoolAmt = surplusAfterDebt - newSaveAmt;
+        } else {
+          // 现有存款已达标 5000+，结余 100% 投入基金定投
+          newSaveAmt = 0;
+          fundPoolAmt = surplusAfterDebt;
+        }
+
+        debtAlertCard.classList.remove('alert');
+        btnAutoExtend.style.display = 'none';
+        debtStatusDesc.textContent = `✅ 还款资金充足：已足额拨备，剩余 ¥${surplusAfterDebt.toFixed(0)} 已流入存款与基金`;
+      } else {
+        // 资金缺口预警
+        actualDebtAlloc = freePool;
+        newSaveAmt = 0;
+        fundPoolAmt = 0;
+        const deficit = totalDebtMonthly - freePool;
+        debtAlertCard.classList.add('alert');
+        btnAutoExtend.style.display = 'inline-block';
+        debtStatusDesc.textContent = `⚠️ 差额缺口 ¥${deficit.toFixed(2)}/月！请点击右上角【一键延长月数】自动适配工资`;
+      }
+    } else {
+      // 无负债状态
+      debtAlertCard.classList.remove('alert');
+      btnAutoExtend.style.display = 'none';
+      debtStatusDesc.textContent = `🎉 当前无负债压力，结余资金全额用于存款与定投增值`;
+      if (saveGap > 0) {
+        newSaveAmt = Math.min(saveGap, Math.round(freePool * 0.40));
+        fundPoolAmt = freePool - newSaveAmt;
+      } else {
+        newSaveAmt = 0;
+        fundPoolAmt = freePool;
+      }
+    }
+
+    document.getElementById('outDebtMonthlyTotal').textContent = `¥${totalDebtMonthly.toFixed(2)}`;
+    document.getElementById('outNewSaveVal').textContent = `¥${newSaveAmt.toFixed(2)}`;
+    document.getElementById('outNewSaveDesc').textContent = saveGap <= 0
+      ? '安全垫已满5000元，无需再存活期'
+      : `存入零钱通（距满5000元还差¥${Math.max(0, saveGap - newSaveAmt).toFixed(0)}）`;
+    document.getElementById('outFundPoolVal').textContent = `¥${fundPoolAmt.toFixed(2)}`;
+
+    // 4. 更新右侧：现有存款与安全垫进度条
+    const endMonthSave = currentSave + newSaveAmt;
+    const progressPct = Math.min(100, Math.round((endMonthSave / SAVE_TARGET) * 100));
+    document.getElementById('rtCurrentSave').textContent = `¥${currentSave.toFixed(0)}`;
+    document.getElementById('rtAddSave').textContent = `¥${newSaveAmt.toFixed(0)}`;
+    document.getElementById('rtEndMonthSave').textContent = `¥${endMonthSave.toFixed(0)}`;
+    document.getElementById('saveProgressBar').style.width = `${progressPct}%`;
+
+    if (endMonthSave >= SAVE_TARGET) {
+      document.getElementById('rtSaveForecast').textContent = `✅ 你的现有存款已达标 ¥5,000 应急安全垫！多余闲钱已自动 100% 倾斜至基金定投。`;
+    } else if (newSaveAmt > 0) {
+      const monthsToFull = Math.ceil((SAVE_TARGET - currentSave) / newSaveAmt);
+      document.getElementById('rtSaveForecast').textContent = `按本月新增 ¥${newSaveAmt.toFixed(0)} 测算，预计约 ${monthsToFull} 个月补满 ¥5,000 应急金库。`;
+    } else {
+      document.getElementById('rtSaveForecast').textContent = `当前优先偿还高优负债，待还款压力减轻后自动恢复存款储备。`;
+    }
+
+    // 5. 更新右侧：负债执行表
+    document.getElementById('rtTotalDebtLeft').textContent = `¥${totalDebtLeft.toFixed(0)}`;
+    const rtDebtBody = document.getElementById('rtDebtTableBody');
+    if (state.debts.length === 0) {
+      rtDebtBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-sub);">无负债项目</td></tr>`;
+      document.getElementById('rtDebtFreeHint').textContent = '';
+    } else {
+      rtDebtBody.innerHTML = state.debts.map(d => {
+        const m = d.total > 0 ? (d.total / Math.max(1, d.months)) : 0;
+        return `
+          <tr>
+            <td><strong>${escapeHtml(d.name)}</strong></td>
+            <td style="text-align:center;" class="num">¥${d.total.toFixed(0)}</td>
+            <td style="text-align:center;">${d.months} 个月</td>
+            <td style="text-align:right; color:var(--accent-red);" class="num">¥${m.toFixed(2)}</td>
+            <td style="text-align:right;">
+              <button class="btn" style="padding:2px 6px; font-size:0.75em;" onclick="checkInOneMonthDebt('${d.id}')">已存1期</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      document.getElementById('rtDebtFreeHint').textContent =
+        maxMonths > 0 ? `📅 按此计划，再坚持 ${maxMonths} 个月即可彻底无债一身轻，届时每月将释放 ¥${totalDebtMonthly.toFixed(0)} 纯现金流！` : '';
+    }
+
+    // 6. 更新右侧：基金定投每行金额与纳斯达克汇总（原地更新文本）
+    let nasdaqMoney = 0;
+    let nasdaqPctSum = 0;
+
+    state.funds.forEach(f => {
+      const amt = fundPoolAmt * (f.pct / 100);
+      if (f.isNasdaq || f.name.includes('纳斯达克') || f.name.includes('纳指') || f.code === '270042') {
+        nasdaqMoney += amt;
+        nasdaqPctSum += f.pct;
+      }
+      const amtEl = document.getElementById('fundAmtOut_' + f.id);
+      if (amtEl) amtEl.textContent = `¥${amt.toFixed(2)}`;
+
+      const quoteEl = document.getElementById('fundQuote_' + f.id);
+      if (quoteEl && f.gszzl !== null && !isNaN(f.gszzl)) {
+        const sign = f.gszzl > 0 ? '+' : '';
+        quoteEl.className = 'num ' + (f.gszzl > 0 ? 'up' : (f.gszzl < 0 ? 'down' : ''));
+        quoteEl.textContent = `${sign}${f.gszzl.toFixed(2)}%`;
+      }
+    });
+
+    document.getElementById('nasdaqPctBadge').textContent = `占比 ${nasdaqPctSum.toFixed(0)}%`;
+    document.getElementById('nasdaqMoneyVal').textContent = `¥${nasdaqMoney.toFixed(2)}`;
+  }
+
+  /* ================= 5. 负债管理与智能一键展期 ================= */
+  function addNewDebt() {
+    const newId = 'd_' + Date.now();
+    state.debts.push({ id: newId, name: '新负债项目', total: 1500, months: 3 });
+    saveState();
+    buildDebtInputsDOM();
+    calculateAndUpdateText();
+  }
+
+  function removeDebt(id) {
+    state.debts = state.debts.filter(d => d.id !== id);
+    saveState();
+    buildDebtInputsDOM();
+    calculateAndUpdateText();
+  }
+
+  // 打卡扣减一期
+  function checkInOneMonthDebt(id) {
+    const d = state.debts.find(item => item.id === id);
+    if (!d || d.total <= 0) return;
+    const mAmt = d.total / Math.max(1, d.months);
+    d.total = Math.max(0, Math.round(d.total - mAmt));
+    d.months = Math.max(1, d.months - 1);
+    if (d.total === 0) {
+      alert(`🎉 恭喜！【${d.name}】已全部结清！`);
+      state.debts = state.debts.filter(item => item.id !== id);
+    }
+    saveState();
+    buildDebtInputsDOM();
+    calculateAndUpdateText();
+  }
+
+  // 当月供超支时，智能延长还款期数以消除缺口
+  function autoOptimizeDebtMonths() {
+    const maxAffordable = Math.max(200, state.salary - state.rent - 1400);
+    const totalDebtSum = state.debts.reduce((s, d) => s + d.total, 0);
+    if (totalDebtSum <= 0) return;
+
+    state.debts.forEach(d => {
+      if (d.total > 0) {
+        const shareBudget = maxAffordable * (d.total / totalDebtSum);
+        d.months = Math.max(1, Math.ceil(d.total / shareBudget));
+      }
+    });
+    saveState();
+    buildDebtInputsDOM();
+    calculateAndUpdateText();
+  }
+
+  /* ================= 6. 基金增删、一键配平与天天基金实时行情 ================= */
+  function balanceFundPct() {
+    const totalPct = state.funds.reduce((s, f) => s + f.pct, 0);
+    if (state.funds.length === 0) return;
+    if (totalPct === 0) {
+      const avg = Math.floor(100 / state.funds.length);
+      state.funds.forEach((f, i) => {
+        f.pct = (i === state.funds.length - 1) ? (100 - avg * i) : avg;
+      });
+    } else {
+      let running = 0;
+      state.funds.forEach((f, i) => {
+        if (i === state.funds.length - 1) {
+          f.pct = Math.max(0, 100 - running);
+        } else {
+          f.pct = Math.round((f.pct / totalPct) * 100);
+          running += f.pct;
+        }
+      });
+    }
+    saveState();
+    buildFundRowsDOM();
+    calculateAndUpdateText();
+  }
+
+  function removeFund(id) {
+    state.funds = state.funds.filter(f => f.id !== id);
+    saveState();
+    buildFundRowsDOM();
+    calculateAndUpdateText();
+  }
+
+  async function addCustomFund() {
+    const codeIn = document.getElementById('newFundCode');
+    const nameIn = document.getElementById('newFundName');
+    const pctIn = document.getElementById('newFundPct');
+
+    const code = codeIn.value.trim();
+    let name = nameIn.value.trim();
+    const pct = parseFloat(pctIn.value) || 10;
+
+    if (!/^\d{6}$/.test(code)) {
+      alert('请输入有效的 6 位数字基金代码（例如 270042）');
+      return;
+    }
+
+    let gszzl = null;
+    const remoteData = await fetchSingleEastmoney(code);
+    if (remoteData && remoteData.name) {
+      name = remoteData.name;
+      gszzl = parseFloat(remoteData.gszzl);
+    } else if (!name) {
+      name = '自选基金 ' + code;
+    }
+
+    state.funds.push({
+      id: 'f_' + Date.now(),
+      name,
+      code,
+      pct,
+      gszzl,
+      isNasdaq: name.includes('纳斯达克') || name.includes('纳指')
+    });
+
+    codeIn.value = '';
+    nameIn.value = '';
+    saveState();
+    buildFundRowsDOM();
+    calculateAndUpdateText();
+  }
+
+  function fetchSingleEastmoney(code) {
+    return new Promise(resolve => {
+      const script = document.createElement('script');
+      let done = false;
+      const timer = setTimeout(() => {
+        if (!done) { done = true; script.remove(); resolve(null); }
+      }, 3500);
+
+      window.jsonpgz = function(data) {
+        if (!done) {
+          done = true;
+          clearTimeout(timer);
+          script.remove();
+          resolve(data);
+        }
+      };
+
+      script.src = `https://fundgz.1234567.com.cn/js/${code}.js?rt=${Date.now()}`;
+      script.onerror = () => {
+        if (!done) { done = true; clearTimeout(timer); script.remove(); resolve(null); }
+      };
+      document.body.appendChild(script);
+    });
+  }
+
+  async function fetchEastmoneyQuotes() {
+    for (let i = 0; i < state.funds.length; i++) {
+      const f = state.funds[i];
+      const data = await fetchSingleEastmoney(f.code);
+      if (data && data.fundcode) {
+        f.name = data.name || f.name;
+        f.gszzl = parseFloat(data.gszzl);
+        calculateAndUpdateText();
+      }
+    }
+    saveState();
+  }
+
+  function escapeHtml(str) {
+    return String(str || '').replace(/[&<>"']/g, s => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[s]));
+  }
+
+  // 启动运行
+  initView();
+  fetchEastmoneyQuotes();
+</script>
+</body>
+</html>
