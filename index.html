@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1120"><meta http-equiv="Cache-Control" content="no-store"><title>私人智能定投系统 · 真实行情版</title><style>
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0b1120"><meta http-equiv="Cache-Control" content="no-store"><title>超级无敌智能理财系统</title><style>
 :root{--bg:#0b1120;--card:#1e293b;--inner:#0f172a;--edge:#42536d;--edge2:#314056;--txt:#f8fafc;--muted:#a8b7cb;--green:#10b981;--blue:#367af5;--orange:#f0aa42;--red:#f87171}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.48;padding:14px 10px 55px}
 button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}button:active{transform:scale(.985)}input,select{color:#fff;outline:none}input:focus,select:focus{border-color:#9cc5ff!important}input[type=checkbox]{accent-color:var(--green);width:15px;height:15px;vertical-align:middle}input[type=number]{appearance:textfield;-moz-appearance:textfield}input::-webkit-inner-spin-button,input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
@@ -27,15 +27,13 @@ button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.
 .fund-link{color:#ecf4ff;text-decoration:none;border-bottom:1px dotted #7798b5}.fund-link:active{color:#7dd3fc}
 [hidden]{display:none!important}.gate{min-height:90svh;display:grid;place-items:center;padding:30px 12px}.gate-card{width:min(100%,435px);border:1.5px solid #57758c;border-radius:20px;background:#1e293b;box-shadow:0 25px 90px #0009;padding:30px 22px}.gate-symbol{font-size:38px;text-align:center}.gate h1{font-size:21px;text-align:center;margin:9px 0 6px}.gate p{font-size:12px;color:#b1c8e0;margin-bottom:15px}.gate input{background:#0f172a;border:1.5px solid #657995;border-radius:9px;padding:12px;width:100%;font-size:16px;margin-bottom:11px}.gate button{width:100%;padding:12px;background:#0d9c70;border:1px solid #69d7b5;border-radius:10px;color:white;font-weight:900}.gate .error{color:#fdb2b8;font-size:12px}.risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:11px 0}.risk-grid label{font-size:11px;color:#becde0}.risk-grid select{width:100%;background:#111b2c;border:1px solid #63788b;border-radius:8px;padding:9px;margin-top:3px}.market-card{background:#102037;border:1px solid #34516e;border-radius:9px;padding:11px;margin:12px 0}.market-card>strong{display:block;margin:3px 0 8px}.signal{padding:6px 0;border-bottom:1px dashed #334b67;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:4px}.signal b{font-size:11px}.signal span{color:#bbd0df;font-size:10px}.news-item{display:flex;flex-direction:column;gap:3px;border-bottom:1px dashed #354960;padding:7px 0}.news-item span{color:#a8b8c9;font-size:10px}.news-item a{color:#a5d4ff;text-decoration:none;font-size:12px;overflow-wrap:anywhere}.news-item a:hover{text-decoration:underline}.feature-note{background:#142336;border:1px solid #38516d;padding:9px;border-radius:8px;color:#bfd2e4;font-size:11px;margin-top:10px}.tag-caution{color:#ffd495}.logout{background:#1a2636;border:1px solid #486076;border-radius:7px;padding:5px 9px;color:#cbd5e1;font-size:11px}.access-hint{text-align:center;color:#a6b8cd;font-size:10px;line-height:1.5}.block .fund-holding{flex-wrap:wrap}.block .fund-holding select{margin-left:auto}.btn:focus-visible,.gate button:focus-visible{outline:2px solid #a4ceff}
 @media(max-width:355px){.risk-grid{grid-template-columns:1fr}.market-card .signal{display:block}}
-</style></head><body><div class="gate" id="loginGate"><section class="gate-card"><div class="gate-symbol">🔐</div><h1>私人智能定投系统</h1><p>每次打开均需登录，密码只由私人云端验证，不写入网页。未完成云端部署前，任何人都无法使用理财分配功能。</p><label class="small" for="gateApiUrl">Cloudflare Worker API 地址</label><input id="gateApiUrl" type="url" placeholder="https://licai-private-api.用户名.workers.dev" autocomplete="url" spellcheck="false"><label class="small" for="gatePassword">访问密码（在云端 Secrets 设置）</label><input id="gatePassword" type="password" placeholder="请输入私人访问密码" autocomplete="off"><button id="gateLogin">验证密码并进入</button><p class="error" id="gateMessage" role="status"></p><div class="access-hint">原 GitHub Pages 网页文件仍公开；<br>云端记录和市场接口受密码保护。</div></section></div>
-
-<main class="shell" id="appRoot" hidden>
-<header class="top"><span class="logo">☑</span><div class="top-title">极简智能行情定投分配系统（终极完全体）</div><button id="quickRefresh" class="quick-refresh" title="仅刷新行情">⟳</button><button id="logoutBtn" class="logout">退出</button></header>
+</style></head><body><main class="shell" id="appRoot">
+<header class="top"><span class="logo">☑</span><div class="top-title">智能行情定投分配系统 · 免登录版</div><button id="quickRefresh" class="quick-refresh" title="仅刷新行情">⟳</button></header>
 <section class="card">
-<div class="head"><strong>输入：</strong><span class="status" id="sourceState">等待连接真实行情</span></div>
+<div class="head"><strong>输入：</strong><span class="status" id="sourceState">等待从公开行情源读取</span></div>
 <div class="risk-grid"><label>选择投资风险偏好<select id="riskMode"><option value="low">低风险 · 保守</option><option value="medium" selected>中风险 · 均衡</option><option value="high">高风险 · 进取</option><option value="auto">智能防守 · 风险上限中档</option></select></label><label>海外数据来源<label class="checkline" style="margin-top:7px"><input id="overseas" type="checkbox" checked> 开启海外行情</label></label></div>
 <p class="helper">海外开关仅控制网站是否获取海外行情与纳指的新增买入，不会切换你的手机VPN。网络不通时请在手机系统中自行开启VPN。</p>
-<div class="market-card"><strong>📊 国内/海外市场判定</strong><div id="regimeState" class="small">待连接指数真实行情</div><details><summary class="helper" style="margin-top:6px">查看全部指数、行情时间与新闻</summary><div id="marketSignals"></div><strong style="margin-top:10px">新闻与来源（只做辅助核验）</strong><div id="newsList"></div><p id="dataLine" class="helper"></p></details></div>
+<div class="market-card"><strong>📊 国内/海外市场判定</strong><div id="regimeState" class="small">待连接指数真实行情</div><details><summary class="helper" style="margin-top:6px">查看全部指数、行情时间与新闻</summary><div id="marketSignals"></div><strong style="margin-top:10px">新闻与来源（需手动核验）</strong><div id="newsList"></div><p id="dataLine" class="helper"></p></details></div>
 <div class="field-row"><label class="field-label" for="salary">- 工资：</label><input id="salary" class="input-num" type="number" inputmode="decimal" min="0" placeholder="本月工资"></div>
 <div class="field-row"><label class="field-label" for="rent">- 房租：</label><input id="rent" class="input-num" type="number" inputmode="decimal" min="0" placeholder="首次设置即可"></div>
 <div class="field-row"><label class="field-label" for="daily">- 日均生活费：</label><input id="daily" class="input-num" type="number" inputmode="decimal" min="0" placeholder="首次设置即可"></div>
@@ -46,24 +44,24 @@ button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.
 <section class="card">
 <div class="head"><strong>行情自动分配：</strong><div class="buttons"><button id="chooseBtn" class="btn">🤖 按行情优选代码</button><button id="refreshBtn" class="btn btn-green">🔄 刷新行情智能分配</button></div></div>
 <div class="summary-strip"><span>本月新增可投资金额</span><b id="sumAllocated">¥0.00</b></div>
-<div class="result-block" id="planHeadline">需要真实净值后才能生成本月建议。</div>
+<div class="result-block" id="planHeadline">点击「刷新行情智能分配」，获取有效行情后生成建议。</div>
 <div class="block" data-cat="cash"><div class="block-title"><div class="block-name">- 货币基金 <span id="pct_cash" class="pct">—</span></div><span id="amt_cash" class="money">—</span></div><p class="block-desc" id="cashNote">🛡️ 应急储备与再平衡现金；此处按现金留存记账，不冒充已申购货币基金。</p><label class="checkline"><input id="cashFull" type="checkbox"> 应急金已存满（新增不主动留现）</label><div id="list_cash" class="funds"></div><div class="add-row"><input id="new_cash" class="code-in" placeholder="6位代码" maxlength="6" inputmode="numeric"><input id="sector_cash" class="sec-in" placeholder="货币板块"><button class="btn" data-add="cash">+ 加代码</button></div></div>
 <div class="block" data-cat="nasdaq"><div class="block-title"><div class="block-name">- 推荐代码纳斯达克 <span id="pct_nasdaq" class="pct">—</span></div><span id="amt_nasdaq" class="money">—</span></div><p class="block-desc">🌐 QDII单日限购取决于购买平台。日限额必须自行核实，系统不会声称自动实查。</p><select id="execDays" class="tiny-select"><option value="1">单次买入（1日额度）</option><option value="5">分5个开放日（最多5日额度）</option><option value="15">分15个开放日（最多15日额度）</option></select><div id="limitStatus" class="limit-info">待核实</div><div id="list_nasdaq" class="funds"></div><div class="add-row"><input id="new_nasdaq" class="code-in" placeholder="6位代码" maxlength="6" inputmode="numeric"><input id="limit_nasdaq" class="limit-in" type="number" min="0" inputmode="decimal" placeholder="已核实日限额"><button class="btn" data-add="nasdaq">+ 加代码</button></div></div>
 <div class="block" data-cat="low"><div class="block-title"><div class="block-name">- 保守型（债券防守） <span id="pct_low" class="pct">—</span></div><span id="amt_low" class="money">—</span></div><p class="block-desc">🛡️ 以纯债为候选、仍可能亏损；净值走势、信用及利率风险都会核验。</p><div id="list_low" class="funds"></div><div class="add-row"><input id="new_low" class="code-in" placeholder="6位代码" maxlength="6" inputmode="numeric"><input id="sector_low" class="sec-in" placeholder="板块(纯债/短债)"><button class="btn" data-add="low">+ 加代码</button></div></div>
 <div class="block" data-cat="med"><div class="block-title"><div class="block-name">- 推荐代码中风险（均衡） <span id="pct_med" class="pct">—</span></div><span id="amt_med" class="money">—</span></div><p class="block-desc">🧱 长期配置；“中风险”是原分区名，非基金官方风险等级。</p><div id="list_med" class="funds"></div><div class="add-row"><input id="new_med" class="code-in" placeholder="6位代码" maxlength="6" inputmode="numeric"><input id="sector_med" class="sec-in" placeholder="板块(红利/固收)"><button class="btn" data-add="med">+ 加代码</button></div></div>
 <div class="block" data-cat="high"><div class="block-title"><div class="block-name">- 推荐代码高风险（半年复核） <span id="pct_high" class="pct">—</span></div><span id="amt_high" class="money">—</span></div><p class="block-desc">🔁 半年<strong>复核</strong>代码与费用，不强制买卖；A/C选择需按实际费率计算。</p><div class="limit-info" id="reviewNotice">尚未开始复核计时</div><div id="list_high" class="funds"></div><div class="add-row"><input id="new_high" class="code-in" placeholder="6位代码" maxlength="6" inputmode="numeric"><input id="sector_high" class="sec-in" placeholder="板块(科技/医药)"><button class="btn" data-add="high">+ 加代码</button></div></div>
-<div class="feature-note" id="reviewExplanation">半年复核只提醒，不自动换基金。每只基金可选择长期定投或半年复核。</div><details class="footer-info"><summary>查看上次手动优选与换基建议</summary><div id="suggestions"></div></details><details class="note-panel"><summary class="helper">查看半年复核候选代码与处理状态</summary><div id="suggestions"></div></details><div class="ledger"><div class="ledger-head"><strong>📆 已确认定投记录</strong><span class="count" id="monthsCount">0 个月</span></div><div class="subsection"><span class="helper" id="lastRecord">目前没有购买记录</span><span class="helper" id="cashBalance"></span></div><div id="historyList"></div></div>
+<div class="feature-note" id="reviewExplanation">半年复核只提醒，不自动换基金。每只基金可选择长期定投或半年复核。</div><details class="footer-info"><summary>查看半年复核候选代码与处理状态</summary><div id="suggestions"></div></details><div class="ledger"><div class="ledger-head"><strong>📆 已确认定投记录</strong><span class="count" id="monthsCount">0 个月</span></div><div class="subsection"><span class="helper" id="lastRecord">目前没有购买记录</span><span class="helper" id="cashBalance"></span></div><div id="historyList"></div></div>
 <div class="note-panel"><label class="checkline"><input type="checkbox" id="rebalanceToggle"> 显示基于真实持仓的加仓／减仓</label><p class="helper" id="holdNote" style="margin-top:8px">若要准确减仓，需先在下方录入各基金真实确认份额。保存购买金额不等于已知最终确认份额。</p><details id="holdPanel" class="footer-info"><summary>初次持仓设置 / 确认每次成交份额</summary><div class="helper">录入基金平台实际确认的持有份额（不是市值），系统按最新真实净值计算持仓。没有持仓请输入0。后续有买卖时，核实份额后更新；否则暂不生成减仓金额。</div><div id="holdFields"></div><label class="checkline"><input type="checkbox" id="holdComplete"> 我已核对全部基金当前确认份额，无待确认交易</label></details></div>
 <div class="summary-btns"><button id="saveMonth" class="btn btn-green">✓ 保存本月已购买</button><button id="copyBtn" class="btn">复制本月计划</button><button id="undoBtn" class="btn">撤销最近一月记录</button><button id="exportBtn" class="btn">本地导出备份</button><button id="importBtn" class="btn">恢复JSON备份</button><input type="file" id="importFile" accept="application/json,.json" hidden></div>
-<div class="cloudbar"><div class="ledger-head"><strong>☁️ 私有云端同步</strong><span id="cloudState" class="small">已登录</span></div><label for="apiUrl">当前Cloudflare API（登录后只读）</label><input id="apiUrl" readonly type="url" placeholder="登录后自动显示"><div class="buttons"><button id="cloudSaveBtn" class="btn btn-green">立即保存云端备份</button></div><p class="helper">保存操作将同步到云端数据库。未成功同步会显示警告，不能假称已备份。下一次打开网页必须再次输入密码。</p></div>
+<div class="cloudbar"><div class="ledger-head"><strong>💾 本机保存 · 不用密码</strong><span class="small ok">自动保存设置和购买记录</span></div><p class="helper">本系统直接在当前浏览器保存资料，不连接私人云端。每次确认购买后，建议点击上方「本地导出备份」保存 JSON 文件。更换手机、浏览器或清理网站数据时，请用「恢复JSON备份」导入。</p></div>
 <div class="important">数据真实原则：必须获取天天基金历史净值，以及中国/海外市场指数的有效日期，缺一不可则<strong>停止生成买卖数额</strong>。不使用模拟行情，新闻不作为确定性交易信号；过去收益不代表未来。保存代表你本人确认已经执行，不会自动下单。</div>
 </section>
-<details class="footer-info"><summary>数据口径、成本风险及部署提示</summary><div class="note-panel"><p>净值算法沿用原有资金比例：货币基准15%、纳指20%，其余资金由中风险/中高风险按吸引力动态调整。120日净值位置不是估值PE/PB；QDII和A股实际市场存在净值时间差。</p><p>历史确认净值来自天天基金（东方财富）公开数据接口，可能变更或限制访问。刷新只换净值，不改代码。按行情优选才会触发更换候选代码，而且须先确认。</p><p>QDII真实限额因购买渠道、交易日期而变化，需用户核实。各金额未扣除申购费、赎回费、持有期限费用及税费。半年轮动是半年复核，不代表必须卖出；长期定投标注的代码不会因复核而变更。</p><p>自动备份需另行部署提供的 Cloudflare Worker 与 D1 数据库；个人登录密码只存 Worker Secret。前端部署在你现有 GitHub Pages 仓库 <code>index.html</code>。</p></div></details>
+<details class="footer-info"><summary>数据口径、成本风险及部署提示</summary><div class="note-panel"><p>净值算法沿用原有资金比例：货币基准15%、纳指20%，其余资金由中风险/中高风险按吸引力动态调整。120日净值位置不是估值PE/PB；QDII和A股实际市场存在净值时间差。</p><p>历史确认净值来自天天基金（东方财富）公开数据接口，可能变更或限制访问。刷新只换净值，不改代码。按行情优选才会触发更换候选代码，而且须先确认。</p><p>QDII真实限额因购买渠道、交易日期而变化，需用户核实。各金额未扣除申购费、赎回费、持有期限费用及税费。半年轮动是半年复核，不代表必须卖出；长期定投标注的代码不会因复核而变更。</p><p>本版不需要 Cloudflare Worker、D1、密钥或登录密码。投资记录只保存在当前浏览器本地，请定期下载 JSON 备份。GitHub Pages 代码及网页对任何知道网址的人公开，请勿将密码、账户证件或投资记录直接写进源码。</p></div></details>
 <div class="footer-info" style="text-align:center">私人投资记录工具 · 非交易系统 · 金额仅用于辅助决策 · ¥ 人民币</div>
 </main><div id="toast" class="toast" role="status" aria-live="polite"></div><script>
 'use strict';
 // Real-price-only client: all computations use real, timestamped confirmed historical NAVs.
-const KEY='licai_secure_market_v4', OLD_KEY='licai_real_cloud_v3', API_KEY='licai_worker_url';
+const KEY='licai_secure_market_v4', OLD_KEY='licai_real_cloud_v3';
 const CATS=['cash','low','nasdaq','med','high'], CN={cash:'现金储备',low:'保守型·纯债',nasdaq:'海外·纳斯达克',med:'中风险·宽基红利',high:'高风险·行业成长'};
 const $=id=>document.getElementById(id), clone=o=>JSON.parse(JSON.stringify(o));
 const DAY=86400000;
@@ -76,8 +74,8 @@ const POOL={
  high:[fund('011613','华夏科创50ETF联接C','科技','high'),fund('003096','中欧医疗健康混合A','医药','high'),fund('001593','天弘创业板ETF联接C','创业板','high'),fund('001618','天弘中证电子ETF联接C','电子科技','high')]
 };
 function fresh(){return {schema:4,rent:'',daily:'',salary:'',salaryMonth:'',cashFull:false,execDays:5,rebalance:false,holdComplete:false,riskMode:'medium',overseas:true,reserveCents:0,pending:[],positions:{},history:[],lists:{cash:clone(POOL.cash.slice(0,1)),low:clone(POOL.low.slice(0,2)),nasdaq:clone(POOL.nasdaq.slice(0,2)),med:clone([POOL.med[0],POOL.med[2]]),high:clone(POOL.high.slice(2,4))},reviewMap:{},reviewSuggestions:[],lastReview:'',modifiedAt:new Date().toISOString()};}
-let st=fresh(),latest=null,busy=false,sessionToken='',cloudRev=null,syncTimer=null,cloudBusy=false,quotesBusy=false,market=null,unlocked=false;
-let cloudUrl='', lastCloudError='', statusText='';
+let st=fresh(),latest=null,busy=false,market=null,unlocked=true;
+let statusText='';
 const cents=x=>x===''||x===null||x===undefined?0:Number.isFinite(Number(x))?Math.max(0,Math.round(Number(x)*100)):0;
 const yu=x=>'¥'+(Math.max(0,x||0)/100).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
@@ -86,7 +84,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const all=()=>CATS.flatMap(cat=>st.lists[cat].map((f,i)=>({f,cat,i})));
 function toast(s){$('toast').textContent=s;$('toast').classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>$('toast').classList.remove('show'),3900);}
 function status(s,kind=''){statusText=s;const el=$('sourceState');el.textContent=s;el.className='status '+(kind==='error'?'err':kind==='warn'?'warn':'ok');}
-function cloudStatus(s,kind=''){const el=$('cloudState');el.textContent=s;el.className='small '+(kind==='error'?'err':kind==='ok'?'ok':'warn');}
+function cloudStatus(s,kind=''){if(kind==='error')toast(s);}
 function sanitize(input){
  if(!input||typeof input!=='object'||!input.lists)return null;
  const n=fresh();for(const k of ['rent','daily','salary']){const x=input[k];if(x!==undefined&&x!==null&&Number.isFinite(Number(x))&&Number(x)>=0)n[k]=String(x);}
@@ -120,7 +118,7 @@ function load(){try{
 
  }catch(e){toast('旧设置无法读取，请导入备份');}}
 function saveLocal(){st.modifiedAt=new Date().toISOString();try{localStorage.setItem(KEY,JSON.stringify(st));}catch{cloudStatus('本地存储异常','error');}}
-function changed(){if(!unlocked)return;saveLocal();scheduleCloudSave();render();}
+function changed(){saveLocal();render();}
 function isQuote(q){return q&&q.source&&/^\d{4}-\d{2}-\d{2}$/.test(q.navDate)&&Number.isFinite(+q.nav)&&+q.nav>0&&Number.isFinite(+q.navTimestamp)&&Date.now()-q.navTimestamp<=7*DAY&&q.navTimestamp<=Date.now()+DAY&&Number.isFinite(+q.percentile)&&Number.isFinite(+q.maBias)&&Number.isFinite(+q.maxDD)&&Number.isFinite(+q.dayChg);}
 
 function marketOK(){if(!market||!market.ok||!market.retrievedAt||Date.now()-Date.parse(market.retrievedAt)>6*3600*1000)return false;
@@ -255,30 +253,94 @@ function render(){let o;try{o=compute();}catch(e){o={salary:cents(st.salary),ren
  $('holdFields').innerHTML=all().filter(x=>x.cat!=='cash').map(({f})=>`<div class="field-row" style="gap:3px"><label class="helper" style="width:59%;overflow-wrap:anywhere">${esc(f.code)} ${esc(f.name)}</label><input class="hold-input" type="number" min="0" step="0.0001" inputmode="decimal" data-shares="${f.code}" value="${esc(st.positions[f.code]?.shares??'')}" placeholder="实际份额"></div>`).join('');
  const rg=o.regime||regime();$('regimeState').textContent=rg.label+' · '+rg.comment;
  const mk=market?.indexes||{};const idxUrls={shanghai:'https://quote.eastmoney.com/zs000001.html',csi300:'https://quote.eastmoney.com/zs000300.html',chinext:'https://quote.eastmoney.com/sz399006.html',star50:'https://quote.eastmoney.com/zs000688.html',nasdaq:'https://finance.yahoo.com/quote/%5ENDX/',sp500:'https://finance.yahoo.com/quote/%5EGSPC/'};$('marketSignals').innerHTML=marketOK()?Object.entries(mk).map(([k,x])=>`<div class="signal"><b><a href="${idxUrls[k]||'https://quote.eastmoney.com/'}" target="_blank" rel="noopener noreferrer" class="fund-link">${esc(x.name)} ↗</a></b><span>${esc(x.asOf)} · 近20日 ${x.ret20>=0?'+':''}${x.ret20.toFixed(2)}% · 20日波动 ${x.vol20.toFixed(2)}% · ${esc(x.source)}</span></div>`).join(''):'<span class="err">指数信号未完整核实；本次不生成行情驱动建议</span>';
- const n=market?.news||[];$('newsList').innerHTML=n.length?n.map(x=>`<div class="news-item"><span>${esc(x.topic)} · ${esc(x.source)} · ${esc(x.published.slice(0,10))}</span><a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.title)}</a></div>`).join(''):'<span class="helper">暂无可核实新闻标题，新闻缺失不编造。</span>';
+ const n=market?.news||[];$('newsList').innerHTML=n.length?n.map(x=>`<div class="news-item"><span>${esc(x.topic)} · ${esc(x.source)} · ${esc(x.published.slice(0,10))}</span><a href="${esc(x.url)}" target="_blank" rel="noopener noreferrer">${esc(x.title)}</a></div>`).join(''):'<span class="helper">单网页版不抓取新闻全文。可自行核验：<a class="fund-link" href="https://finance.eastmoney.com/" target="_blank" rel="noopener">东方财富财经</a> · <a class="fund-link" href="https://finance.yahoo.com/" target="_blank" rel="noopener">Yahoo Finance</a></span>';
  $('dataLine').textContent=market?'指数同步：'+esc(market.retrievedAt.slice(0,19).replace('T',' '))+' UTC · 新闻仅辅助核验，不主导交易':'尚未读取市场资讯';
  $('saveMonth').disabled=!o.ready||busy||st.history.some(h=>h.month===nowMonth());
  if(st.history.some(h=>h.month===nowMonth()))$('saveMonth').textContent='✓ 本月已记账（防重复）';else $('saveMonth').textContent='✓ 保存本月已购买';
 }
-// All data from authenticated Cloudflare Worker. No JSONP global scripts or pretend market estimates.
-async function apiFetch(path,method='GET',body=null){if(!cloudUrl||!sessionToken)throw Error('未登录或登录会话失效');
- const r=await fetch(cloudUrl+path,{method,headers:{Authorization:'Bearer '+sessionToken,'Content-Type':'application/json'},body:body?JSON.stringify(body):undefined,signal:AbortSignal.timeout(85000),cache:'no-store'});
- const v=await r.json().catch(()=>({error:'服务器没有返回合法JSON'}));if(!r.ok){if(r.status===401){unlocked=false;$('loginGate').hidden=false;$('appRoot').hidden=true;sessionToken='';}throw Object.assign(new Error(v.error||'HTTP '+r.status),{status:r.status});}return v;
+
+// 无需独立服务器，直接向公开数据源读取已确认基金净值与指数日线。
+// 第三方脚本在 sandbox 无同源权限的 iframe 中执行，不能读取本机投资记录。
+// 外部接口仍可能因地区、CORS、限流或站点调整而失败；失败时停止给出行情买卖计划。
+const fmtCN=ts=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(ts));
+function safeMessage(data){try{return JSON.stringify(data).slice(0,1200)}catch{return ''}}
+function sandboxScript(url,type,timeout=12500){return new Promise((resolve,reject)=>{
+ const id='q'+crypto.getRandomValues(new Uint32Array(2)).join('');
+ const fr=document.createElement('iframe');fr.setAttribute('sandbox','allow-scripts');fr.style.cssText='display:none;width:0;height:0;border:0';
+ let done=false;
+ function finish(error,value){if(done)return;done=true;clearTimeout(t);window.removeEventListener('message',handler);fr.remove();error?reject(error):resolve(value);}
+ function handler(e){if(e.source!==fr.contentWindow||e.data?.id!==id||e.data?.type!==type)return;const value=e.data;finish(value.error?new Error(value.error):null,value.data);}
+ const t=setTimeout(()=>finish(new Error('行情源连接超时')),timeout);window.addEventListener('message',handler);
+ const scriptUrl=JSON.stringify(url),nonce=JSON.stringify(id),kind=JSON.stringify(type);
+ const js=`(function(){const id=${nonce},type=${kind};let sent=false;const send=(data,error)=>{if(sent)return;sent=true;parent.postMessage({id,type,data,error},'*');};
+ window.marketCB=(x)=>send(x,null);
+ const sc=document.createElement('script');sc.src=${scriptUrl};sc.onerror=()=>send(null,'行情源拒绝加载');sc.onload=()=>{if(type==='fund'){let a=window.Data_netWorthTrend; if(!Array.isArray(a))return send(null,'基金净值数据缺失');send({trend:a.slice(-175).map(x=>[x.x,x.y,x.equityReturn]),name:window.fS_name},null);}else setTimeout(()=>send(null,'指数回调缺失'),200);};document.head.appendChild(sc);
+ })();`;
+ // The closing script tag needs to be syntactically complete in the generated srcdoc.
+ fr.srcdoc='<!doctype html><meta charset="utf-8"><script>'+js+'</'+'script>';
+ document.body.appendChild(fr);
+});}
+function summarizeFund(code,raw){
+ const list=(raw?.trend||[]).map(p=>({ts:Number(p[0]),nav:Number(p[1]),chg:Number(p[2])})).filter(p=>Number.isFinite(p.ts)&&Number.isFinite(p.nav)&&p.nav>0&&p.ts<=Date.now()+DAY).sort((a,b)=>a.ts-b.ts);
+ if(list.length<80)throw Error('历史净值不足80期');const a=list.slice(-160),last=a.at(-1),w=a.slice(-120),vals=w.map(x=>x.nav);
+ if(Date.now()-last.ts>7*DAY)throw Error('确认净值超过7天');const lo=Math.min(...vals),hi=Math.max(...vals),ma=vals.slice(-60).reduce((a,b)=>a+b,0)/60;
+ let peak=0,dd=0;for(const v of vals){peak=Math.max(peak,v);dd=Math.min(dd,(v/peak-1)*100);}
+ const rt=w.slice(-21).map((x,i,l)=>i?100*(x.nav/l[i-1].nav-1):null).filter(v=>v!==null),avg=rt.reduce((a,b)=>a+b,0)/rt.length;
+ const vol=Math.sqrt(rt.reduce((a,b)=>a+(b-avg)**2,0)/rt.length);
+ return {code,name:String(raw?.name||'基金'+code).slice(0,85),source:'天天基金·公开历史确认净值',nav:last.nav,navDate:fmtCN(last.ts),navTimestamp:last.ts,verifiedAt:new Date().toISOString(),points:w.length,percentile:hi>lo?100*(last.nav-lo)/(hi-lo):50,maBias:100*(last.nav/ma-1),maxDD:dd,dayChg:Number.isFinite(last.chg)?last.chg:100*(last.nav/a.at(-2).nav-1),vol20:vol,metric:'120期单位净值相对位置，不代表价格估值或未来涨跌'};
 }
-async function syncReal(){if(busy||!unlocked)return;busy=true;$('refreshBtn').disabled=true;$('chooseBtn').disabled=true;
+async function fundQuote(code){if(!/^\d{6}$/.test(code))throw Error('基金代码非法');const url='https://fund.eastmoney.com/pingzhongdata/'+code+'.js?v='+Math.floor(Date.now()/1800000);return summarizeFund(code,await sandboxScript(url,'fund',14000));}
+function summarizeIndex(secid,name,source,arr){const a=arr.filter(x=>Number.isFinite(x.ts)&&Number.isFinite(x.price)&&x.price>0).sort((a,b)=>a.ts-b.ts).slice(-145);
+ if(a.length<65)throw Error(name+'指数数据不足65个交易日');const last=a.at(-1);if(Date.now()-last.ts>7*DAY)throw Error(name+'指数日期超过7天');
+ const ma=a.slice(-60).reduce((s,x)=>s+x.price,0)/60,ret20=100*(last.price/a.at(-21).price-1);
+ const r=[];for(let i=a.length-20;i<a.length;i++)r.push(100*(a[i].price/a[i-1].price-1));const mu=r.reduce((s,v)=>s+v,0)/r.length,vol=Math.sqrt(r.reduce((s,v)=>s+(v-mu)**2,0)/r.length);
+ return {code:secid,name,source,asOf:fmtCN(last.ts),timestamp:last.ts,close:last.price,trend60:100*(last.price/ma-1),ret20,vol20:vol,points:a.length};}
+async function indexChina(secid,name){
+ const url='https://push2his.eastmoney.com/api/qt/stock/kline/get?secid='+encodeURIComponent(secid)+'&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57&klt=101&fqt=0&end=20500101&lmt=145&cb=marketCB&_='+Math.floor(Date.now()/600000);
+ const j=await sandboxScript(url,'index');if(!j?.data||!Array.isArray(j.data.klines))throw Error(name+'公开指数数据不可用');
+ if(String(j.data.code||'')!==secid.split('.')[1])throw Error(name+'代码核验未通过');
+ const a=j.data.klines.map(line=>{const c=line.split(',');return {ts:Date.parse(c[0]+'T15:00:00+08:00'),price:Number(c[2])};});
+ return summarizeIndex(secid,name,'东方财富·公开指数日线',a);
+}
+async function indexUS(symbol,name){
+ // 首先向 Yahoo Finance 请求真实海外指数日线；如浏览器拒绝 CORS，则尝试东方财富海外指数公开接口。
+ const u='https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(symbol)+'?range=1y&interval=1d';
+ const abort=new AbortController();const timer=setTimeout(()=>abort.abort(),9000);
+ try{const r=await fetch(u,{signal:abort.signal,cache:'no-store'});if(!r.ok)throw Error('海外接口HTTP '+r.status);const j=await r.json(),v=j?.chart?.result?.[0];if(!Array.isArray(v?.timestamp)||!Array.isArray(v?.indicators?.quote?.[0]?.close))throw Error('海外数据结构错误');
+  return summarizeIndex(symbol,name,'Yahoo Finance·指数日线',v.timestamp.map((x,i)=>({ts:x*1000,price:Number(v.indicators.quote[0].close[i])})));}
+ catch(original){
+  const code=symbol==='^NDX'?'NDX':symbol==='^GSPC'?'SPX':null;if(!code)throw original;
+  const url='https://push2his.eastmoney.com/api/qt/stock/kline/get?secid=100.'+code+'&fields1=f1,f2,f3&fields2=f51,f52,f53,f54,f55,f56,f57&klt=101&fqt=0&end=20500101&lmt=145&cb=marketCB&_='+Math.floor(Date.now()/600000);
+  let j;try{j=await sandboxScript(url,'index',11000);}catch{throw new Error(name+'海外行情在本浏览器无法直接访问');}
+  const d=j?.data;if(!d||!Array.isArray(d.klines)||String(d.code||'').toUpperCase()!==code||!(code==='NDX'?/NASDAQ.?100|纳斯达克.?100|纳指.?100/i:/S&P.?500|标普.?500/i).test(String(d.name||'')))throw new Error(name+'备用接口身份核验失败');
+  return summarizeIndex(code,name,'东方财富·海外指数日线',d.klines.map(x=>{const a=x.split(',');return {ts:Date.parse(a[0]+'T16:00:00-04:00'),price:Number(a[2])};}));
+ }
+ finally{clearTimeout(timer);}
+}
+async function directMarket(){
+ const req=[['shanghai',()=>indexChina('1.000001','上证指数')],['csi300',()=>indexChina('1.000300','沪深300')],['chinext',()=>indexChina('0.399006','创业板指数')],['star50',()=>indexChina('1.000688','科创50')]];
+ if(st.overseas)req.push(['nasdaq',()=>indexUS('^NDX','纳斯达克100')],['sp500',()=>indexUS('^GSPC','标普500')]);
+ const indexes={},errors=[];
+ const results=await Promise.all(req.map(async ([name,fn])=>{try{return [name,await fn(),null];}catch(e){return [name,null,String(e?.message||e)];}}));
+ for(const [name,value,error] of results){if(value)indexes[name]=value;else errors.push(name+'：'+error);}
+ const keys=st.overseas?['shanghai','csi300','nasdaq','sp500']:['shanghai','csi300'];
+ return {ok:keys.every(k=>indexes[k]),indexes,errors,news:[],retrievedAt:new Date().toISOString()};
+}
+
+async function syncReal(){if(busy)return;busy=true;$('refreshBtn').disabled=true;$('chooseBtn').disabled=true;
  try{
-  status('联网核实：中国指数 / 海外指数 / 最新新闻…','warn');const m=await apiFetch('/api/market?overseas='+(st.overseas?'1':'0'));
-  market=m.ok?m:null;
-  if(!m.ok)throw Error('指数来源不完整：'+(m.errors||[]).join(' | '));
+  status('正在读取真实指数行情（无需密码）…','warn');const m=await directMarket();market=m.ok?m:null;
+  if(!m.ok)throw Error('所需市场指数数据不足：'+m.errors.join('；')+'。可关闭海外行情后重试国内配置');
   const selected=all().filter(x=>x.cat!=='cash'&&(st.overseas||x.cat!=='nasdaq'));
-  const codes=[...new Set(selected.map(x=>x.f.code))];const good={};for(let i=0;i<codes.length;i+=30){
-   status('正在核实天天基金真实确认净值 '+Math.min(i+30,codes.length)+'/'+codes.length,'warn');
-   const resp=await apiFetch('/api/quotes?codes='+codes.slice(i,i+30).join(','));
-   for(const [code,x] of Object.entries(resp.items||{}))if(x.ok&&isQuote(x.quote))good[code]=x.quote;
+  const codes=[...new Set(selected.map(x=>x.f.code))],good={};let fail=[];
+  for(let i=0;i<codes.length;i++){
+   const code=codes[i];status('正在核实天天基金确认净值 '+(i+1)+'/'+codes.length,'warn');
+   try{const q=await fundQuote(code);if(isQuote(q))good[code]=q;else throw Error('净值缺少有效日期');}catch(e){fail.push(code+'('+e.message+')');}
   }
-  let ok=0;for(const {f} of selected){if(good[f.code]){f.quote=good[f.code];if(good[f.code].name&&!good[f.code].name.startsWith('基金'+f.code))f.name=good[f.code].name;ok++;}else{f.quote=null;}}
-  changed();status(ok===codes.length?`✅ 指数与新闻已校验 · 基金${ok}/${codes.length}（不换代码）`:`⚠️ 基金仅${ok}/${codes.length}有效，不完整时停止操作` ,ok===codes.length?'ok':'warn');
- }catch(e){market=null;status('⚠️ 真实行情获取失败：'+e.message,'error');toast('无真实行情：暂停生成买卖金额');}
+  for(const {f} of selected){if(good[f.code]){f.quote=good[f.code];if(good[f.code].name&&!good[f.code].name.startsWith('基金'+f.code))f.name=good[f.code].name;}else f.quote=null;}
+  changed();status(fail.length?'⚠️ 净值未完全校验 '+(codes.length-fail.length)+'/'+codes.length+'，暂停建议':'✅ 真实净值已核实 '+codes.length+'/'+codes.length+' · 不换代码',fail.length?'warn':'ok');
+  if(fail.length)toast('有基金净值不可用：本次不生成买卖计划');
+ }catch(e){market=null;status('⚠️ 联网获取失败：'+e.message,'error');toast('数据缺失，本次不生成买卖建议');}
  finally{busy=false;$('refreshBtn').disabled=false;$('chooseBtn').disabled=false;render();}
 }
 async function chooseCodes(){if(busy||!unlocked)return;
@@ -291,8 +353,7 @@ async function chooseCodes(){if(busy||!unlocked)return;
   if(!which.length){toast('没有标注“半年复核”的基金，名单保持不变');return;}
   if(!marketOK())throw Error('请先刷新确认国内/海外指数行情');
   const selected=which.flatMap(cat=>POOL[cat].map(x=>({...x,cycle:'semi'})));
-  const response=await apiFetch('/api/quotes?codes='+[...new Set(selected.map(x=>x.code))].join(','));
-  for(const f of selected){const q=response.items?.[f.code];if(q?.ok&&isQuote(q.quote)){f.quote=q.quote;if(q.quote.name&&!q.quote.name.startsWith('基金'+f.code))f.name=q.quote.name;}}
+  for(const f of selected){try{const q=await fundQuote(f.code);if(isQuote(q)){f.quote=q;if(q.name&&!q.name.startsWith('基金'+f.code))f.name=q.name;}}catch(e){f.quote=null;}}
   const replacements={};for(const cat of which){const slots=st.lists[cat].filter(f=>f.cycle==='semi').length;
    const fixed=new Set(st.lists[cat].filter(f=>f.cycle!=='semi').map(f=>f.code));
    const rank=selected.filter(f=>f.cat===cat&&isQuote(f.quote)&&!fixed.has(f.code)).sort((a,b)=>weight(b)-weight(a));
@@ -318,36 +379,7 @@ function addCode(cat){const input=$('new_'+cat),code=input.value.trim();if(!/^\d
  st.lists[cat].push(obj);input.value='';if($('sector_'+cat))$('sector_'+cat).value='';st.holdComplete=false;changed();toast('已添加，请点击刷新获取真实基金净值');}
 function removeCode(cat,i){const f=st.lists[cat]?.[i];if(!f)return;if(st.history.some(h=>h.actions.some(a=>a.code===f.code))||st.positions[f.code]?.shares>0||st.pending.some(p=>p.code===f.code)){toast('该代码存在历史交易或持仓，不可直接删除，以免账本失真');return;}
  if(!confirm('移除代码 '+f.code+' ？仅修改本系统规划，不会卖出基金。'))return;st.lists[cat].splice(i,1);st.holdComplete=false;changed();}
-async function connectCloud(){
- const u=$('gateApiUrl').value.trim().replace(/\/+$/,'');let parsed;
- try{parsed=new URL(u);if(parsed.protocol!=='https:'||parsed.username||parsed.password)throw Error('URL必须是HTTPS');}catch{gateStatus('请输入正确的云端 HTTPS 地址');return;}
- const password=$('gatePassword').value; if(!password){gateStatus('请输入云端访问密码');return;}
- $('gateLogin').disabled=true;gateStatus('正在验证密码并读取云端备份…');
- try{
-  const res=await fetch(u+'/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password}),signal:AbortSignal.timeout(18000)});
-  const data=await res.json();if(!res.ok||!data.token)throw Error(data.error||'服务器未验证');
-  cloudUrl=u;sessionToken=data.token;localStorage.setItem(API_KEY,u);
-  // Load legacy local data only after authentication.
-  load();const remote=await apiFetch('/api/backup');cloudRev=remote.revision;
-  if(remote.state){const restored=sanitize(remote.state);if(!restored)throw Error('云端数据格式不兼容');
-   if(st.history.length>restored.history.length&& !confirm(`本机有${st.history.length}个月记录，云端有${restored.history.length}个月。按“取消”保留本机并登录，按“确定”以云端覆盖本机。`)){
-    cloudStatus('已登录，但本机与云端版本不同，请先人工导出核对','warn');
-   }else st=restored;
-  }else{st.schema=4;saveLocal();await persistCloud();}
-  if(st.salaryMonth!==nowMonth()){st.salary='';st.salaryMonth=nowMonth();saveLocal();}
-  unlocked=true;$('gatePassword').value='';$('loginGate').hidden=true;$('appRoot').hidden=false;$('apiUrl').value=u;render();
-  gateStatus('');cloudStatus('☁️ 已认证 · 云端版本 '+cloudRev,'ok');status('已登录，请点击刷新核实真实行情','warn');
- }catch(e){sessionToken='';cloudRev=null;gateStatus('登录失败：'+e.message);}finally{$('gateLogin').disabled=false;}
-}
-function gateStatus(s){$('gateMessage').textContent=s;}
-function logout(){unlocked=false;sessionToken='';cloudRev=null;market=null;st=fresh();$('gatePassword').value='';$('appRoot').hidden=true;$('loginGate').hidden=false;gateStatus('已退出，请重新输入密码');}
-
-function scheduleCloudSave(){if(cloudRev===null||!sessionToken||!unlocked)return;clearTimeout(syncTimer);syncTimer=setTimeout(()=>{persistCloud().catch(()=>{});},1300);}
-async function persistCloud(){if(cloudRev===null||!sessionToken){cloudStatus('未登录，云端无法备份','warn');return false;}
- if(cloudBusy){clearTimeout(syncTimer);syncTimer=setTimeout(()=>persistCloud().catch(()=>{}),1300);return false;}
- cloudBusy=true;try{const result=await apiFetch('/api/backup','POST',{expectedRevision:cloudRev,state:st});cloudRev=result.revision;lastCloudError='';cloudStatus('☁ 已备份 '+new Date().toLocaleTimeString('zh-CN'),'ok');return true;
- }catch(e){lastCloudError=e.message;cloudStatus('⚠️ 本机已存，云备份失败：'+e.message,'error');return false;}finally{cloudBusy=false;}}
-function saveMonth(){if(!unlocked||cloudRev===null){toast('请先连接云端才能确认交易');return;}const o=compute();if(!o.ready){toast('真实行情不足或预算未填写，不能确认本月购买');return;}
+function saveMonth(){const o=compute();if(!o.ready){toast('有效真实行情不足或预算未填写，不能确认本月购买');return;}
  const month=nowMonth();if(st.history.some(h=>h.month===month)){toast('同一个月只能确认一次，避免重复买入记账');return;}
  if(o.unverified&&st.lists.nasdaq.length){toast('至少一只纳指基金申购限额未核实；请填真实额度后再保存');return;}
  if(!confirm(`确认你已经在基金平台执行本月计划？\n\n买入：${yu(o.buy)}；减仓：${yu(o.sell)}；保留现金：${yu(o.freeCash)}。\n\n点击“确定”仅记录已执行交易，不会向基金平台下单。`))return;
@@ -363,13 +395,12 @@ function saveMonth(){if(!unlocked||cloudRev===null){toast('请先连接云端才
  const save={month,saveId:month+'-'+Date.now(),savedAt:new Date().toISOString(),salary:o.salary,budget:o.can,cashAmount:reserveThisMonth,actions,quoteSources:[...new Set(all().filter(x=>x.cat!=='cash'&&(st.overseas||x.cat!=='nasdaq')&&isQuote(x.f.quote)).map(x=>x.f.quote.source))],holdSnapshot:clone(st.positions),beforeReserve:st.reserveCents};
  st.history.push(save);st.reserveCents+=reserveThisMonth;
  st.pending.push(...actions.filter(a=>a.action==='buy'||a.action==='sell').map(a=>({code:a.code,cents:a.cents,action:a.action,month})));
- st.holdComplete=false;saveLocal();render();clearTimeout(syncTimer);
- persistCloud().then(ok=>toast(ok?'已确认本月购买并自动备份到云端':'本月已记账，但云端未成功！请检查连接并点击“立即备份”'));
+ st.holdComplete=false;saveLocal();render();toast('本月交易已记入本机；记得导出JSON备份');
 }
 function undoMonth(){const h=st.history.at(-1);if(!h)return toast('没有购买记录可撤销');if(h.month!==nowMonth())return toast('为了保护历史记录，只允许撤销本月最近一次确认');
  if(!confirm('撤销本月购买记录？仅删除本系统账本记录，不会影响基金平台已经发生的交易。'))return;
  st.history.pop();st.positions=h.holdSnapshot||st.positions;st.reserveCents=h.beforeReserve||0;
- st.pending=st.pending.filter(p=>p.month!==h.month);st.holdComplete=false;changed();toast('本月账本记录已撤销，云端将保留历史备份版本');}
+ st.pending=st.pending.filter(p=>p.month!==h.month);st.holdComplete=false;changed();toast('本月账本记录已撤销，建议导出新备份');}
 function copyPlan(){const o=compute();if(!o.ready)return toast('尚无可靠的真实行情计划');const lines=[`本月 ${nowMonth()} | 可投资 ${yu(o.can)}`,`行情：天天基金历史确认净值（非实时成交价）`];
  for(const c of CATS){lines.push(CN[c]+'：'+o.pct[c]+' '+yu(o.amounts[c]));for(const f of st.lists[c]){if(c==='cash')continue;const p=o.plan[f.code]||{buy:0,sell:0};lines.push(`  ${f.code} ${f.name} 定投/追加 ${yu(p.buy)}，参考减仓 ${yu(p.sell)}，确认净值 ${f.quote.navDate}`);}}
  lines.push('现金留存：'+yu(o.freeCash));const text=lines.join('\n');navigator.clipboard?.writeText(text).then(()=>toast('已复制执行清单')).catch(()=>prompt('复制下列内容：',text));}
@@ -386,17 +417,16 @@ function initEvents(){
  document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>addCode(b.dataset.add)));
  document.querySelectorAll('.funds').forEach(root=>{root.addEventListener('click',e=>{const t=e.target.closest('[data-del]');if(t)removeCode(t.dataset.del,+t.dataset.i);});root.addEventListener('change',e=>{const cyc=e.target.dataset.cycle;if(cyc){const [cat,j]=cyc.split(':');if(st.lists[cat]?.[+j]){st.lists[cat][+j].cycle=e.target.value==='semi'?'semi':'long';changed();}return;}const i=e.target.dataset.limit;if(i===undefined)return;const f=st.lists.nasdaq[+i];if(f){const v=e.target.value;f.dailyLimit=v===''?null:Math.max(0,Number(v));changed();}});});
  $('refreshBtn').addEventListener('click',syncReal);$('quickRefresh').addEventListener('click',syncReal);$('chooseBtn').addEventListener('click',chooseCodes);
- $('gateLogin').addEventListener('click',connectCloud);$('gatePassword').addEventListener('keydown',e=>{if(e.key==='Enter')connectCloud();});$('logoutBtn').addEventListener('click',logout);$('cloudSaveBtn').addEventListener('click',()=>persistCloud().then(ok=>toast(ok?'云备份完成':'云备份失败或未连接')));
+
  $('saveMonth').addEventListener('click',saveMonth);$('undoBtn').addEventListener('click',undoMonth);$('copyBtn').addEventListener('click',copyPlan);
  $('exportBtn').addEventListener('click',exportData);$('importBtn').addEventListener('click',()=>$('importFile').click());
- $('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{if(f.size>170000)throw Error('备份文件超出大小限制');const data=JSON.parse(await f.text()),v=sanitize(data.state||data);if(!v)throw Error('格式不兼容');if(confirm('导入将覆盖当前本机记录，建议先导出旧数据。确认吗？')){st=v;changed();toast('已导入数据；连接云端后请检查版本差异');}}catch(er){toast('导入失败：'+er.message);}e.target.value='';});
- window.addEventListener('online',()=>{if(cloudRev!==null)persistCloud().catch(()=>{});});
+ $('importFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{if(f.size>170000)throw Error('备份文件超出大小限制');const data=JSON.parse(await f.text()),v=sanitize(data.state||data);if(!v)throw Error('格式不兼容');if(confirm('导入将覆盖当前本机记录，建议先导出旧数据。确认吗？')){st=v;changed();toast('已恢复本机备份，刷新行情后使用');}}catch(er){toast('导入失败：'+er.message);}e.target.value='';});
+ window.addEventListener('online',()=>status('网络恢复，可点击刷新真实行情','warn'));
 }
-cloudUrl=localStorage.getItem(API_KEY)||'';$('gateApiUrl').value=cloudUrl;$('apiUrl').value=cloudUrl;
-// On a new month, make salary input blank while preserving recurring household costs and holdings.
+load();
+// 第一次打开及更换自然月后，仅清空当月工资输入，保留生活费、基金、历史持仓。
 if(st.salaryMonth!==nowMonth()){st.salary='';st.salaryMonth=nowMonth();saveLocal();}
 initEvents();render();
-status('🔒 请先验证云端密码，登录后刷新真实行情','warn');
-// Never silently replace fund codes or trigger a purchase on page load.
-
+status('免登录模式已开启 · 请点击刷新真实行情','warn');
+// 不自动改变基金名单；点击“按行情优选代码”才尝试变更。
 </script></body></html>
