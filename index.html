@@ -3,709 +3,576 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#C7EDCC">
-<title>AI 全智能定投系统（估值·趋势·波动率模型）</title>
+<title>核心-卫星量化定投指令系统</title>
 <style>
   :root {
-    --bg-main: #C7EDCC;       /* 经典豆沙护眼绿 */
-    --bg-card: #DCEFE0;      /* 卡片底色 */
-    --bg-inner: #EAF7EC;     /* 内部容器浅绿 */
-    --border-color: #8FB896;  /* 浅绿边框 */
-    --border-dark: #1F4D2B;   /* 深绿主边框 */
-    --text-main: #142618;     /* 墨绿主字色 */
-    --text-sub: #3B5942;      /* 辅助字色 */
-    --stock-red: #B82525;     /* 股基/上涨红 */
-    --bond-blue: #165B8C;     /* 固收/防守蓝 */
-    --up-green: #147A2E;      /* 逢低吸筹绿 */
+    --bg-overlay: rgba(0, 0, 0, 0.72);
+    --bg-drawer: rgba(0, 0, 0, 0.85);
+    --bg-input: rgba(255, 255, 255, 0.12);
+    --border-light: rgba(255, 255, 255, 0.28);
+    --border-focus: rgba(255, 255, 255, 0.85);
+    --text-white: #FFFFFF;
+    --accent-emerald: #2ECC71;
+    --accent-amber: #F39C12;
+    --accent-crimson: #FF5252;
+    --accent-cyan: #00E5FF;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: var(--text-white);
+    -webkit-tap-highlight-color: transparent;
+  }
 
   body {
-    background-color: var(--bg-main);
-    color: var(--text-main);
+    /* 深邃星空渐变底色，即使叠加任何背景图也能保证遮罩内纯白文字绝对清晰 */
+    background: radial-gradient(circle at 20% 20%, #1a2a3a 0%, #0d131a 60%, #05070a 100%) fixed;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
-    line-height: 1.5;
-    padding: 14px 12px 40px;
+    line-height: 1.6;
+    padding: 20px 12px 50px;
+    min-height: 100vh;
   }
 
-  .container { max-width: 640px; margin: 0 auto; }
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+  }
 
-  /* 顶部折叠抽屉：收支与云端设置 */
+  /* 统一半透明深色遮罩卡片 */
+  .glass-card {
+    background: var(--bg-overlay);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55);
+  }
+
+  .header-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+  }
+
+  .header-sub {
+    font-size: 0.85rem;
+    opacity: 0.85;
+  }
+
+  /* 输入网格 */
+  .input-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  @media (max-width: 560px) {
+    .input-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  .field label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    opacity: 0.9;
+  }
+
+  .field input {
+    width: 100%;
+    background: var(--bg-input);
+    border: 1.5px solid var(--border-light);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    font-family: Consolas, Monaco, monospace;
+    color: var(--text-white);
+    outline: none;
+  }
+
+  .field input:focus {
+    border-color: var(--border-focus);
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .field input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* 主触发按钮 */
+  .btn-generate {
+    width: 100%;
+    background: linear-gradient(135deg, #1E8449 0%, #117A65 100%);
+    border: 1.5px solid var(--border-focus);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 1.05rem;
+    font-weight: 900;
+    cursor: pointer;
+    letter-spacing: 1px;
+    transition: transform 0.15s ease, opacity 0.2s;
+  }
+
+  .btn-generate:active { transform: scale(0.98); }
+  .btn-generate:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* 核心输出：本月操作指令卡片 */
+  .command-box {
+    background: rgba(0, 0, 0, 0.82);
+    border: 2px solid var(--accent-emerald);
+    border-radius: 14px;
+    padding: 18px;
+    margin-top: 8px;
+  }
+
+  .cmd-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed var(--border-light);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 0.78rem;
+    font-weight: 800;
+    background: rgba(46, 204, 113, 0.25);
+    border: 1px solid var(--accent-emerald);
+  }
+
+  .badge-warn {
+    background: rgba(243, 156, 18, 0.3);
+    border-color: var(--accent-amber);
+  }
+
+  /* 自然语言总结指令段落 */
+  .narrative-summary {
+    background: rgba(255, 255, 255, 0.08);
+    border-left: 4px solid var(--accent-cyan);
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 0.96rem;
+    line-height: 1.75;
+    margin-bottom: 16px;
+  }
+
+  /* 逐条操作指令列表 */
+  .order-item {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .order-left { flex: 1; }
+  .order-title { font-weight: 800; font-size: 0.98rem; }
+  .order-reason { font-size: 0.82rem; opacity: 0.85; margin-top: 3px; }
+  .order-amt {
+    font-family: Consolas, Monaco, monospace;
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: var(--accent-emerald);
+    white-space: nowrap;
+  }
+
+  /* 折叠抽屉组件 */
   .drawer {
-    background-color: var(--bg-card);
-    border: 2px solid var(--border-dark);
+    background: var(--bg-drawer);
+    border: 1px solid var(--border-light);
     border-radius: 14px;
     margin-bottom: 14px;
     overflow: hidden;
   }
 
   .drawer-header {
-    padding: 12px 16px;
+    padding: 14px 18px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    cursor: pointer;
     user-select: none;
-    font-weight: 800;
-    font-size: 0.95em;
-  }
-
-  .drawer-summary {
-    font-size: 0.82em;
-    font-weight: normal;
-    color: var(--text-sub);
-    font-family: Consolas, monospace;
   }
 
   .drawer-body {
     display: none;
-    padding: 14px 16px;
-    border-top: 1.5px dashed var(--border-color);
-    background-color: var(--bg-inner);
+    padding: 16px 18px;
+    border-top: 1px dashed var(--border-light);
   }
 
   .drawer.open .drawer-body { display: block; }
 
-  .input-grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  @media (max-width: 480px) {
-    .input-grid-3 { grid-template-columns: 1fr; }
-  }
-
-  .field label {
-    display: block;
-    font-size: 0.8em;
-    font-weight: bold;
-    color: var(--text-sub);
-    margin-bottom: 4px;
-  }
-
-  .field input {
+  /* 量化因子评分表格 */
+  .table-wrap { overflow-x: auto; }
+  table.quant-table {
     width: 100%;
-    padding: 8px 10px;
-    border: 1.5px solid var(--border-color);
-    border-radius: 8px;
-    font-size: 1.1em;
-    font-weight: bold;
-    font-family: Consolas, monospace;
-    background: #FFFFFF;
-    color: var(--text-main);
-    outline: none;
+    border-collapse: collapse;
+    font-size: 0.84rem;
+    min-width: 520px;
   }
 
-  .field input:focus { border-color: var(--border-dark); }
-
-  .cloud-box {
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border-color);
-    font-size: 0.82em;
-  }
-
-  .cloud-row {
-    display: grid;
-    grid-template-columns: 1.6fr 1fr;
-    gap: 8px;
-    margin: 6px 0 10px;
-  }
-
-  .btn-row {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .btn {
-    background-color: #B4DFB9;
-    border: 1.5px solid var(--border-dark);
-    color: var(--text-main);
-    padding: 7px 12px;
-    border-radius: 8px;
-    font-size: 0.84em;
-    font-weight: 800;
-    cursor: pointer;
-    flex: 1;
-    text-align: center;
-  }
-
-  .btn:active { transform: scale(0.98); }
-  .btn-dark { background-color: var(--border-dark); color: #FFFFFF; }
-
-  /* 首屏核心决策大卡片 */
-  .hero-card {
-    background-color: var(--bg-inner);
-    border: 2.5px solid var(--border-dark);
-    border-radius: 18px;
-    padding: 20px 18px;
-    text-align: center;
-    margin-bottom: 14px;
-  }
-
-  .hero-top-tag {
-    display: inline-block;
-    background-color: #CFEAD3;
-    border: 1px solid var(--border-dark);
-    padding: 2px 10px;
-    border-radius: 99px;
-    font-size: 0.78em;
-    font-weight: 800;
-    margin-bottom: 6px;
-  }
-
-  .hero-label { font-size: 0.9em; color: var(--text-sub); font-weight: bold; }
-
-  .hero-amount {
-    font-size: 2.65em;
-    font-weight: 900;
-    font-family: Consolas, Monaco, monospace;
-    color: var(--border-dark);
-    line-height: 1.15;
-    margin: 4px 0 6px;
-  }
-
-  .hero-sub-meta {
-    font-size: 0.82em;
-    color: var(--text-sub);
-    margin-bottom: 14px;
-  }
-
-  /* 股债动态配比进度条 */
-  .ratio-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.86em;
-    font-weight: 800;
-    margin-bottom: 6px;
-  }
-
-  .ratio-track {
-    height: 14px;
-    width: 100%;
-    background-color: #D0E5D4;
-    border: 1.5px solid var(--border-dark);
-    border-radius: 8px;
-    overflow: hidden;
-    display: flex;
-    margin-bottom: 10px;
-  }
-
-  .bar-stock {
-    background-color: var(--stock-red);
-    height: 100%;
-    transition: width 0.35s ease;
-  }
-
-  .bar-bond {
-    background-color: var(--bond-blue);
-    height: 100%;
-    transition: width 0.35s ease;
-  }
-
-  .ai-macro-brief {
-    background-color: var(--bg-card);
-    border: 1px dashed var(--border-dark);
-    border-radius: 8px;
-    padding: 8px 10px;
-    font-size: 0.81em;
+  table.quant-table th, table.quant-table td {
+    border-bottom: 1px solid var(--border-light);
+    padding: 8px 6px;
     text-align: left;
-    margin-bottom: 14px;
-    color: var(--text-main);
   }
 
-  .hero-actions {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 10px;
-  }
-
-  /* 基金精简卡片列表 + 点击展开量化因子 */
-  .section-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 6px 2px 10px;
-    font-size: 0.92em;
-    font-weight: 800;
-  }
-
-  .fund-card {
-    background-color: var(--bg-card);
-    border: 1.5px solid var(--border-dark);
-    border-radius: 12px;
-    padding: 12px 14px;
-    margin-bottom: 10px;
+  .btn-small {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid var(--border-light);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 700;
     cursor: pointer;
   }
-
-  .fund-main-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .fund-title {
-    font-weight: 800;
-    font-size: 0.96em;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
-  .code-pill {
-    font-family: Consolas, monospace;
-    font-size: 0.82em;
-    background-color: var(--bg-inner);
-    border: 1px solid var(--border-color);
-    padding: 1px 6px;
-    border-radius: 4px;
-    color: var(--text-sub);
-  }
-
-  .fund-right {
-    display: flex;
-    align-items: baseline;
-    gap: 8px;
-    flex-shrink: 0;
-  }
-
-  .fund-pct {
-    font-family: Consolas, monospace;
-    font-size: 0.88em;
-    font-weight: 800;
-    background-color: #CFEAD3;
-    border: 1px solid var(--border-dark);
-    padding: 1px 6px;
-    border-radius: 5px;
-  }
-
-  .fund-amt {
-    font-family: Consolas, monospace;
-    font-size: 1.22em;
-    font-weight: 900;
-    color: var(--up-green);
-  }
-
-  .fund-one-liner {
-    margin-top: 6px;
-    font-size: 0.82em;
-    color: var(--text-sub);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  /* 折叠的三因子量化详情 */
-  .factor-drawer {
-    display: none;
-    margin-top: 10px;
-    padding-top: 8px;
-    border-top: 1px dashed var(--border-color);
-    font-size: 0.78em;
-    color: var(--text-main);
-  }
-
-  .fund-card.expanded .factor-drawer { display: block; }
-
-  .factor-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
-    margin-bottom: 6px;
-  }
-
-  .factor-box {
-    background-color: var(--bg-inner);
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    padding: 5px 6px;
-    text-align: center;
-  }
-
-  .factor-box .k { color: var(--text-sub); font-size: 0.9em; }
-  .factor-box .v { font-family: Consolas, monospace; font-weight: 800; margin-top: 2px; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- 1. 顶部抽屉式折叠输入区（默认折叠，首屏极简） -->
-  <div class="drawer" id="settingDrawer">
-    <div class="drawer-header" onclick="toggleSettingDrawer()">
-      <span>⚙️ 收支参数与云端同步设置</span>
-      <span class="drawer-summary" id="drawerSummaryText">工资 ¥5000 | 房租 ¥800 | 日均 ¥50 ▼</span>
+  <!-- 1. 顶部主控与收支输入卡片 -->
+  <div class="glass-card">
+    <div class="header-title">🎯 核心-卫星量化定投指令系统</div>
+    <div class="header-sub">纳指基石定投 + 卫星性价比动态寻优 + 股债偏离再平衡</div>
+
+    <div class="input-grid">
+      <div class="field">
+        <label>本月到账工资 (¥)</label>
+        <input type="number" id="inSalary" value="5500" step="100">
+      </div>
+      <div class="field">
+        <label>本月房租支出 (¥)</label>
+        <input type="number" id="inRent" value="800" step="50">
+      </div>
+      <div class="field">
+        <label>每日生活费 (¥/天)</label>
+        <input type="number" id="inDaily" value="50" step="5">
+      </div>
+      <div class="field">
+        <label>纳指固定比例 (%)</label>
+        <input type="number" id="inNasdaqRatio" value="20" min="0" max="50">
+      </div>
+      <div class="field">
+        <label>当前股基总持仓 (¥)</label>
+        <input type="number" id="inHoldStock" value="12000" step="500">
+      </div>
+      <div class="field">
+        <label>当前固收总持仓 (¥)</label>
+        <input type="number" id="inHoldBond" value="8000" step="500">
+      </div>
+    </div>
+
+    <button class="btn-generate" id="btnGenerate" onclick="generateMonthlyPlan()">
+      ⚡ 实时联网抓取行情 · 生成本月专属操作指令
+    </button>
+  </div>
+
+  <!-- 2. 首屏核心展示：本月操作指令清单（生成后展示） -->
+  <div class="glass-card" id="commandCard">
+    <div class="cmd-header">
+      <span style="font-weight:900; font-size:1.1rem;">📋 本月操作指令清单</span>
+      <span class="badge" id="dataSourceBadge">等待点击生成方案</span>
+    </div>
+
+    <!-- 自然语言汇总指令（如：本月总定投3000元：纳指600元...） -->
+    <div class="narrative-summary" id="narrativeBox">
+      请在上方确认<strong>本月工资</strong>与<strong>现有持仓</strong>，点击<strong>「生成本月专属操作指令」</strong>。系统将优先读取 Cloudflare D1 缓存（超24小时则实时联网抓取天天基金120日净值），为您生成精确到元的操作指令。
+    </div>
+
+    <!-- 再平衡警报框（偏离超10%时自动显现） -->
+    <div class="narrative-summary" id="rebalanceAlertBox" style="display:none; border-left-color: var(--accent-amber); background: rgba(243, 156, 18, 0.18);"></div>
+
+    <!-- 逐项执行指令列表 -->
+    <div id="orderListContainer"></div>
+
+    <div style="margin-top:12px; display:flex; justify-content:flex-end;">
+      <button class="btn-small" onclick="copyCommandText()">📄 一键复制完整操作指令</button>
+    </div>
+  </div>
+
+  <!-- 3. 折叠抽屉一：算法明细与三因子性价比评分表（默认收起） -->
+  <div class="drawer" id="algoDrawer">
+    <div class="drawer-header" onclick="document.getElementById('algoDrawer').classList.toggle('open')">
+      <span>🔬 展开查看：卫星池三因子「买入性价比评分」明细</span>
+      <span>▼</span>
     </div>
     <div class="drawer-body">
-      <div class="input-grid-3">
-        <div class="field">
-          <label>月到账工资 (¥)</label>
-          <input type="number" id="inSalary" value="5000" step="100" oninput="onParamChange()">
-        </div>
-        <div class="field">
-          <label>房租月支出 (¥)</label>
-          <input type="number" id="inRent" value="800" step="50" oninput="onParamChange()">
-        </div>
-        <div class="field">
-          <label>每天生活费 (¥)</label>
-          <input type="number" id="inDaily" value="50" step="5" oninput="onParamChange()">
-        </div>
-      </div>
-
-      <!-- 零硬编码密钥的云端同步配置 -->
-      <div class="cloud-box">
-        <div style="font-weight:bold; color:var(--text-main);">
-          ☁️ Cloudflare D1 云端同步（密钥仅保存在您本地浏览器，绝不写入代码）
-        </div>
-        <div class="cloud-row">
-          <input type="url" id="inWorkerUrl" placeholder="Worker 地址，如 https://fund.你的域名.workers.dev"
-            style="padding:6px 8px; border-radius:6px; border:1px solid var(--border-color); font-size:0.95em;"
-            oninput="saveCloudEndpoint()">
-          <input type="password" id="inSyncToken" placeholder="自定义同步口令 (API_TOKEN)"
-            style="padding:6px 8px; border-radius:6px; border:1px solid var(--border-color); font-size:0.95em;"
-            oninput="saveCloudEndpoint()">
-        </div>
-        <div class="btn-row">
-          <button class="btn" onclick="pullFromCloud()">📥 从云端拉取配置与行情</button>
-          <button class="btn btn-dark" onclick="pushToCloud()">📤 立即保存当前设置到云端</button>
-        </div>
-        <div id="cloudStatusMsg" style="margin-top:6px; color:var(--text-sub);">状态：本机离线存储已开启</div>
+      <div class="table-wrap">
+        <table class="quant-table">
+          <thead>
+            <tr>
+              <th>基金名称 (代码)</th>
+              <th>半年分位点</th>
+              <th>半年最大回撤</th>
+              <th>当日涨跌</th>
+              <th>性价比评分</th>
+              <th>动态池权重</th>
+            </tr>
+          </thead>
+          <tbody id="quantTableBody">
+            <tr><td colspan="6">点击上方生成方案后，此处展示每只基金的实时三因子打分详情</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 
-  <!-- 2. 首屏核心大卡片：定投总额 + 股债配比 + 一键跟投 -->
-  <div class="hero-card">
-    <div class="hero-top-tag" id="liveStatusTag">⏳ 正在读取天天基金 120 日净值序列...</div>
-    <div class="hero-label">本月智能定投总额</div>
-    <div class="hero-amount" id="heroInvestTotal">¥2,700.00</div>
-    <div class="hero-sub-meta" id="heroSubMeta">
-      扣房租后 ¥4,200.00 · 预留月生活费 ¥1,500.00 (储蓄率 64%)
+  <!-- 4. 折叠抽屉二：Cloudflare Workers + D1 云端配置（默认收起，零硬编码密钥） -->
+  <div class="drawer" id="cloudDrawer">
+    <div class="drawer-header" onclick="document.getElementById('cloudDrawer').classList.toggle('open')">
+      <span>☁️ 展开配置：Cloudflare Workers + D1 云端同步地址</span>
+      <span>▼</span>
     </div>
-
-    <div class="ratio-header">
-      <span style="color:var(--stock-red);" id="lblStockRatio">🔥 进攻股基 (中高风险)：45.0%</span>
-      <span style="color:var(--bond-blue);" id="lblBondRatio">🛡️ 防守固收 (纯债/活钱)：55.0%</span>
-    </div>
-    <div class="ratio-track">
-      <div class="bar-stock" id="barStock" style="width: 45%;"></div>
-      <div class="bar-bond" id="barBond" style="width: 55%;"></div>
-    </div>
-
-    <div class="ai-macro-brief" id="aiMacroBrief">
-      🤖 <strong>AI 三因子宏观诊断</strong>：正在计算全市场估值分位点、MA20/60 均线趋势与 20 日年化波动率...
-    </div>
-
-    <div class="hero-actions">
-      <button class="btn btn-dark" onclick="copyAllOrderSheet()">📋 一键复制本月跟投作业单</button>
-      <button class="btn" id="btnRefreshQuotes" onclick="refreshAllMarketData()">🔄 实时重算量化配比</button>
+    <div class="drawer-body">
+      <div class="input-grid" style="grid-template-columns: 1.5fr 1fr; margin-top:0;">
+        <div class="field">
+          <label>Worker 接口域名 (留空则直连天天基金)</label>
+          <input type="url" id="inWorkerUrl" placeholder="https://quant.你的域名.workers.dev" oninput="saveCloudConfig()">
+        </div>
+        <div class="field">
+          <label>API 访问口令 (仅存本地浏览器)</label>
+          <input type="password" id="inApiToken" placeholder="输入自定义 Bearer 口令" oninput="saveCloudConfig()">
+        </div>
+      </div>
+      <div style="font-size:0.8rem; opacity:0.8;" id="cloudSyncStatus">
+        提示：配置后，每次点击「生成方案」将自动把工资参数备份至 D1，并优先读取 D1 每日定时缓存的评分数据。
+      </div>
     </div>
   </div>
-
-  <!-- 3. 极简基金分配明细（默认仅显示：名称、比例、金额、一句话建议；点击卡片展开三因子详情） -->
-  <div class="section-bar">
-    <span>📊 智能定投明细清单（点击任意卡片展开三因子数据）</span>
-    <span style="font-size:0.78em; color:var(--text-sub); font-weight:normal;">合计 100%</span>
-  </div>
-
-  <div id="fundListContainer"></div>
 </div>
 
 <script>
   /* ============================================================================
-   * 模块一：本地状态管理与无密钥云端接口（绝不在代码中硬编码任何 Token）
+   * 核心配置：基金池定义（1只核心基石 + 3只卫星权益 + 2只防守避险）
    * ============================================================================ */
-  const LOCAL_STORAGE_KEY = 'ai_quant_fund_v9_state';
-  const CLOUD_ENDPOINT_KEY = 'ai_quant_fund_v9_cloud';
-
-  let userParams = { salary: 5000, rent: 800, daily: 50 };
-
-  function loadLocalState() {
-    try {
-      const saved = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '{}');
-      if (saved.salary !== undefined) userParams.salary = Number(saved.salary);
-      if (saved.rent !== undefined) userParams.rent = Number(saved.rent);
-      if (saved.daily !== undefined) userParams.daily = Number(saved.daily);
-
-      document.getElementById('inSalary').value = userParams.salary;
-      document.getElementById('inRent').value = userParams.rent;
-      document.getElementById('inDaily').value = userParams.daily;
-
-      const cloudCfg = JSON.parse(localStorage.getItem(CLOUD_ENDPOINT_KEY) || '{}');
-      if (cloudCfg.url) document.getElementById('inWorkerUrl').value = cloudCfg.url;
-      if (cloudCfg.token) document.getElementById('inSyncToken').value = cloudCfg.token;
-    } catch (e) {}
-  }
-
-  function saveCloudEndpoint() {
-    const url = document.getElementById('inWorkerUrl').value.trim().replace(/\/+$/, '');
-    const token = document.getElementById('inSyncToken').value.trim();
-    localStorage.setItem(CLOUD_ENDPOINT_KEY, JSON.stringify({ url, token }));
-  }
-
-  function toggleSettingDrawer() {
-    document.getElementById('settingDrawer').classList.toggle('open');
-  }
-
-  let syncDebounceTimer = null;
-  function onParamChange() {
-    userParams.salary = Math.max(0, parseFloat(document.getElementById('inSalary').value) || 0);
-    userParams.rent = Math.max(0, parseFloat(document.getElementById('inRent').value) || 0);
-    userParams.daily = Math.max(0, parseFloat(document.getElementById('inDaily').value) || 0);
-
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userParams));
-    renderUI();
-
-    // 若已配置云端 Worker，则输入停顿 1.2 秒后自动静默同步至 Cloudflare D1
-    clearTimeout(syncDebounceTimer);
-    syncDebounceTimer = setTimeout(() => {
-      const { url, token } = JSON.parse(localStorage.getItem(CLOUD_ENDPOINT_KEY) || '{}');
-      if (url && token) pushToCloud(true);
-    }, 1200);
-  }
+  const FUND_POOL = {
+    core: {
+      key: 'nasdaq', name: '广发纳指100ETF联接A', code: '270042',
+      percentile6M: 62, maxDrawdown6M: -6.5, dayChange: -0.25
+    },
+    satellites: [
+      { key: 'hs300', name: '沪深300ETF联接A',   code: '110020', percentile6M: 18, maxDrawdown6M: -14.2, dayChange: -0.65, score: 0 },
+      { key: 'a500',  name: '华夏中证A500联接A', code: '022430', percentile6M: 28, maxDrawdown6M: -11.8, dayChange: -0.35, score: 0 },
+      { key: 'cyb',   name: '天弘创业板ETF联接A', code: '001592', percentile6M: 82, maxDrawdown6M: -3.2,  dayChange: +1.65, score: 0 }
+    ],
+    defensive: {
+      bond: { key: 'bond', name: '招商双债增强纯债A', code: '161716', percentile6M: 55, maxDrawdown6M: -0.8, dayChange: +0.04 },
+      cash: { key: 'cash', name: '天弘余额宝货币',    code: '000198' }
+    }
+  };
 
   /* ============================================================================
-   * 模块二：三因子量化模型（估值 Valuation + 趋势 Trend + 波动率 Volatility）
+   * 核心算法：三因子「买入性价比评分」与「核心-卫星动态资金分配引擎」
    * ============================================================================ */
-  const PORTFOLIO_ITEMS = [
-    // 进攻型权益资产（中高风险，基准合计 45%）
-    { key: 'hs300',  name: '沪深300ETF联接A',   code: '110020', group: 'stock', basePct: 11 },
-    { key: 'a500',   name: '华夏中证A500联接A', code: '022430', group: 'stock', basePct: 12 },
-    { key: 'cyb',    name: '天弘创业板ETF联接A', code: '001592', group: 'stock', basePct: 10 },
-    { key: 'nasdaq', name: '广发纳指100ETF联接A', code: '270042', group: 'stock', basePct: 12 },
-    // 防守型固收与现金资产（基准合计 55%）
-    { key: 'bond',   name: '招商双债增强纯债A', code: '161716', group: 'bond',  basePct: 25 },
-    { key: 'money',  name: '天弘余额宝货币',    code: '000198', group: 'cash',  basePct: 15 },
-    { key: 'tenpay', name: '财付通 (微信零钱通)', code: 'TENPAY', group: 'cash',  basePct: 15 }
-  ];
-
-  // 存储每只基金的实时三因子计算结果
-  const factorStore = {};
 
   /**
-   * 给定最近 N 日单位净值数组 navs 和最新日涨跌 realtimeDayChg，计算三大核心量化因子
+   * 1. 计算单只基金的「买入性价比评分」(0 ~ 100分)
+   * 核心逻辑：越跌、分位点越低、回撤越深 ➔ 性价比评分越高！
+   * - 因子A：近半年净值分位点 (权重 50%，最高 50 分) -> 分位点 0% 得 50分，分位点 100% 得 0分
+   * - 因子B：近半年最大回撤深度 (权重 30%，最高 30 分) -> 回撤达 -25% 拿满 30分，无回撤 0分
+   * - 因子C：当前当日涨跌幅 (权重 20%，最高 20 分) -> 当日大跌 -2.5% 拿满 20分，当日大涨 +2.5% 得 0分
    */
-  function computeThreeFactors(navs, realtimeDayChg) {
-    const slice120 = navs.slice(-120);
-    const len = slice120.length;
-    if (len < 20) {
-      return {
-        valPercentile: 50,
-        ma20DiffPct: 0,
-        ma60DiffPct: 0,
-        trendScore: 0,
-        annualVolPct: 18,
-        dayChange: realtimeDayChg ?? 0
-      };
-    }
+  function calculateBargainScore(fund) {
+    // A. 分位点逆向得分 (0 ~ 50)
+    const clampedPct = Math.max(0, Math.min(100, fund.percentile6M));
+    const percentileScore = ((100 - clampedPct) / 100) * 50;
 
-    const current = slice120[len - 1];
-    const min120 = Math.min(...slice120);
-    const max120 = Math.max(...slice120);
+    // B. 最大回撤深度得分 (0 ~ 30)
+    const ddAbs = Math.min(25, Math.abs(fund.maxDrawdown6M));
+    const drawdownScore = (ddAbs / 25) * 30;
 
-    // 1. 估值因子 (Valuation)：当前净值在近120个交易日的高低分位点 (0%最低 ~ 100%最高)
-    const valPercentile = max120 > min120
-      ? ((current - min120) / (max120 - min120)) * 100
-      : 50;
+    // C. 当日跌势低吸得分 (0 ~ 20)：以 0% 为中轴(10分)，每跌 1% 加 4 分，每涨 1% 扣 4 分
+    const intradayScore = Math.max(0, Math.min(20, 10 - fund.dayChange * 4));
 
-    // 2. 趋势因子 (Trend)：计算 MA20 与 MA60 均线关系，判断右侧动量与主跌浪保护
-    const ma20Slice = slice120.slice(-20);
-    const ma60Slice = slice120.slice(-Math.min(60, len));
-    const ma20 = ma20Slice.reduce((s, v) => s + v, 0) / ma20Slice.length;
-    const ma60 = ma60Slice.reduce((s, v) => s + v, 0) / ma60Slice.length;
+    return Math.round(percentileScore + drawdownScore + intradayScore);
+  }
 
-    const ma20DiffPct = ((current - ma20) / ma20) * 100;
-    const ma60DiffPct = ((ma20 - ma60) / ma60) * 100;
+  /**
+   * 2. 核心-卫星动态资金分配主引擎
+   * 输入：总定投池 totalInvest, 纳指固定比例 nasdaqRatioPct, 当前股基持仓 holdStock, 当前债基持仓 holdBond
+   */
+  function runCoreSatelliteEngine(totalInvest, nasdaqRatioPct, holdStock, holdBond) {
+    const orders = [];
+    let remainingPool = totalInvest;
 
-    // 趋势综合得分 (-1.0 主跌浪 ~ +1.0 右侧多头排列)
-    let trendScore = 0;
-    if (current >= ma20 && ma20 >= ma60) {
-      trendScore = +0.6; // 多头趋势确认，右侧顺势加码
-    } else if (current >= ma20 && ma20 < ma60) {
-      trendScore = +0.8; // 底部拐头突破20日线（黄金右侧买点）
-    } else if (current < ma20 && ma20 < ma60) {
-      trendScore = -0.7; // 空头主跌浪，触发左侧保护，克制盲目抄底
+    // 【第一步：处理基石仓位（纳指固定定投 + 85%高估熔断保护）】
+    const rawCoreAmount = Math.round(totalInvest * (nasdaqRatioPct / 100));
+    const coreFund = FUND_POOL.core;
+    let actualCoreStockAmt = 0;
+    let coreMeltdownToBondAmt = 0;
+
+    if (coreFund.percentile6M > 85) {
+      // 高级风控触发：纳指半年分位点 > 85%，暂停纳指固定买入，全额转入纯债避险
+      coreMeltdownToBondAmt = rawCoreAmount;
+      orders.push({
+        name: `${coreFund.name} (${coreFund.code})`,
+        role: '基石仓位·高估熔断',
+        amount: 0,
+        reason: `⚠️ 当前半年分位点高达 ${coreFund.percentile6M.toFixed(0)}% (>85%警戒线)，暂停本期固定定投，原定 ¥${rawCoreAmount} 已自动转入纯债避险`
+      });
     } else {
-      trendScore = -0.2; // 高位跌破20日线，短期回调
+      actualCoreStockAmt = rawCoreAmount;
+      orders.push({
+        name: `${coreFund.name} (${coreFund.code})`,
+        role: '基石仓位·固定定投',
+        amount: actualCoreStockAmt,
+        reason: `📌 长期核心基石资产（固定分配 ${nasdaqRatioPct}%，当前半年分位 ${coreFund.percentile6M.toFixed(0)}% 未触发熔断）`
+      });
+    }
+    remainingPool = Math.max(0, totalInvest - rawCoreAmount);
+
+    // 【第二步：计算卫星池每只权益基金的「买入性价比评分」】
+    const satellites = FUND_POOL.satellites;
+    satellites.forEach(f => {
+      f.score = calculateBargainScore(f);
+    });
+
+    // 筛选出合格可买的卫星基金（评分 < 38 分代表当前估值偏高或连续大涨，直接暂停买入 0 元！）
+    const MIN_BUY_SCORE = 38;
+    const eligibleSatellites = satellites.filter(f => f.score >= MIN_BUY_SCORE);
+
+    // 【第三步：决定卫星动态池中“多少买进取股基、多少转入纯债/余额宝避险”】
+    // 计算卫星池最高分与平均分：若全市场普遍高估（最高分都很低），则大部分资金自动留存纯债/余额宝
+    const maxScore = satellites.reduce((max, f) => Math.max(max, f.score), 0);
+    const avgScore = satellites.reduce((sum, f) => sum + f.score, 0) / satellites.length;
+
+    // 动态池进攻比例系数 (0.0 ~ 0.85)：平均性价比越高，动态池分给股基的比例越高；反之全部避险
+    let dynamicEquityRatio = 0;
+    if (eligibleSatellites.length > 0) {
+      dynamicEquityRatio = Math.max(0.15, Math.min(0.85, (avgScore - 25) / 55));
     }
 
-    // 3. 波动率因子 (Volatility)：近20日对数/简单日收益率标准差 * sqrt(252) 年化
-    const returns20 = [];
-    for (let i = len - 20; i < len; i++) {
-      if (i > 0 && slice120[i - 1] > 0) {
-        returns20.push((slice120[i] - slice120[i - 1]) / slice120[i - 1]);
+    const satelliteEquityBudget = Math.round(remainingPool * dynamicEquityRatio);
+    const defensivePoolBudget = remainingPool - satelliteEquityBudget + coreMeltdownToBondAmt;
+
+    // 【第四步：非线性幂次加权分配（拉开差距，绝不平均分配！）】
+    // 使用 (score - 30)^2 作为权重，让高性价比（极度低估）的品种拿走大头资金
+    const totalPoweredWeight = eligibleSatellites.reduce((sum, f) => sum + Math.pow(f.score - 30, 2), 0);
+    let allocatedSatMoney = 0;
+
+    satellites.forEach((f, idx) => {
+      if (f.score < MIN_BUY_SCORE || totalPoweredWeight === 0) {
+        f.allocWeightPct = 0;
+        f.buyAmount = 0;
+        orders.push({
+          name: `${f.name} (${f.code})`,
+          role: '卫星仓位·暂停买入',
+          amount: 0,
+          score: f.score,
+          reason: `🛑 性价比评分仅 ${f.score} 分（半年分位 ${f.percentile6M.toFixed(0)}%，当日 ${f.dayChange >= 0 ? '+' : ''}${f.dayChange.toFixed(2)}%），当前估值偏高暂停买入`
+        });
+      } else {
+        const rawW = Math.pow(f.score - 30, 2) / totalPoweredWeight;
+        f.allocWeightPct = Math.round(rawW * 100);
+        // 最后一只合格基金兜底对齐尾差
+        const isLastEligible = f.key === eligibleSatellites[eligibleSatellites.length - 1].key;
+        const buyAmt = isLastEligible
+          ? Math.max(0, satelliteEquityBudget - allocatedSatMoney)
+          : Math.round(satelliteEquityBudget * rawW);
+        allocatedSatMoney += buyAmt;
+        f.buyAmount = buyAmt;
+
+        let tagDesc = f.score >= 70 ? '🔥 极度低估·重仓低吸' : '✅ 估值合理·顺势定投';
+        orders.push({
+          name: `${f.name} (${f.code})`,
+          role: `卫星仓位·评分 ${f.score}分`,
+          amount: buyAmt,
+          score: f.score,
+          reason: `${tagDesc}（半年分位 ${f.percentile6M.toFixed(0)}%，回撤 ${f.maxDrawdown6M.toFixed(1)}%，获卫星进攻池 ${f.allocWeightPct}% 权重）`
+        });
+      }
+    });
+
+    // 【第五步：防守避险资金分配（纯债压舱 + 余额宝等待机会）】
+    // 若市场整体高估（闲置避险资金多），60% 买纯债吃稳健票息，40% 放天弘余额宝随时准备抄底
+    const bondBuyAmt = Math.round(defensivePoolBudget * 0.55);
+    const cashBuyAmt = defensivePoolBudget - bondBuyAmt;
+
+    orders.push({
+      name: `${FUND_POOL.defensive.bond.name} (${FUND_POOL.defensive.bond.code})`,
+      role: '防守底仓·纯债避险',
+      amount: bondBuyAmt,
+      reason: `🛡️ 承接高估轮出与稳健防守资金（最新日涨跌 ${FUND_POOL.defensive.bond.dayChange >= 0 ? '+' : ''}${FUND_POOL.defensive.bond.dayChange.toFixed(2)}%）`
+    });
+
+    orders.push({
+      name: `${FUND_POOL.defensive.cash.name} (${FUND_POOL.defensive.cash.code})`,
+      role: '机动现金·等待机会',
+      amount: cashBuyAmt,
+      reason: `💧 剩余防守资金转入天弘余额宝，留作未来指数大跌时的抄底弹药`
+    });
+
+    // 【第六步：股债实际持仓偏离度检测（超 10% 触发再平衡指令）】
+    // 目标股债比：根据当前全市场平均性价比动态锚定（基准 60% 股 : 40% 债）
+    const targetStockRatio = 0.60;
+    const totalHold = holdStock + holdBond;
+    let rebalanceInstruction = null;
+
+    if (totalHold > 0) {
+      const actualStockRatio = holdStock / totalHold;
+      const deviation = actualStockRatio - targetStockRatio; // 正数说明股票超配，负数说明股票欠配
+
+      if (Math.abs(deviation) > 0.10) {
+        const shiftAmount = Math.round(Math.abs(deviation) * totalHold * 0.5); // 建议每次修正一半偏离度，平滑冲击
+        if (deviation > 0.10) {
+          rebalanceInstruction = `⚖️ 【触发股债再平衡指令】您当前存量持仓中股基占比高达 ${(actualStockRatio * 100).toFixed(1)}%（超出 60% 目标线 +${(deviation * 100).toFixed(1)}%）。建议本月除按上方指令定投外，额外赎回约 ¥${shiftAmount} 高位股基，转入「招商双债增强A (161716)」锁住利润！`;
+        } else {
+          rebalanceInstruction = `⚖️ 【触发股债再平衡指令】您当前存量持仓中股基占比仅 ${(actualStockRatio * 100).toFixed(1)}%（低于 60% 目标线 ${(deviation * 100).toFixed(1)}%）。建议从余额宝/纯债中额外抽出约 ¥${shiftAmount}，加仓当前性价比最高的「${eligibleSatellites[0]?.name || '沪深300'}」！`;
+        }
       }
     }
-    const meanR = returns20.reduce((s, r) => s + r, 0) / (returns20.length || 1);
-    const variance = returns20.reduce((s, r) => s + Math.pow(r - meanR, 2), 0) / (returns20.length || 1);
-    const annualVolPct = Math.sqrt(variance) * Math.sqrt(252) * 100;
 
-    return {
-      valPercentile,
-      ma20DiffPct,
-      ma60DiffPct,
-      trendScore,
-      annualVolPct,
-      dayChange: realtimeDayChg ?? (returns20[returns20.length - 1] * 100 || 0)
-    };
-  }
-
-  /**
-   * 根据三因子模型动态计算「股债大类总配比」与「每只基金精确百分比」
-   */
-  function runQuantModelAllocation() {
-    const stockItems = PORTFOLIO_ITEMS.filter(i => i.group === 'stock');
-
-    // 汇总 4 只核心权益基金的平均估值分位、平均趋势分、平均年化波动率
-    let sumVal = 0, sumTrend = 0, sumVol = 0, validCnt = 0;
-    stockItems.forEach(item => {
-      const f = factorStore[item.key];
-      if (f) {
-        sumVal += f.valPercentile;
-        sumTrend += f.trendScore;
-        sumVol += f.annualVolPct;
-        validCnt++;
-      }
-    });
-
-    const avgVal = validCnt > 0 ? sumVal / validCnt : 50;
-    const avgTrend = validCnt > 0 ? sumTrend / validCnt : 0;
-    const avgVol = validCnt > 0 ? sumVol / validCnt : 20;
-
-    // 一、计算动态股基总仓位（基准 45%，范围 30% ~ 62%）
-    const valShift = (50 - avgVal) * 0.24;               // 估值每低10分位，股基+2.4%
-    const trendShift = avgTrend * 4.5;                   // 趋势右侧确认+3.6%，主跌浪-3.1%
-    const volPenalty = Math.max(0, avgVol - 22) * 0.35;  // 市场年化波动超22%时启动降仓避险
-
-    let rawStockTotal = 45 + valShift + trendShift - volPenalty;
-    const totalStockPct = Number(Math.max(30, Math.min(62, rawStockTotal)).toFixed(1));
-    const totalDefendPct = Number((100 - totalStockPct).toFixed(1));
-
-    // 二、4 只核心股基内部按「估值低位 + 趋势右侧 + 逆波动率风险平价 + 当日逢跌」分配权重
-    const stockScores = stockItems.map(item => {
-      const f = factorStore[item.key] || {
-        valPercentile: 50, trendScore: 0, annualVolPct: 20, dayChange: 0
-      };
-
-      // 估值分：越低越买 (0.75 ~ 1.35)
-      const vMult = 1 + (50 - f.valPercentile) * 0.007;
-      // 趋势分：突破20日线加权，空头主跌浪降权 (0.82 ~ 1.20)
-      const tMult = 1 + f.trendScore * 0.22;
-      // 波动率阻尼（逆波动率平价）：波动过大的品种降低单次冲击 (0.78 ~ 1.12)
-      const volMult = 1 - Math.max(-6, Math.min(12, f.annualVolPct - 20)) * 0.018;
-      // 日内绿盘微调
-      const dipMult = 1 + Math.max(-0.08, Math.min(0.10, -f.dayChange * 0.04));
-
-      const finalMultiplier = Math.max(0.55, Math.min(1.65, vMult * tMult * volMult * dipMult));
-      const rawScore = item.basePct * finalMultiplier;
-
-      // 生成一句话 AI 决策建议
-      let advice = '';
-      if (f.valPercentile <= 35 && f.trendScore >= 0) {
-        advice = `🔥 黄金击球区：半年低位(${f.valPercentile.toFixed(0)}%分位)且均线拐头向上，重点超配`;
-      } else if (f.valPercentile <= 35 && f.trendScore < 0) {
-        advice = `🛡️ 左侧磨底区：估值便宜(${f.valPercentile.toFixed(0)}%分位)但均线向下，分批温和低吸`;
-      } else if (f.valPercentile >= 72) {
-        advice = `⚠️ 高位防追高：处于半年${f.valPercentile.toFixed(0)}%高分位，AI已自动下调定投占比`;
-      } else if (f.annualVolPct >= 28) {
-        advice = `🌊 高波动降权：年化波动率达${f.annualVolPct.toFixed(1)}%，启动风险平价控仓`;
-      } else {
-        advice = `⚖️ 估值中枢(${f.valPercentile.toFixed(0)}%分位) + 趋势平稳，维持标准定投节奏`;
-      }
-
-      return { key: item.key, rawScore, advice };
-    });
-
-    const sumStockRaw = stockScores.reduce((s, x) => s + x.rawScore, 0);
-    let allocatedStock = 0;
-    const finalPcts = {};
-    const finalAdvices = {};
-
-    stockScores.forEach((x, idx) => {
-      finalAdvices[x.key] = x.advice;
-      if (idx === stockScores.length - 1) {
-        finalPcts[x.key] = Number(Math.max(2, totalStockPct - allocatedStock).toFixed(1));
-      } else {
-        const p = Number(((x.rawScore / sumStockRaw) * totalStockPct).toFixed(1));
-        finalPcts[x.key] = p;
-        allocatedStock = Number((allocatedStock + p).toFixed(1));
-      }
-    });
-
-    // 三、防守端（纯债 161716 + 余额宝 000198 + 财付通）按比例承接 totalDefendPct
-    finalPcts.bond = Number((totalDefendPct * (25 / 55)).toFixed(1));
-    finalPcts.money = Number((totalDefendPct * (15 / 55)).toFixed(1));
-    finalPcts.tenpay = Number((100 - totalStockPct - finalPcts.bond - finalPcts.money).toFixed(1));
-
-    const bondF = factorStore['bond'];
-    finalAdvices.bond = bondF
-      ? `🛡️ 纯债压舱石（年化波动仅 ${bondF.annualVolPct.toFixed(1)}%），对冲权益组合回撤`
-      : `🛡️ 纯债稳健底仓，平滑大盘波动`;
-    finalAdvices.money = `💧 机动弹药库：大盘触发黄金买点时随时抽出补仓`;
-    finalAdvices.tenpay = `👛 微信零钱通活钱底仓，保障日常应急流动性`;
-
-    window.currentQuantResult = {
-      totalStockPct,
-      totalDefendPct,
-      avgVal,
-      avgTrend,
-      avgVol,
-      finalPcts,
-      finalAdvices
-    };
-
-    renderUI();
+    return { orders, rebalanceInstruction, coreMeltdownToBondAmt, bondBuyAmt, cashBuyAmt };
   }
 
   /* ============================================================================
-   * 模块三：直连天天基金网双接口拉取 120 日真实净值序列与实时估值
+   * 联网行情抓取：优先读 Cloudflare D1 缓存（<24小时），否则实时抓取天天基金
    * ============================================================================ */
-  function fetchFundGz(code) {
-    return new Promise(resolve => {
-      const script = document.createElement('script');
-      let done = false;
-      const timer = setTimeout(() => { if (!done) { done = true; script.remove(); resolve(null); } }, 3200);
-      window.jsonpgz = function(data) {
-        if (!done) { done = true; clearTimeout(timer); script.remove(); resolve(data); }
-      };
-      script.src = `https://fundgz.1234567.com.cn/js/${code}.js?rt=${Date.now()}`;
-      script.onerror = () => { if (!done) { done = true; clearTimeout(timer); script.remove(); resolve(null); } };
-      document.body.appendChild(script);
-    });
-  }
-
-  function fetchFundPingzhong(code) {
+  function fetchEastmoneyPingzhong(code) {
     return new Promise(resolve => {
       window.Data_netWorthTrend = null;
       const script = document.createElement('script');
       let done = false;
-      const timer = setTimeout(() => { if (!done) { done = true; script.remove(); resolve(null); } }, 4200);
+      const timer = setTimeout(() => { if (!done) { done = true; script.remove(); resolve(null); } }, 4000);
 
       script.src = `https://fund.eastmoney.com/pingzhongdata/${code}.js?v=${Date.now()}`;
       script.onload = () => {
         if (!done) {
           done = true;
           clearTimeout(timer);
-          let navs = [];
-          let lastEquityReturn = 0;
-          if (Array.isArray(window.Data_netWorthTrend) && window.Data_netWorthTrend.length > 0) {
+          if (Array.isArray(window.Data_netWorthTrend) && window.Data_netWorthTrend.length >= 20) {
             const trend = window.Data_netWorthTrend;
-            navs = trend.slice(-125).map(pt => parseFloat(pt.y)).filter(v => !isNaN(v) && v > 0);
-            const lastPt = trend[trend.length - 1];
-            if (lastPt && lastPt.equityReturn !== undefined) {
-              lastEquityReturn = parseFloat(lastPt.equityReturn);
-            }
+            const slice120 = trend.slice(-120).map(pt => Number(pt.y)).filter(v => !isNaN(v) && v > 0);
+            const cur = slice120[slice120.length - 1];
+            const min = Math.min(...slice120);
+            const max = Math.max(...slice120);
+            const percentile6M = max > min ? ((cur - min) / (max - min)) * 100 : 50;
+            const maxDrawdown6M = ((cur - max) / max) * 100;
+            const dayChange = Number(trend[trend.length - 1]?.equityReturn ?? 0);
+            script.remove();
+            resolve({ percentile6M, maxDrawdown6M, dayChange });
+            return;
           }
           script.remove();
-          resolve({ navs, lastEquityReturn });
+          resolve(null);
         }
       };
       script.onerror = () => { if (!done) { done = true; clearTimeout(timer); script.remove(); resolve(null); } };
@@ -713,220 +580,172 @@
     });
   }
 
-  async function refreshAllMarketData() {
-    const tag = document.getElementById('liveStatusTag');
-    const btn = document.getElementById('btnRefreshQuotes');
-    tag.textContent = '📡 正在拉取天天基金120日净值与实时估值...';
+  async function generateMonthlyPlan() {
+    const btn = document.getElementById('btnGenerate');
+    const badge = document.getElementById('dataSourceBadge');
     btn.disabled = true;
+    btn.textContent = '⏳ 正在同步行情并计算三因子性价比...';
 
-    const liveFunds = PORTFOLIO_ITEMS.filter(i => i.code !== 'TENPAY' && i.code !== '000198');
-    for (let i = 0; i < liveFunds.length; i++) {
-      const item = liveFunds[i];
-      const [gz, pz] = await Promise.all([
-        fetchFundGz(item.code),
-        fetchFundPingzhong(item.code)
-      ]);
+    const salary = Math.max(0, Number(document.getElementById('inSalary').value) || 0);
+    const rent = Math.max(0, Number(document.getElementById('inRent').value) || 0);
+    const daily = Math.max(0, Number(document.getElementById('inDaily').value) || 0);
+    const nasdaqRatio = Math.max(0, Math.min(60, Number(document.getElementById('inNasdaqRatio').value) || 20));
+    const holdStock = Math.max(0, Number(document.getElementById('inHoldStock').value) || 0);
+    const holdBond = Math.max(0, Number(document.getElementById('inHoldBond').value) || 0);
 
-      let dayChg = pz ? pz.lastEquityReturn : 0;
-      if (gz && gz.gszzl !== undefined && !isNaN(parseFloat(gz.gszzl)) && parseFloat(gz.gszzl) !== 0) {
-        dayChg = parseFloat(gz.gszzl);
-      }
+    const totalInvest = Math.max(0, salary - rent - daily * 30);
 
-      const navList = (pz && pz.navs && pz.navs.length > 0) ? pz.navs : [];
-      factorStore[item.key] = computeThreeFactors(navList, dayChg);
-    }
+    // 1. 尝试与 Cloudflare Worker + D1 通信（保存输入参数 & 读取24小时内缓存行情）
+    let usedD1Cache = false;
+    const { url, token } = getCloudConfig();
 
-    const nowStr = new Date().toLocaleTimeString();
-    tag.textContent = `✅ 三因子实时量化已同步 (${nowStr})`;
-    btn.disabled = false;
-    runQuantModelAllocation();
-  }
+    if (url && token) {
+      try {
+        // 异步保存用户输入参数到 D1
+        fetch(`${url}/api/plan`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ salary, rent, daily, nasdaqRatio, holdStock, holdBond })
+        }).catch(() => {});
 
-  /* ============================================================================
-   * 模块四：界面渲染与一键跟投复制
-   * ============================================================================ */
-  function renderUI() {
-    const { salary, rent, daily } = userParams;
-    const afterRent = Math.max(0, salary - rent);
-    const livingMonth = Math.min(afterRent, daily * 30);
-    const investPool = Math.max(0, afterRent - livingMonth);
-    const saveRate = afterRent > 0 ? Math.round((investPool / afterRent) * 100) : 0;
-
-    // 更新顶部折叠抽屉摘要
-    document.getElementById('drawerSummaryText').textContent =
-      `工资 ¥${salary} | 房租 ¥${rent} | 日均 ¥${daily} ▼`;
-
-    // 更新首屏大卡片
-    document.getElementById('heroInvestTotal').textContent = `¥${investPool.toFixed(2)}`;
-    document.getElementById('heroSubMeta').textContent =
-      `扣房租后 ¥${afterRent.toFixed(0)} · 预留月生活费 ¥${livingMonth.toFixed(0)} (定投储蓄率 ${saveRate}%)`;
-
-    const q = window.currentQuantResult;
-    if (!q) return;
-
-    document.getElementById('lblStockRatio').textContent = `🔥 进攻股基 (中高风险)：${q.totalStockPct.toFixed(1)}%`;
-    document.getElementById('lblBondRatio').textContent = `🛡️ 防守固收 (纯债/活钱)：${q.totalDefendPct.toFixed(1)}%`;
-    document.getElementById('barStock').style.width = `${q.totalStockPct}%`;
-    document.getElementById('barBond').style.width = `${q.totalDefendPct}%`;
-
-    const trendDesc = q.avgTrend >= 0.2 ? '右侧多头向上' : (q.avgTrend <= -0.3 ? '左侧空头防御' : '均线震荡整理');
-    document.getElementById('aiMacroBrief').innerHTML =
-      `🤖 <strong>AI 三因子诊断</strong>：核心宽基平均估值分位 <strong>${q.avgVal.toFixed(0)}%</strong>，` +
-      `均线趋势 <strong>${trendDesc}</strong>，20日年化波动率 <strong>${q.avgVol.toFixed(1)}%</strong> ➔ ` +
-      `系统已将股基总仓位动态匹配为 <strong>${q.totalStockPct.toFixed(1)}%</strong>。`;
-
-    // 渲染精简基金列表（点击展开三因子详情）
-    const container = document.getElementById('fundListContainer');
-    container.innerHTML = PORTFOLIO_ITEMS.map(item => {
-      const pct = q.finalPcts[item.key] ?? item.basePct;
-      const amt = investPool * (pct / 100);
-      const advice = q.finalAdvices[item.key] || '';
-      const f = factorStore[item.key];
-
-      const factorDetailHtml = f ? `
-        <div class="factor-drawer">
-          <div class="factor-grid">
-            <div class="factor-box">
-              <div class="k">120日估值分位</div>
-              <div class="v">${f.valPercentile.toFixed(1)}%</div>
-            </div>
-            <div class="factor-box">
-              <div class="k">MA20偏离 / 趋势</div>
-              <div class="v">${f.ma20DiffPct >= 0 ? '+' : ''}${f.ma20DiffPct.toFixed(2)}%</div>
-            </div>
-            <div class="factor-box">
-              <div class="k">20日年化波动率</div>
-              <div class="v">${f.annualVolPct.toFixed(1)}%</div>
-            </div>
-          </div>
-          <div style="display:flex; justify-content:space-between; color:var(--text-sub);">
-            <span>基准配比：${item.basePct}% ➔ AI调整后：<strong>${pct.toFixed(1)}%</strong></span>
-            <span>最新日涨跌：<strong>${f.dayChange >= 0 ? '+' : ''}${f.dayChange.toFixed(2)}%</strong></span>
-          </div>
-        </div>
-      ` : '';
-
-      return `
-        <div class="fund-card" onclick="this.classList.toggle('expanded')">
-          <div class="fund-main-row">
-            <div class="fund-title">
-              <span>${item.name}</span>
-              <span class="code-pill">${item.code}</span>
-            </div>
-            <div class="fund-right">
-              <span class="fund-pct">${pct.toFixed(1)}%</span>
-              <span class="fund-amt">¥${amt.toFixed(2)}</span>
-            </div>
-          </div>
-          <div class="fund-one-liner">
-            <span>${advice}</span>
-            <span style="font-size:0.85em; opacity:0.75;">详情 ▾</span>
-          </div>
-          ${factorDetailHtml}
-        </div>
-      `;
-    }).join('');
-  }
-
-  function copyAllOrderSheet() {
-    const q = window.currentQuantResult;
-    if (!q) return;
-    const afterRent = Math.max(0, userParams.salary - userParams.rent);
-    const investPool = Math.max(0, afterRent - Math.min(afterRent, userParams.daily * 30));
-
-    let lines = [`【AI智能定投跟投单】本月定投总额：¥${investPool.toFixed(2)} (股${q.totalStockPct}% / 债${q.totalDefendPct}%)`];
-    PORTFOLIO_ITEMS.forEach(item => {
-      const pct = q.finalPcts[item.key] ?? item.basePct;
-      const amt = (investPool * pct / 100).toFixed(2);
-      lines.push(`• ${item.name} (${item.code})：${pct.toFixed(1)}% ➔ 买入 ¥${amt}`);
-    });
-    const text = lines.join('\n');
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text);
-      alert('✅ 本月完整跟投作业单已复制，可直接发到微信备忘！\n\n' + text);
-    } else {
-      prompt('请复制以下定投跟投单：', text);
-    }
-  }
-
-  /* ============================================================================
-   * 模块五：与 Cloudflare Workers + D1 云端双向同步
-   * ============================================================================ */
-  async function pushToCloud(silent = false) {
-    const { url, token } = JSON.parse(localStorage.getItem(CLOUD_ENDPOINT_KEY) || '{}');
-    const msgEl = document.getElementById('cloudStatusMsg');
-    if (!url || !token) {
-      if (!silent) alert('请先在输入框填写您的 Cloudflare Worker 地址与自定义同步口令！');
-      return;
-    }
-    try {
-      msgEl.textContent = '状态：⏳ 正在加密同步至 Cloudflare D1...';
-      const res = await fetch(`${url}/api/state`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(userParams)
-      });
-      if (!res.ok) throw new Error('鉴权失败或网络异常');
-      msgEl.textContent = `状态：✅ 已于 ${new Date().toLocaleTimeString()} 自动同步至云端 D1`;
-    } catch (err) {
-      msgEl.textContent = `状态：⚠️ 云端同步失败 (${err.message})`;
-    }
-  }
-
-  async function pullFromCloud() {
-    const { url, token } = JSON.parse(localStorage.getItem(CLOUD_ENDPOINT_KEY) || '{}');
-    const msgEl = document.getElementById('cloudStatusMsg');
-    if (!url || !token) {
-      alert('请先填写 Worker 地址与同步口令！');
-      return;
-    }
-    try {
-      msgEl.textContent = '状态：⏳ 正在从云端 D1 拉取配置与缓存行情...';
-      const res = await fetch(`${url}/api/state`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (!res.ok) throw new Error('口令错误或连接失败');
-      const data = await res.json();
-
-      if (data.config) {
-        userParams = {
-          salary: Number(data.config.salary ?? 5000),
-          rent: Number(data.config.rent ?? 800),
-          daily: Number(data.config.daily ?? 50)
-        };
-        document.getElementById('inSalary').value = userParams.salary;
-        document.getElementById('inRent').value = userParams.rent;
-        document.getElementById('inDaily').value = userParams.daily;
-        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userParams));
-      }
-
-      // 若云端 D1 已有定时抓取的因子数据，可直接回填加速
-      if (Array.isArray(data.market) && data.market.length > 0) {
-        data.market.forEach(row => {
-          factorStore[row.fund_key] = {
-            valPercentile: Number(row.val_percentile),
-            ma20DiffPct: Number(row.ma20_diff),
-            ma60DiffPct: 0,
-            trendScore: Number(row.trend_score),
-            annualVolPct: Number(row.annual_vol),
-            dayChange: Number(row.day_change)
-          };
+        // 拉取 D1 缓存的行情评分数据
+        const res = await fetch(`${url}/api/market-cache`, {
+          headers: { 'Authorization': `Bearer ${token}` }
         });
-        runQuantModelAllocation();
+        if (res.ok) {
+          const cacheData = await res.json();
+          const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+          if (cacheData.updatedAt && (Date.now() - cacheData.updatedAt < ONE_DAY_MS) && Array.isArray(cacheData.funds) && cacheData.funds.length > 0) {
+            applyMarketMetrics(cacheData.funds);
+            usedD1Cache = true;
+            badge.textContent = '⚡ 数据源：Cloudflare D1 收盘缓存 (<24h)';
+          }
+        }
+      } catch (e) {}
+    }
+
+    // 2. 若未命中 D1 缓存（或缓存已超1天），浏览器实时直连天天基金抓取 120 日净值
+    if (!usedD1Cache) {
+      badge.textContent = '📡 正在实时拉取天天基金网 120 日数据...';
+      const allTargets = [FUND_POOL.core, ...FUND_POOL.satellites, FUND_POOL.defensive.bond];
+      for (const f of allTargets) {
+        const live = await fetchEastmoneyPingzhong(f.code);
+        if (live) {
+          f.percentile6M = live.percentile6M;
+          f.maxDrawdown6M = live.maxDrawdown6M;
+          f.dayChange = live.dayChange;
+        }
       }
-      msgEl.textContent = `状态：✅ 云端数据回填成功 (${new Date().toLocaleTimeString()})`;
-    } catch (err) {
-      msgEl.textContent = `状态：⚠️ 拉取失败 (${err.message})`;
+      badge.textContent = `✅ 实时行情已更新 (${new Date().toLocaleTimeString()})`;
+    }
+
+    // 3. 运行核心-卫星动态资金分配引擎
+    const plan = runCoreSatelliteEngine(totalInvest, nasdaqRatio, holdStock, holdBond);
+
+    // 4. 渲染自然语言操作指令卡片
+    renderCommandUI(totalInvest, plan);
+
+    btn.disabled = false;
+    btn.textContent = '⚡ 实时联网抓取行情 · 重新生成本月操作指令';
+  }
+
+  function applyMarketMetrics(rows) {
+    const allTargets = [FUND_POOL.core, ...FUND_POOL.satellites, FUND_POOL.defensive.bond];
+    rows.forEach(r => {
+      const target = allTargets.find(t => t.code === r.fund_code || t.key === r.fund_key);
+      if (target) {
+        target.percentile6M = Number(r.percentile_6m);
+        target.maxDrawdown6M = Number(r.max_drawdown_6m);
+        target.dayChange = Number(r.day_change);
+      }
+    });
+  }
+
+  function renderCommandUI(totalInvest, plan) {
+    const coreOrder = plan.orders[0];
+    const satOrders = plan.orders.slice(1, 4);
+
+    // 构建自然语言指令文案
+    const satDescriptions = satOrders.map(s => {
+      const shortName = s.name.split(' ')[0];
+      if (s.amount > 0) {
+        return `${shortName}买入 <strong>¥${s.amount}</strong>（性价比评分 ${s.score} 分）`;
+      } else {
+        return `${shortName}买入 <strong>¥0</strong>（当前估值偏高暂停买入）`;
+      }
+    }).join('，');
+
+    const coreText = coreOrder.amount > 0
+      ? `纳指100定投 <strong>¥${coreOrder.amount}</strong>（基石固定）`
+      : `纳指100本月<strong>暂停买入 ¥0</strong>（分位超85%触发高估熔断）`;
+
+    const narrativeHtml =
+      `📢 <strong>本月总定投 ¥${totalInvest} 操作指令</strong>：${coreText}；` +
+      `${satDescriptions}；防守端招商双债增强A买入 <strong>¥${plan.bondBuyAmt}</strong>，` +
+      `剩余 <strong>¥${plan.cashBuyAmt}</strong> 转入天弘余额宝等待低吸机会。`;
+
+    document.getElementById('narrativeBox').innerHTML = narrativeHtml;
+    window.latestPlainNarrative = document.getElementById('narrativeBox').innerText;
+
+    // 渲染再平衡提示
+    const rebBox = document.getElementById('rebalanceAlertBox');
+    if (plan.rebalanceInstruction) {
+      rebBox.style.display = 'block';
+      rebBox.textContent = plan.rebalanceInstruction;
+    } else {
+      rebBox.style.display = 'none';
+    }
+
+    // 渲染逐条指令卡片
+    document.getElementById('orderListContainer').innerHTML = plan.orders.map(o => `
+      <div class="order-item">
+        <div class="order-left">
+          <div class="order-title">${o.name} <span class="badge ${o.amount === 0 ? 'badge-warn' : ''}">${o.role}</span></div>
+          <div class="order-reason">${o.reason}</div>
+        </div>
+        <div class="order-amt" style="color: ${o.amount > 0 ? 'var(--accent-emerald)' : 'var(--accent-amber)'};">
+          ¥${o.amount}
+        </div>
+      </div>
+    `).join('');
+
+    // 渲染底部折叠抽屉中的三因子评分明细表
+    document.getElementById('quantTableBody').innerHTML = FUND_POOL.satellites.map(f => `
+      <tr>
+        <td><strong>${f.name}</strong> (${f.code})</td>
+        <td>${f.percentile6M.toFixed(1)}%</td>
+        <td>${f.maxDrawdown6M.toFixed(2)}%</td>
+        <td>${f.dayChange >= 0 ? '+' : ''}${f.dayChange.toFixed(2)}%</td>
+        <td><strong>${f.score} 分</strong></td>
+        <td>${f.allocWeightPct || 0}% (¥${f.buyAmount || 0})</td>
+      </tr>
+    `).join('');
+  }
+
+  function copyCommandText() {
+    const txt = window.latestPlainNarrative || document.getElementById('narrativeBox').innerText;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(txt);
+      alert('✅ 本月操作指令已复制到剪贴板！');
     }
   }
 
-  // 启动执行
-  loadLocalState();
-  runQuantModelAllocation();
-  refreshAllMarketData();
+  function getCloudConfig() {
+    try { return JSON.parse(localStorage.getItem('core_sat_cloud_cfg') || '{}'); } catch (e) { return {}; }
+  }
+
+  function saveCloudConfig() {
+    const url = document.getElementById('inWorkerUrl').value.trim().replace(/\/+$/, '');
+    const token = document.getElementById('inApiToken').value.trim();
+    localStorage.setItem('core_sat_cloud_cfg', JSON.stringify({ url, token }));
+  }
+
+  // 初始化回填本地存储的云端地址
+  (function init() {
+    const cfg = getCloudConfig();
+    if (cfg.url) document.getElementById('inWorkerUrl').value = cfg.url;
+    if (cfg.token) document.getElementById('inApiToken').value = cfg.token;
+  })();
 </script>
 </body>
 </html>
