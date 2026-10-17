@@ -6,8 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#C7EDCC">
-<title>顶配智能定投量化配比 & 班表兼职系统</title>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<title>顶配智能月度资金定投系统（100%真实行情量化版）</title>
 <style>
   :root {
     --bg-main: #C7EDCC;       /* 经典豆沙护眼绿 */
@@ -23,48 +22,69 @@
     --accent-blue: #165B8C;   /* 量化因子蓝 */
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
 
   body {
     background-color: var(--bg-main);
     color: var(--text-main);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
     line-height: 1.5;
-    padding: 16px 10px 40px 10px;
+    padding: 20px 12px 40px 12px;
   }
 
-  .container { max-width: 1160px; margin: 0 auto; }
+  .container {
+    max-width: 1160px;
+    margin: 0 auto;
+  }
 
-  .header { text-align: center; margin-bottom: 16px; }
-  .header h1 { font-size: 1.42em; font-weight: 800; margin-bottom: 4px; }
-  .header p { font-size: 0.86em; color: var(--text-sub); }
+  .header {
+    text-align: center;
+    margin-bottom: 18px;
+  }
 
-  /* 上半部分：左右双卡片结构 */
+  .header h1 {
+    font-size: 1.45em;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+
+  .header p {
+    font-size: 0.88em;
+    color: var(--text-sub);
+  }
+
+  /* 左右双卡片主结构 */
   .top-layout {
     display: flex;
     align-items: stretch;
     justify-content: center;
-    gap: 14px;
-    margin-bottom: 20px;
+    gap: 16px;
   }
 
   @media (max-width: 900px) {
-    .top-layout { flex-direction: column; }
+    .top-layout {
+      flex-direction: column;
+    }
   }
 
   .main-card {
     background-color: var(--bg-card);
     border: 2.5px solid var(--border-dark);
     border-radius: 16px;
-    padding: 16px;
+    padding: 18px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     min-width: 0;
   }
 
-  .card-left { flex: 0.85; }
-  .card-right { flex: 1.35; }
+  .card-left { flex: 0.82; }
+  .card-right { flex: 1.38; }
 
   .arrow-col {
     display: flex;
@@ -77,7 +97,10 @@
   }
 
   @media (max-width: 900px) {
-    .arrow-col { transform: rotate(90deg); margin: -6px 0; }
+    .arrow-col {
+      transform: rotate(90deg);
+      margin: -6px 0;
+    }
   }
 
   /* 左侧输入区 */
@@ -85,18 +108,20 @@
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-    margin-bottom: 12px;
+    margin-bottom: 14px;
   }
 
   @media (max-width: 520px) {
-    .input-grid-3 { grid-template-columns: 1fr; }
+    .input-grid-3 {
+      grid-template-columns: 1fr;
+    }
   }
 
   .input-group label {
     display: block;
-    font-size: 0.84em;
+    font-size: 0.85em;
     font-weight: bold;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
     color: var(--text-sub);
   }
 
@@ -105,61 +130,67 @@
     background-color: #FFFFFF;
     border: 2px solid var(--border-color);
     border-radius: 8px;
-    padding: 8px 10px;
-    font-size: 1.2em;
+    padding: 9px 10px;
+    font-size: 1.22em;
     font-weight: bold;
-    font-family: Consolas, monospace;
+    font-family: Consolas, Monaco, monospace;
     color: var(--text-main);
     outline: none;
   }
 
-  .input-box:focus { border-color: var(--border-dark); }
+  .input-box:focus {
+    border-color: var(--border-dark);
+  }
 
   .summary-strip {
     background-color: var(--bg-inner);
     border: 1.5px solid var(--border-color);
     border-radius: 8px;
-    padding: 8px 12px;
+    padding: 10px 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.88em;
+    font-size: 0.92em;
     font-weight: bold;
-    margin-bottom: 8px;
   }
 
   .divider-line {
     height: 2px;
     background-color: var(--border-dark);
-    margin: 14px 0;
+    margin: 20px 0;
   }
 
   .result-card {
     background-color: var(--bg-inner);
     border: 1.5px solid var(--border-color);
     border-radius: 10px;
-    padding: 12px 14px;
-    margin-bottom: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
   }
 
-  .result-card:last-child { margin-bottom: 0; }
+  .result-card:last-child {
+    margin-bottom: 0;
+  }
 
   .result-head {
     display: flex;
     justify-content: space-between;
-    font-size: 0.85em;
+    font-size: 0.86em;
     font-weight: bold;
     color: var(--text-sub);
   }
 
   .result-num {
-    font-size: 1.65em;
+    font-size: 1.75em;
     font-weight: 800;
-    font-family: Consolas, monospace;
-    margin: 2px 0;
+    font-family: Consolas, Monaco, monospace;
+    margin: 4px 0;
   }
 
-  .result-note { font-size: 0.8em; color: var(--text-sub); }
+  .result-note {
+    font-size: 0.8em;
+    color: var(--text-sub);
+  }
 
   /* 右侧：天天基金实时量化引擎 */
   .card-title-bar {
@@ -170,24 +201,34 @@
     padding-bottom: 8px;
     margin-bottom: 10px;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
   }
 
-  .card-title-bar h2 { font-size: 1.05em; font-weight: 800; }
+  .card-title-bar h2 {
+    font-size: 1.06em;
+    font-weight: 800;
+  }
 
   .btn {
     background-color: #B4DFB9;
     border: 1px solid var(--border-dark);
     color: var(--text-main);
-    padding: 5px 11px;
+    padding: 6px 12px;
     border-radius: 6px;
     font-size: 0.82em;
     font-weight: bold;
     cursor: pointer;
   }
 
-  .btn:active { transform: scale(0.97); }
-  .btn-dark { background-color: var(--border-dark); color: #FFFFFF; }
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn-dark {
+    background-color: var(--border-dark);
+    color: #FFFFFF;
+  }
+
   .btn-copy {
     padding: 1px 6px;
     font-size: 0.74em;
@@ -197,13 +238,19 @@
     cursor: pointer;
     margin-left: 4px;
     font-weight: bold;
+    color: var(--text-main);
+  }
+
+  .btn-copy:active {
+    background-color: var(--border-dark);
+    color: #FFFFFF;
   }
 
   .market-radar-box {
     background-color: var(--bg-inner);
     border: 1.5px solid var(--border-dark);
     border-radius: 8px;
-    padding: 8px 10px;
+    padding: 9px 11px;
     margin-bottom: 10px;
     font-size: 0.82em;
   }
@@ -212,11 +259,13 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 6px;
-    margin-top: 6px;
+    margin-top: 8px;
   }
 
   @media (max-width: 620px) {
-    .radar-tickers { grid-template-columns: repeat(2, 1fr); }
+    .radar-tickers {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   .ticker-pill {
@@ -225,7 +274,7 @@
     padding: 5px 6px;
     border-radius: 6px;
     text-align: center;
-    font-family: Consolas, monospace;
+    font-family: Consolas, Monaco, monospace;
     font-size: 0.9em;
   }
 
@@ -236,7 +285,7 @@
     background-color: var(--bg-inner);
     border: 1.5px solid var(--border-color);
     border-radius: 10px;
-    padding: 9px 12px;
+    padding: 10px 12px;
     margin-bottom: 8px;
   }
 
@@ -247,8 +296,16 @@
     gap: 8px;
   }
 
-  .alloc-title { font-weight: 800; font-size: 0.94em; }
-  .alloc-sub { font-size: 0.78em; color: var(--text-sub); margin-top: 2px; }
+  .alloc-title {
+    font-weight: 800;
+    font-size: 0.95em;
+  }
+
+  .alloc-sub {
+    font-size: 0.78em;
+    color: var(--text-sub);
+    margin-top: 2px;
+  }
 
   .alloc-right {
     display: flex;
@@ -260,19 +317,19 @@
   .pct-badge {
     background-color: #CFEAD3;
     border: 1px solid var(--border-dark);
-    padding: 2px 7px;
+    padding: 2px 8px;
     border-radius: 6px;
     font-weight: 800;
-    font-family: Consolas, monospace;
-    font-size: 0.9em;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 0.92em;
   }
 
   .amt-val {
-    font-size: 1.22em;
+    font-size: 1.25em;
     font-weight: 800;
-    font-family: Consolas, monospace;
+    font-family: Consolas, Monaco, monospace;
     color: var(--accent-green);
-    min-width: 88px;
+    min-width: 90px;
     text-align: right;
   }
 
@@ -300,12 +357,14 @@
   }
 
   table.sub-fund-table td {
-    padding: 6px 4px;
+    padding: 7px 4px;
     border-bottom: 1px solid #D5E8D8;
     vertical-align: middle;
   }
 
-  table.sub-fund-table tr:last-child td { border-bottom: none; }
+  table.sub-fund-table tr:last-child td {
+    border-bottom: none;
+  }
 
   .delta-up {
     color: var(--accent-green);
@@ -319,108 +378,29 @@
     font-size: 0.9em;
   }
 
-  /* 下半部分：班表上传与兼职跑外卖智能排表 */
-  .schedule-section {
-    background-color: var(--bg-card);
-    border: 2.5px solid var(--border-dark);
-    border-radius: 16px;
-    padding: 18px;
-  }
-
-  .upload-zone {
-    background-color: var(--bg-inner);
-    border: 2px dashed var(--border-dark);
-    border-radius: 12px;
-    padding: 12px 14px;
-    margin-bottom: 14px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .stats-grid-4 {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    margin-bottom: 14px;
-  }
-
-  @media (max-width: 680px) {
-    .stats-grid-4 { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  .mini-stat {
-    background-color: var(--bg-inner);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 10px;
-    text-align: center;
-  }
-
-  .mini-stat .label { font-size: 0.8em; color: var(--text-sub); font-weight: bold; }
-  .mini-stat .val { font-size: 1.25em; font-weight: 800; font-family: Consolas, monospace; margin-top: 2px; }
-
-  .table-scroll {
-    overflow-x: auto;
-    background-color: var(--bg-inner);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-  }
-
-  table.sched-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.86em;
-    min-width: 720px;
-  }
-
-  table.sched-table th, table.sched-table td {
-    border: 1px solid var(--border-color);
-    padding: 8px 10px;
-    text-align: left;
-  }
-
-  table.sched-table th { background-color: #B4DFB9; font-weight: 800; }
-
-  .row-rest { background-color: #FFF6D6; }
-  .row-early { background-color: #E2F4E5; }
-  .row-skip { background-color: #F2F7F3; color: #5B7560; }
-
   .tag-pill {
     display: inline-block;
-    padding: 2px 7px;
+    padding: 2px 8px;
     border-radius: 4px;
-    font-size: 0.8em;
+    font-size: 0.82em;
     font-weight: bold;
+    margin-top: 4px;
   }
 
   .tag-gold { background-color: #FFE082; color: #7A4100; border: 1px solid #CCA300; }
   .tag-good { background-color: #C2E5C8; color: #0F5C22; border: 1px solid #147A2E; }
   .tag-light { background-color: #D9EDF7; color: #165B8C; border: 1px solid #7EB5D6; }
-  .tag-stop { background-color: #E8ECE9; color: #5A6B5E; border: 1px solid #B0C4B4; }
-
-  .shift-select {
-    background-color: #FFFFFF;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    padding: 3px 6px;
-    font-size: 0.9em;
-    font-weight: bold;
-    color: var(--text-main);
-  }
 </style>
 </head>
 <body>
 
 <div class="container">
   <div class="header">
-    <h1>顶配智能月度资金定投 & 班表兼职规划系统（100%真实行情量化版）</h1>
+    <h1>顶配智能月度资金定投系统（100%真实行情量化版）</h1>
     <p>输入工资/房租/日伙食费 ➔ 实时读取天天基金120日净值分位点与日涨跌 ➔ 动态调整每只基金百分比与买入金</p>
   </div>
 
-  <!-- ==================== 上半部分：左右双卡片资金与AI实时量化定投 ==================== -->
+  <!-- ==================== 左右双卡片：资金分流与天天基金实时量化定投 ==================== -->
   <div class="top-layout">
     <!-- 左卡片：收入、房租、每日生活费 -->
     <div class="main-card card-left">
@@ -428,29 +408,21 @@
         <div class="input-grid-3">
           <div class="input-group">
             <label>[ 月到账工资 ]</label>
-            <input type="number" id="inSalary" class="input-box" value="5000" step="100" oninput="reCalcAll()">
+            <input type="number" id="inSalary" class="input-box" value="5000" step="100" oninput="onUserInput()">
           </div>
           <div class="input-group">
             <label>[ 房租月支出 ]</label>
-            <input type="number" id="inRent" class="input-box" value="800" step="50" oninput="reCalcAll()">
+            <input type="number" id="inRent" class="input-box" value="800" step="50" oninput="onUserInput()">
           </div>
           <div class="input-group">
             <label>[ 每天生活费 ]</label>
-            <input type="number" id="inDailyLiving" class="input-box" value="50" step="5" oninput="reCalcAll()">
+            <input type="number" id="inDailyLiving" class="input-box" value="50" step="5" oninput="onUserInput()">
           </div>
         </div>
 
         <div class="summary-strip">
           <span>扣房租后剩余总金额（工资 - 房租）：</span>
-          <span id="outAfterRent" style="font-family:Consolas; font-size:1.18em;">¥4,200.00</span>
-        </div>
-
-        <div class="summary-strip" style="margin-bottom:0;">
-          <label style="cursor:pointer;">
-            <input type="checkbox" id="includeMeituanCheck" onchange="reCalcAll()">
-            并入下方「本月兼职跑外卖预估收入」
-          </label>
-          <span id="outMeituanAdded" style="font-family:Consolas; color:var(--accent-orange);">+¥0</span>
+          <span id="outAfterRent" style="font-family:Consolas, Monaco, monospace; font-size:1.22em;">¥4200.00</span>
         </div>
       </div>
 
@@ -459,28 +431,28 @@
       <div>
         <div class="result-card">
           <div class="result-head">
-            <span>本月生活费总计（按 <span id="lblDaysCount">30</span> 天匹配）</span>
+            <span>本月生活费总计（按 30 天匹配）</span>
             <span id="lblDailyShow">¥50 / 天</span>
           </div>
-          <div class="result-num" id="outLivingMonth">¥1,500.00</div>
+          <div class="result-num" id="outLivingMonth">¥1500.00</div>
           <div class="result-note">优先锁定的日常三餐伙食费，留在微信日常钱包按日消费</div>
         </div>
 
         <div class="result-card">
           <div class="result-head">
             <span>本月储蓄与定投总金额</span>
-            <span id="outSaveRate">储蓄率 64%</span>
+            <span id="outSaveRate">占可支配 64%</span>
           </div>
-          <div class="result-num" id="outInvestPool" style="color:var(--accent-green);">¥2,700.00</div>
+          <div class="result-num" id="outInvestPool" style="color:var(--accent-green);">¥2700.00</div>
           <div class="result-note">每次修改工资或点击右侧刷新行情，下方每只基金百分比与金额实时重算</div>
         </div>
       </div>
     </div>
 
-    <!-- 中间箭头 -->
+    <!-- 中间流向箭头 -->
     <div class="arrow-col">➔</div>
 
-    <!-- 右卡片：天天基金100%真实数据驱动的量化配仓引擎 -->
+    <!-- 右卡片：天天基金100%真实数据驱动的三因子量化配仓引擎 -->
     <div class="main-card card-right">
       <div>
         <div class="card-title-bar">
@@ -490,8 +462,10 @@
 
         <!-- 5大核心标的实时行情与近半年分位点雷达 -->
         <div class="market-radar-box">
-          <div style="display:flex; justify-content:space-between; align-items:center; font-weight:bold; flex-wrap:wrap; gap:4px;">
-            <span id="marketStatusText">⏳ 正在直连天天基金网拉取实时估值与120日历史净值...</span>
+          <div style="font-weight:bold;" id="marketStatusText">
+            ⏳ 正在直连天天基金网拉取实时估值与120日历史净值...
+          </div>
+          <div>
             <span id="marketTempBadge" class="tag-pill tag-light">等待实时行情运算...</span>
           </div>
           <div class="radar-tickers" id="radarTickersBox">
@@ -508,7 +482,7 @@
           <div class="alloc-top">
             <div>
               <div class="alloc-title">1. 财付通（微信零钱通）</div>
-              <div class="alloc-sub" id="desc_tenpay">随大盘估值水位动态伸缩的日常应急活钱底仓（基准 15%）</div>
+              <div class="alloc-sub">随大盘估值水位动态伸缩的日常应急活钱底仓（基准 15%）</div>
             </div>
             <div class="alloc-right">
               <span class="pct-badge" id="pct_tenpay">--%</span>
@@ -525,7 +499,7 @@
                 2. 货币基金：天弘余额宝 (<span style="font-family:Consolas;">000198</span>)
                 <button class="btn-copy" onclick="copyCode('000198')">复制代码</button>
               </div>
-              <div class="alloc-sub" id="desc_money">暴跌补仓预备队：大盘高估时自动多留现金，大盘低估时自动释放买股基（基准 15%）</div>
+              <div class="alloc-sub">暴跌补仓预备队：大盘高估时自动多留现金，大盘低估时自动释放买股基（基准 15%）</div>
             </div>
             <div class="alloc-right">
               <span class="pct-badge" id="pct_money">--%</span>
@@ -556,7 +530,7 @@
           <div class="alloc-top">
             <div>
               <div class="alloc-title">4. 中高风险基金（四大核心指数 · 实时按行情自动调比例）</div>
-              <div class="alloc-sub" id="desc_high">根据【近半年净值分位点 + 今日实时涨跌 + 近半年最大回撤】自动向低估/超跌品种倾斜：</div>
+              <div class="alloc-sub">根据【近半年净值分位点 + 今日实时涨跌 + 近半年最大回撤】自动向低估/超跌品种倾斜：</div>
             </div>
             <div class="alloc-right">
               <span class="pct-badge" id="pct_high">--%</span>
@@ -579,85 +553,50 @@
                 </tr>
               </thead>
               <tbody id="highRiskSubTable">
-                <tr><td colspan="7" style="text-align:center; padding:12px;">正在从天天基金网拉取真实行情并计算动态配比...</td></tr>
+                <tr>
+                  <td colspan="7" style="text-align:center; padding:12px;">正在从天天基金网拉取真实行情并计算动态配比...</td>
+                </tr>
               </tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <div class="summary-strip" style="margin-top:10px; margin-bottom:0; font-size:0.8em;">
-        <span id="aiStrategySummary">💡 量化执行说明：上方所有百分比均由天天基金网实时返回数据现场算出，无任何人工写死或模拟场景。</span>
+      <div class="summary-strip" style="margin-top:10px; font-size:0.8em;">
+        <span>💡 量化执行说明：上方所有百分比均由天天基金网实时返回数据现场算出，无任何人工写死或模拟场景。</span>
       </div>
-    </div>
-  </div>
-
-  <!-- ==================== 下半部分：班表图片上传 & 智能兼职跑外卖规划表 ==================== -->
-  <div class="schedule-section">
-    <div class="card-title-bar">
-      <h2>🛵 每月班表上传 ➔ 智能分配兼职跑外卖时间表（已内置林达烽10月班表）</h2>
-      <div style="display:flex; gap:6px;">
-        <button class="btn" onclick="resetOctSchedule()">恢复10月原版班表</button>
-        <button class="btn" onclick="exportScheduleCSV()">导出兼职计划表(Excel)</button>
-      </div>
-    </div>
-
-    <div class="upload-zone">
-      <div>
-        <div style="font-weight:800; font-size:0.94em; margin-bottom:4px;">
-          📷 每月发新班表时，点击右侧按钮上传班表截图，自动识别休息日与早下班日并排好跑外卖时段
-        </div>
-        <div style="font-size:0.8em; color:var(--text-sub);">
-          排班铁律：① <strong>休息日</strong>跑午晚双高峰(7小时)；② <strong>早班(17:00/17:30下班)</strong>跑晚高峰(3.5小时)；③ <strong>白班(18:00~19:00下班)</strong>跑2小时轻量档；④ <strong>跳班/夜班</strong>强制休息不跑。
-        </div>
-      </div>
-      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
-        <input type="file" id="schedImageInput" accept="image/*" style="display:none;" onchange="handleScheduleImageUpload(event)">
-        <button class="btn btn-dark" onclick="document.getElementById('schedImageInput').click()">📁 上传新班表图片智能分析</button>
-        <span id="ocrStatusText" style="font-size:0.82em; font-weight:bold; color:var(--accent-green);">当前：10月林达烽班表 (30天)</span>
-      </div>
-    </div>
-
-    <div class="stats-grid-4">
-      <div class="mini-stat">
-        <div class="label">黄金双高峰（休息日）</div>
-        <div class="val" id="statRestDays" style="color:var(--accent-orange);">9 天</div>
-      </div>
-      <div class="mini-stat">
-        <div class="label">下班晚高峰（早/白班）</div>
-        <div class="val" id="statAfterWorkDays" style="color:var(--accent-green);">11 天</div>
-      </div>
-      <div class="mini-stat">
-        <div class="label">强制休息护体（夜/跳班）</div>
-        <div class="val" id="statSkipDays">10 天</div>
-      </div>
-      <div class="mini-stat">
-        <div class="label">本月兼职预估净增收</div>
-        <div class="val" id="statEstIncome" style="color:var(--accent-red);">¥2,130</div>
-      </div>
-    </div>
-
-    <div class="table-scroll">
-      <table class="sched-table">
-        <thead>
-          <tr>
-            <th style="width:88px;">日期</th>
-            <th style="width:72px;">星期</th>
-            <th style="width:245px;">主业班次与上下班时间（可点击微调）</th>
-            <th style="width:135px;">当日跑单等级</th>
-            <th>智能规划跑外卖最佳时段 & 策略说明</th>
-            <th style="width:85px; text-align:right;">预估时长</th>
-            <th style="width:90px; text-align:right;">预估收入</th>
-          </tr>
-        </thead>
-        <tbody id="scheduleTableBody"></tbody>
-      </table>
     </div>
   </div>
 </div>
 
 <script>
-  /* ================= 1. 五大核心基金定义（不设任何假行情，全部由天天基金接口实时填充） ================= */
+  /* ================= 1. 本地输入状态记忆 ================= */
+  const STORAGE_KEY = 'pure_quant_fund_system_v1';
+
+  function loadSavedInputs() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.salary !== undefined) document.getElementById('inSalary').value = parsed.salary;
+        if (parsed.rent !== undefined) document.getElementById('inRent').value = parsed.rent;
+        if (parsed.dailyLiving !== undefined) document.getElementById('inDailyLiving').value = parsed.dailyLiving;
+      }
+    } catch (e) {}
+  }
+
+  function onUserInput() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        salary: document.getElementById('inSalary').value,
+        rent: document.getElementById('inRent').value,
+        dailyLiving: document.getElementById('inDailyLiving').value
+      }));
+    } catch (e) {}
+    reCalcAll();
+  }
+
+  /* ================= 2. 五大核心基金定义（100% 由天天基金实时接口填充） ================= */
   const CORE_FUNDS = [
     {
       key: 'hs300',
@@ -666,10 +605,10 @@
       code: '110020',
       role: 'high',
       baseWeight: 11,      // 基准占总定投池 11%
-      dayChange: null,     // 实时日涨跌(%)
-      halfYear: null,      // 真实近半年涨幅(%)
-      percentile6M: null,  // 近120个交易日净值分位点(0~100%)
-      maxDrawdown6M: null, // 近半年最大回撤(%)
+      dayChange: null,
+      halfYear: null,
+      percentile6M: null,
+      maxDrawdown6M: null,
       navDate: '--',
       reasonText: '等待实时数据'
     },
@@ -731,14 +670,12 @@
     }
   ];
 
-  // 动态计算后的全局权重（支持精确到小数点后1位）
   let allocState = {
     tenpay: 15.0,
     money: 15.0,
     medium: 25.0,
     high: 45.0,
-    subWeights: { hs300: 11.0, a500: 12.0, cyb: 10.0, nasdaq: 12.0 },
-    isLiveLoaded: false
+    subWeights: { hs300: 11.0, a500: 12.0, cyb: 10.0, nasdaq: 12.0 }
   };
 
   function copyCode(code) {
@@ -750,7 +687,7 @@
     }
   }
 
-  /* ================= 2. 直连天天基金网双接口（实时估值 + 120日历史净值序列深度解析） ================= */
+  /* ================= 3. 直连天天基金网双接口（实时估值 + 120日历史净值序列深度解析） ================= */
   function fetchFundGz(code) {
     return new Promise(resolve => {
       const script = document.createElement('script');
@@ -776,10 +713,8 @@
     });
   }
 
-  // 从天天基金 pingzhongdata 提取官方近半年涨幅、最近120日净值水位分位点、最大回撤、最新收盘涨跌幅
   function fetchFundPingzhong(code) {
     return new Promise(resolve => {
-      // 先清理全局变量防止串数据
       window.Data_netWorthTrend = null;
       window.syl_6y = undefined;
       window.syl_1n = undefined;
@@ -821,17 +756,12 @@
               const minNav = Math.min(...slice120);
               const maxNav = Math.max(...slice120);
 
-              // 若官方 syl_6y 缺失（如次新基金），用净值首尾实算涨幅
               if (syl6y === null || isNaN(syl6y)) {
                 syl6y = ((currentNav - firstNav) / firstNav) * 100;
               }
-
-              // 实算近半年净值分位点 (0%代表处于半年最低点，100%代表处于半年最高点)
               if (maxNav > minNav) {
                 percentile6M = ((currentNav - minNav) / (maxNav - minNav)) * 100;
               }
-
-              // 实算近半年从最高点回撤幅度
               maxDrawdown6M = ((currentNav - maxNav) / maxNav) * 100;
             }
           }
@@ -855,7 +785,6 @@
     statusEl.textContent = '📡 正在逐只读取天天基金网实时估值与120日历史净值序列...';
 
     let latestTimeStr = '';
-    let successCount = 0;
 
     for (let i = 0; i < CORE_FUNDS.length; i++) {
       const f = CORE_FUNDS[i];
@@ -864,17 +793,14 @@
         fetchFundPingzhong(f.code)
       ]);
 
-      // 优先采用 pingzhongdata 的120日深度数据
       if (pz) {
         if (pz.syl6y !== null && !isNaN(pz.syl6y)) f.halfYear = pz.syl6y;
         if (pz.percentile6M !== null && !isNaN(pz.percentile6M)) f.percentile6M = pz.percentile6M;
         if (pz.maxDrawdown6M !== null && !isNaN(pz.maxDrawdown6M)) f.maxDrawdown6M = pz.maxDrawdown6M;
         if (pz.lastDayChange !== null && !isNaN(pz.lastDayChange)) f.dayChange = pz.lastDayChange;
         if (pz.latestNavDate) f.navDate = pz.latestNavDate;
-        successCount++;
       }
 
-      // 若当前处于交易时段且实时估值 gszzl 非0，则用盘中实时涨跌幅覆盖
       if (gz && gz.gszzl !== undefined && !isNaN(parseFloat(gz.gszzl))) {
         const realtimeVal = parseFloat(gz.gszzl);
         if (realtimeVal !== 0 || f.dayChange === null) {
@@ -884,11 +810,9 @@
           latestTimeStr = gz.gztime;
           f.navDate = gz.gztime.slice(5, 16);
         }
-        successCount++;
       }
     }
 
-    allocState.isLiveLoaded = successCount > 0;
     const nowClock = new Date().toLocaleTimeString();
     statusEl.textContent = `✅ 天天基金网实时数据同步完成（刷新于 ${nowClock}，净值基准：${latestTimeStr || '最新确认净值'}）`;
     btn.disabled = false;
@@ -897,9 +821,8 @@
     runTopTierQuantAllocation();
   }
 
-  /* ================= 3. 顶配三因子量化配比引擎（100% 由真实行情决定百分比） ================= */
+  /* ================= 4. 三因子量化配比引擎（100% 由真实行情决定百分比） ================= */
   function runTopTierQuantAllocation() {
-    // 1. 渲染顶部 5 只基金实时行情胶囊
     const radarBox = document.getElementById('radarTickersBox');
     radarBox.innerHTML = CORE_FUNDS.map(f => {
       if (f.dayChange === null) {
@@ -917,45 +840,32 @@
     }).join('');
 
     const highFunds = CORE_FUNDS.filter(f => f.role === 'high');
-
-    // 计算四大权益指数的加权近半年估值水位 (0~100%) 与 平均当日涨跌
     const avgPercentile = highFunds.reduce((s, f) => s + (f.percentile6M ?? 50), 0) / highFunds.length;
     const avgDayChange = highFunds.reduce((s, f) => s + (f.dayChange ?? 0), 0) / highFunds.length;
 
-    /* 第一层：宏观股债攻守总比例动态计算
-       基准中枢：中高风险 45% | 中风险纯债 25% | 货币基金 15% | 财付通 15%
-       - 估值水位调整项：当平均分位点低于 50% 时，每低 10% 增加 2.2% 股基仓位；高于 50% 时减少。
-       - 当日涨跌调整项：当日平均每跌 1%，增加 3.5% 股基仓位（逢绿多买）；每涨 1%，减少 3.5% 股基仓位。
-    */
+    // 第一层：宏观股债攻守总比例动态计算（基准：中高风险45% / 纯债25% / 货币15% / 财付通15%）
     const valuationShift = ((50 - avgPercentile) / 10) * 2.2;
     const intradayShift = -avgDayChange * 3.5;
-    let totalHighShift = valuationShift + intradayShift;
-    totalHighShift = Math.max(-13, Math.min(13, totalHighShift)); // 限制在 -13% ~ +13% 之间
+    let totalHighShift = Math.max(-13, Math.min(13, valuationShift + intradayShift));
 
     const totalHighPct = Number((45 + totalHighShift).toFixed(1));
     const mediumPct = Number((25 - totalHighShift * 0.45).toFixed(1));
     const moneyPct = Number((15 - totalHighShift * 0.35).toFixed(1));
     const tenpayPct = Number((100 - totalHighPct - mediumPct - moneyPct).toFixed(1));
 
-    /* 第二层：4只中高风险指数基金内部三因子PK打分
-       对每只基金计算综合乘数 Multiplier：
-       1. 估值低位因子 (权重50%)：分位点越低，乘数越高 -> 1 + (50 - percentile6M) * 0.008
-       2. 今日逢跌因子 (权重30%)：今日跌得越多，乘数越高 -> 1 + (-dayChange) * 0.12
-       3. 回撤性价比因子 (权重20%)：距半年高点回撤越大，低吸性价比越高 -> 1 + (|maxDrawdown6M| / 10) * 0.10
-    */
+    // 第二层：4只中高风险指数基金内部三因子PK打分
     const scoredHigh = highFunds.map(f => {
       const p6m = f.percentile6M ?? 50;
       const dChg = f.dayChange ?? 0;
       const mdd = Math.abs(f.maxDrawdown6M ?? 0);
 
-      const valFactor = (50 - p6m) * 0.008;       // 分位20% -> +0.24；分位80% -> -0.24
-      const dipFactor = (-dChg) * 0.12;           // 跌1.5% -> +0.18；涨1.5% -> -0.18
-      const mddFactor = (mdd / 10) * 0.08;        // 回撤10% -> +0.08
+      const valFactor = (50 - p6m) * 0.008;
+      const dipFactor = (-dChg) * 0.12;
+      const mddFactor = (mdd / 10) * 0.08;
 
       const multiplier = Math.max(0.55, Math.min(1.65, 1 + valFactor + dipFactor + mddFactor));
       const rawWeight = f.baseWeight * multiplier;
 
-      // 生成透明的中文调仓原因
       const reasons = [];
       if (p6m <= 35) reasons.push(`半年低位(${p6m.toFixed(0)}%分位)加码`);
       else if (p6m >= 75) reasons.push(`半年高位(${p6m.toFixed(0)}%分位)控仓`);
@@ -974,7 +884,6 @@
       };
     });
 
-    // 归一化使 4 只中高风险基金的百分比之和严格等于 totalHighPct
     const sumRaw = scoredHigh.reduce((s, item) => s + item.rawWeight, 0);
     let runningSub = 0;
     const subWeights = {};
@@ -997,11 +906,9 @@
       money: moneyPct,
       medium: mediumPct,
       high: totalHighPct,
-      subWeights,
-      isLiveLoaded: true
+      subWeights
     };
 
-    // 更新顶部状态徽章与纯债详情
     const badge = document.getElementById('marketTempBadge');
     if (totalHighShift >= 2.0) {
       badge.className = 'tag-pill tag-good';
@@ -1025,28 +932,21 @@
     reCalcAll();
   }
 
-  /* ================= 4. 工资、生活费与定投金额全局联动计算 ================= */
-  let totalEstimatedMeituan = 0;
-
+  /* ================= 5. 工资、生活费与定投金额全局联动计算 ================= */
   function reCalcAll() {
     const salary = Math.max(0, parseFloat(document.getElementById('inSalary').value) || 0);
     const rent = Math.max(0, parseFloat(document.getElementById('inRent').value) || 0);
     const dailyLiving = Math.max(0, parseFloat(document.getElementById('inDailyLiving').value) || 0);
-    const includeMeituan = document.getElementById('includeMeituanCheck').checked;
 
-    const daysCount = scheduleData.length || 30;
-    const afterRentBase = Math.max(0, salary - rent);
-    const extraMeituan = includeMeituan ? totalEstimatedMeituan : 0;
-    const totalAvailable = afterRentBase + extraMeituan;
+    const daysCount = 30;
+    const totalAvailable = Math.max(0, salary - rent);
 
-    document.getElementById('outAfterRent').textContent = `¥${afterRentBase.toFixed(2)}`;
-    document.getElementById('outMeituanAdded').textContent = includeMeituan ? `+¥${extraMeituan}` : `+¥0 (未勾选)`;
+    document.getElementById('outAfterRent').textContent = `¥${totalAvailable.toFixed(2)}`;
 
     const monthLiving = Math.min(totalAvailable, dailyLiving * daysCount);
     const investPool = Math.max(0, totalAvailable - monthLiving);
     const saveRate = totalAvailable > 0 ? Math.round((investPool / totalAvailable) * 100) : 0;
 
-    document.getElementById('lblDaysCount').textContent = daysCount;
     document.getElementById('lblDailyShow').textContent = `¥${dailyLiving} / 天`;
     document.getElementById('outLivingMonth').textContent = `¥${monthLiving.toFixed(2)}`;
     document.getElementById('outInvestPool').textContent = `¥${investPool.toFixed(2)}`;
@@ -1109,210 +1009,8 @@
     }).join('');
   }
 
-  /* ================= 5. 班表与跑外卖智能排班引擎（内置林达烽10月真实班表） ================= */
-  const SHIFT_TYPES = {
-    'REST':     { label: '休息（全天休）', level: 'gold', badge: '🔥 黄金双高峰', timeSlot: '午高峰 11:00-14:00 + 晚高峰 17:00-21:00', reason: '全天无主业，抓牢午晚两大爆单期，下午14:00-17:00回家午休充电', hours: 7.0, income: 140, rowCls: 'row-rest' },
-    'EARLY_0':  { label: '早0(8H) 08:00-12:00 13:00-17:00', level: 'good', badge: '⚡ 最佳晚高峰', timeSlot: '晚高峰 17:30 - 21:00', reason: '17:00早下班完美踩中17:30-20:00晚高峰爆单期，21点准时收工', hours: 3.5, income: 75, rowCls: 'row-early' },
-    'EARLY_102':{ label: '早102(8H) 08:30-12:30 13:30-17:30', level: 'good', badge: '⚡ 最佳晚高峰', timeSlot: '晚高峰 17:45 - 21:00', reason: '17:30下班直接上线接晚高峰餐饮单，单价高顺路单多', hours: 3.2, income: 70, rowCls: 'row-early' },
-    'DAY_104':  { label: '白104(8H) 09:00-13:00 14:00-18:00', level: 'light', badge: '🛵 轻量晚高峰', timeSlot: '晚高峰后段 18:30 - 21:00', reason: '18:00下班吃口简餐后跑2.5小时晚高峰+夜宵前段，见好就收', hours: 2.5, income: 55, rowCls: '' },
-    'DAY_A104': { label: '白A104(8.5H) 09:00-13:00 14:00-18:30', level: 'light', badge: '🛵 轻量晚档2H', timeSlot: '晚档 19:00 - 21:00', reason: '18:30下班跑2小时散单补贴次日伙食费', hours: 2.0, income: 45, rowCls: '' },
-    'DAY_002':  { label: '白002(8H) 10:00-13:30 14:30-19:00', level: 'light', badge: '🌙 随缘轻量2H', timeSlot: '晚档 19:30 - 21:30', reason: '19:00下班顺路跑2小时轻食/商超单，不强求', hours: 2.0, income: 40, rowCls: '' },
-    'MID_101':  { label: '中101(8H) 12:00-16:00 17:00-21:00', level: 'stop', badge: '🛑 专心主业不跑', timeSlot: '全天不跑外卖（充分睡眠）', reason: '中午12点上班、晚上21点下班，专心休息保次日状态', hours: 0, income: 0, rowCls: 'row-skip' },
-    'JUMP_106': { label: '跳106(8H) 09:00-13:00 17:00-21:00', level: 'stop', badge: '🛑 严禁跑单·午休', timeSlot: '13:00-17:00 必须午休，不跑外卖', reason: '跳班跨度长达12小时！下午空档务必午睡，否则晚班顶不住', hours: 0, income: 0, rowCls: 'row-skip' },
-    'JUMP_A106':{ label: '跳A106(8.5H) 09:00-13:30 17:00-21:00', level: 'stop', badge: '🛑 严禁跑单·午休', timeSlot: '13:30-17:00 必须午休，不跑外卖', reason: '8.5小时跳班体力消耗大，中间空档务必回家睡觉', hours: 0, income: 0, rowCls: 'row-skip' },
-    'JUMP_A101':{ label: '跳A101(8.5H) 10:00-13:30 17:00-22:00', level: 'stop', badge: '🛑 强制休息不跑', timeSlot: '全天不跑外卖（22点下班）', reason: '晚上22:00才下班，绝对不要去跑单', hours: 0, income: 0, rowCls: 'row-skip' },
-    'NIGHT_002':{ label: '夜002(8H) 13:00-17:30 18:30-22:00', level: 'stop', badge: '🛑 强制休息不跑', timeSlot: '全天不跑外卖（夜班护体）', reason: '夜班22:00下班，回家洗漱睡觉，严禁熬夜跑夜宵', hours: 0, income: 0, rowCls: 'row-skip' },
-    'NIGHT_A002':{ label: '夜A002(8.5H) 12:30-17:30 18:30-22:00', level: 'stop', badge: '🛑 强制休息不跑', timeSlot: '全天不跑外卖（夜班护体）', reason: '8.5小时长夜班22:00下班，严格执行“夜班不跑单”纪律', hours: 0, income: 0, rowCls: 'row-skip' }
-  };
-
-  const DEFAULT_OCT_SCHEDULE = [
-    { date: '10月1日',  week: '星期四', type: 'EARLY_0' },
-    { date: '10月2日',  week: '星期五', type: 'EARLY_102' },
-    { date: '10月3日',  week: '星期六', type: 'EARLY_0' },
-    { date: '10月4日',  week: '星期日', type: 'REST' },
-    { date: '10月5日',  week: '星期一', type: 'REST' },
-    { date: '10月6日',  week: '星期二', type: 'JUMP_106' },
-    { date: '10月7日',  week: '星期三', type: 'NIGHT_002' },
-    { date: '10月8日',  week: '星期四', type: 'DAY_002' },
-    { date: '10月9日',  week: '星期五', type: 'REST' },
-    { date: '10月10日', week: '星期六', type: 'JUMP_A101' },
-    { date: '10月11日', week: '星期日', type: 'NIGHT_A002' },
-    { date: '10月12日', week: '星期一', type: 'DAY_002' },
-    { date: '10月13日', week: '星期二', type: 'DAY_104' },
-    { date: '10月14日', week: '星期三', type: 'EARLY_0' },
-    { date: '10月15日', week: '星期四', type: 'REST' },
-    { date: '10月16日', week: '星期五', type: 'JUMP_A106' },
-    { date: '10月17日', week: '星期六', type: 'REST' },
-    { date: '10月18日', week: '星期日', type: 'NIGHT_A002' },
-    { date: '10月19日', week: '星期一', type: 'REST' },
-    { date: '10月20日', week: '星期二', type: 'MID_101' },
-    { date: '10月21日', week: '星期三', type: 'DAY_104' },
-    { date: '10月22日', week: '星期四', type: 'DAY_A104' },
-    { date: '10月23日', week: '星期五', type: 'EARLY_0' },
-    { date: '10月24日', week: '星期六', type: 'REST' },
-    { date: '10月25日', week: '星期日', type: 'REST' },
-    { date: '10月26日', week: '星期一', type: 'NIGHT_A002' },
-    { date: '10月27日', week: '星期二', type: 'MID_101' },
-    { date: '10月28日', week: '星期三', type: 'DAY_A104' },
-    { date: '10月29日', week: '星期四', type: 'REST' },
-    { date: '10月30日', week: '星期五', type: 'NIGHT_A002' }
-  ];
-
-  const STORAGE_KEY = 'smart_lin_top_quant_v7';
-  let scheduleData = (function() {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (e) {}
-    return JSON.parse(JSON.stringify(DEFAULT_OCT_SCHEDULE));
-  })();
-
-  function saveSchedule() {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(scheduleData)); } catch (e) {}
-  }
-
-  function resetOctSchedule() {
-    if (confirm('确定恢复为你上传的 10月林达烽 原始班表吗？')) {
-      scheduleData = JSON.parse(JSON.stringify(DEFAULT_OCT_SCHEDULE));
-      saveSchedule();
-      renderScheduleTable();
-      reCalcAll();
-    }
-  }
-
-  function renderScheduleTable() {
-    const tbody = document.getElementById('scheduleTableBody');
-    let restDays = 0, afterWorkDays = 0, skipDays = 0, estIncome = 0;
-
-    tbody.innerHTML = scheduleData.map((row, idx) => {
-      const rule = SHIFT_TYPES[row.type] || SHIFT_TYPES['REST'];
-      const nextDay = scheduleData[idx + 1];
-      let customSlot = rule.timeSlot;
-      let customReason = rule.reason;
-      let customHours = rule.hours;
-      let customIncome = rule.income;
-      let badgeCls = rule.level === 'gold' ? 'tag-gold' : (rule.level === 'good' ? 'tag-good' : (rule.level === 'light' ? 'tag-light' : 'tag-stop'));
-
-      if ((row.type === 'DAY_002' || row.type === 'DAY_A104') && nextDay && nextDay.type === 'EARLY_0') {
-        customSlot = '19:00 - 20:30（仅跑1.5小时早归）';
-        customReason = '⚠️ 次日接08:00早0班！今晚20:30必须收工回家睡觉';
-        customHours = 1.5;
-        customIncome = 35;
-      }
-
-      if (rule.level === 'gold') restDays++;
-      else if (rule.level === 'good' || rule.level === 'light') afterWorkDays++;
-      else skipDays++;
-      estIncome += customIncome;
-
-      const optionsHtml = Object.keys(SHIFT_TYPES).map(k =>
-        `<option value="${k}" ${k === row.type ? 'selected' : ''}>${SHIFT_TYPES[k].label}</option>`
-      ).join('');
-
-      return `
-        <tr class="${rule.rowCls}">
-          <td style="font-weight:bold;">${row.date}</td>
-          <td>${row.week}</td>
-          <td>
-            <select class="shift-select" onchange="onShiftChange(${idx}, this.value)">
-              ${optionsHtml}
-            </select>
-          </td>
-          <td><span class="tag-pill ${badgeCls}">${rule.badge}</span></td>
-          <td>
-            <div style="font-weight:bold;">${customSlot}</div>
-            <div style="font-size:0.8em; color:var(--text-sub);">${customReason}</div>
-          </td>
-          <td style="text-align:right; font-family:Consolas; font-weight:bold;">${customHours > 0 ? customHours + ' 小时' : '休息'}</td>
-          <td style="text-align:right; font-family:Consolas; font-weight:bold; color:${customIncome > 0 ? 'var(--accent-red)' : 'var(--text-sub)'};">
-            ${customIncome > 0 ? '+¥' + customIncome : '¥0'}
-          </td>
-        </tr>
-      `;
-    }).join('');
-
-    totalEstimatedMeituan = estIncome;
-    document.getElementById('statRestDays').textContent = `${restDays} 天`;
-    document.getElementById('statAfterWorkDays').textContent = `${afterWorkDays} 天`;
-    document.getElementById('statSkipDays').textContent = `${skipDays} 天`;
-    document.getElementById('statEstIncome').textContent = `¥${estIncome}`;
-  }
-
-  function onShiftChange(index, newType) {
-    scheduleData[index].type = newType;
-    saveSchedule();
-    renderScheduleTable();
-    reCalcAll();
-  }
-
-  async function handleScheduleImageUpload(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const statusEl = document.getElementById('ocrStatusText');
-    statusEl.style.color = 'var(--accent-orange)';
-    statusEl.textContent = '🔍 正在智能扫描识别班表图片...';
-
-    try {
-      const worker = await Tesseract.createWorker('chi_sim');
-      const ret = await worker.recognize(file);
-      await worker.terminate();
-      const lines = (ret.data.text || '').split('\n').map(l => l.trim()).filter(Boolean);
-      const parsed = [];
-      const weekNames = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
-
-      lines.forEach(line => {
-        const m = line.match(/(\d{1,2})\s*月\s*(\d{1,2})\s*日/);
-        if (m) {
-          let wStr = '星期一';
-          weekNames.forEach(w => { if (line.includes(w)) wStr = w; });
-          let sType = 'DAY_104';
-          if (line.includes('休息')) sType = 'REST';
-          else if (line.includes('早102') || line.includes('17:30')) sType = 'EARLY_102';
-          else if (line.includes('早0') || line.includes('08:00')) sType = 'EARLY_0';
-          else if (line.includes('跳A101')) sType = 'JUMP_A101';
-          else if (line.includes('跳A106')) sType = 'JUMP_A106';
-          else if (line.includes('跳106') || line.includes('跳')) sType = 'JUMP_106';
-          else if (line.includes('夜A002')) sType = 'NIGHT_A002';
-          else if (line.includes('夜002') || line.includes('夜')) sType = 'NIGHT_002';
-          else if (line.includes('中101') || line.includes('12:00-16:00')) sType = 'MID_101';
-          else if (line.includes('白A104') || line.includes('18:30')) sType = 'DAY_A104';
-          else if (line.includes('白002') || line.includes('19:00')) sType = 'DAY_002';
-          parsed.push({ date: `${m[1]}月${m[2]}日`, week: wStr, type: sType });
-        }
-      });
-
-      if (parsed.length >= 5) {
-        scheduleData = parsed;
-        saveSchedule();
-        renderScheduleTable();
-        reCalcAll();
-        statusEl.style.color = 'var(--accent-green)';
-        statusEl.textContent = `✅ 已成功识别并更新 ${parsed.length} 天排班！`;
-      } else {
-        statusEl.style.color = 'var(--accent-green)';
-        statusEl.textContent = `✅ 已加载，可通过表格下拉框微调班次`;
-      }
-    } catch (e) {
-      statusEl.style.color = 'var(--accent-red)';
-      statusEl.textContent = '⚠️ 可直接在下方表格下拉框切换每日班次';
-    }
-  }
-
-  function exportScheduleCSV() {
-    let csv = '\uFEFF日期,星期,主业班次,跑单等级,建议跑外卖时段,策略说明,预估时长(小时),预估收入(元)\n';
-    scheduleData.forEach(r => {
-      const rule = SHIFT_TYPES[r.type] || SHIFT_TYPES['REST'];
-      csv += `${r.date},${r.week},"${rule.label}",${rule.badge},"${rule.timeSlot}","${rule.reason}",${rule.hours},${rule.income}\n`;
-    });
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = '本月班表兼职跑外卖计划表.csv';
-    a.click();
-  }
-
-  // 页面加载即刻渲染班表 并向天天基金网发起真实数据请求
-  renderScheduleTable();
+  // 启动加载本机记忆并向天天基金网发起真实数据请求
+  loadSavedInputs();
   reCalcAll();
   fetchAllFundsRealTime();
 </script>
