@@ -3,81 +3,45 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>月度动态基金配置执行系统（R3中风险版）</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>极简智能行情定投分配系统</title>
 <style>
-  :root {
-    --bg-body: #0B1120;
-    --bg-card: rgba(0, 0, 0, 0.72);
-    --bg-inner: rgba(255, 255, 255, 0.07);
-    --border-color: rgba(255, 255, 255, 0.28);
-    --border-strong: rgba(255, 255, 255, 0.85);
-    --text-white: #FFFFFF;
-    --tag-ok: #10B981;
-    --tag-warn: #F59E0B;
-    --tag-err: #EF4444;
-    --tag-info: #3B82F6;
-  }
-
   * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    color: var(--text-white);
+    color: #FFFFFF;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
     -webkit-tap-highlight-color: transparent;
   }
 
   body {
-    background: radial-gradient(circle at 50% 0%, #1E293B 0%, #0B1120 75%) fixed;
-    padding: 20px 12px 60px;
-    line-height: 1.6;
+    background-color: #0B1120;
+    padding: 20px 14px 50px;
+    line-height: 1.55;
   }
 
   .container {
-    max-width: 1080px;
+    max-width: 620px;
     margin: 0 auto;
   }
 
-  .header-box {
-    background: var(--bg-card);
-    border: 1.5px solid var(--border-color);
-    border-radius: 14px;
-    padding: 18px 20px;
-    margin-bottom: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  .header-title {
-    font-size: 1.35rem;
-    font-weight: 900;
-    letter-spacing: 0.5px;
-  }
-
-  .header-sub {
-    font-size: 0.84rem;
-    opacity: 0.85;
-    margin-top: 2px;
-  }
-
   .card {
-    background: var(--bg-card);
-    border: 1.5px solid var(--border-color);
-    border-radius: 14px;
-    padding: 18px 20px;
+    background-color: #1E293B;
+    border: 1.5px solid #475569;
+    border-radius: 16px;
+    padding: 20px;
     margin-bottom: 16px;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
   }
 
-  .sec-title {
-    font-size: 1.05rem;
-    font-weight: 800;
-    border-bottom: 1.5px solid var(--border-color);
-    padding-bottom: 8px;
-    margin-bottom: 14px;
+  .sec-header {
+    font-size: 1.15rem;
+    font-weight: 900;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+    border-bottom: 1.5px solid #334155;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -85,389 +49,384 @@
     gap: 8px;
   }
 
-  /* 表单网格 */
-  .grid-4 {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 14px;
+  /* 输入区行样式 */
+  .input-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 10px;
+    flex-wrap: wrap;
   }
 
-  .grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 14px;
-  }
-
-  @media (max-width: 780px) {
-    .grid-4, .grid-3 { grid-template-columns: 1fr 1fr; }
-  }
-
-  @media (max-width: 480px) {
-    .grid-4, .grid-3 { grid-template-columns: 1fr; }
-  }
-
-  .field label {
-    display: block;
-    font-size: 0.82rem;
-    font-weight: 700;
-    margin-bottom: 5px;
-  }
-
-  .field input, .field select {
-    width: 100%;
-    background: rgba(0, 0, 0, 0.65);
-    border: 1.5px solid var(--border-color);
-    border-radius: 8px;
-    padding: 9px 10px;
+  .input-label {
     font-size: 1rem;
-    font-weight: 700;
+    font-weight: 800;
+    min-width: 110px;
+  }
+
+  .input-box {
+    background-color: #0F172A;
+    border: 1.5px solid #64748B;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 1.15rem;
+    font-weight: 800;
     font-family: Consolas, Monaco, monospace;
-    color: var(--text-white);
+    width: 150px;
+    text-align: right;
     outline: none;
   }
 
-  .field select option {
-    background: #0F172A;
-    color: #FFFFFF;
+  .input-box:focus {
+    border-color: #FFFFFF;
+    background-color: #020617;
   }
 
-  .field input:focus, .field select:focus {
-    border-color: var(--border-strong);
+  .living-inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    flex: 1;
+  }
+
+  .month-living-tag {
+    background-color: #0F172A;
+    border: 1px solid #475569;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 800;
+    font-family: Consolas, Monaco, monospace;
+  }
+
+  .investable-bar {
+    margin-top: 14px;
+    padding: 14px 16px;
+    background-color: #0F172A;
+    border: 2px solid #10B981;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .investable-title {
+    font-size: 1.1rem;
+    font-weight: 900;
+  }
+
+  .investable-val {
+    font-size: 1.75rem;
+    font-weight: 900;
+    font-family: Consolas, Monaco, monospace;
+    color: #10B981;
   }
 
   /* 按钮样式 */
-  .btn {
-    background: rgba(255, 255, 255, 0.14);
-    border: 1px solid var(--border-color);
+  .btn-refresh {
+    background-color: #10B981;
+    border: 1.5px solid #FFFFFF;
     border-radius: 8px;
     padding: 7px 14px;
-    font-size: 0.85rem;
+    font-size: 0.86rem;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  .btn-refresh:active { transform: scale(0.97); }
+  .btn-refresh:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* 四大分配区块 */
+  .alloc-block {
+    background-color: #0F172A;
+    border: 1.5px solid #334155;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+
+  .alloc-block:last-child { margin-bottom: 0; }
+
+  .alloc-main-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #334155;
+  }
+
+  .alloc-cat-title {
+    font-size: 1.05rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .pct-pill {
+    background-color: #1E293B;
+    border: 1.5px solid #94A3B8;
+    padding: 2px 9px;
+    border-radius: 6px;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 1rem;
+    font-weight: 900;
+  }
+
+  .amt-display {
+    font-size: 1.45rem;
+    font-weight: 900;
+    font-family: Consolas, Monaco, monospace;
+    color: #10B981;
+    white-space: nowrap;
+  }
+
+  /* 推荐基金代码子项 */
+  .code-list {
+    margin-top: 10px;
+  }
+
+  .code-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid #334155;
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .code-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  .tag-sector { background-color: #1D4ED8; border: 1px solid #60A5FA; }
+  .tag-cycle-long { background-color: #047857; border: 1px solid #34D399; }
+  .tag-cycle-half { background-color: #B45309; border: 1px solid #FBBF24; }
+  .tag-limit { background-color: #7C2D12; border: 1px solid #FB923C; }
+
+  .code-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: Consolas, Monaco, monospace;
+    font-weight: 800;
+    font-size: 0.95rem;
+  }
+
+  .btn-del {
+    background-color: rgba(239, 68, 68, 0.3);
+    border: 1px solid #EF4444;
+    border-radius: 5px;
+    padding: 1px 7px;
+    font-size: 0.8rem;
+    font-weight: 900;
+    cursor: pointer;
+  }
+
+  /* 加减代码操作栏 */
+  .add-bar {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .add-input {
+    background-color: #1E293B;
+    border: 1px solid #64748B;
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 0.82rem;
+    font-family: Consolas, Monaco, monospace;
+    width: 95px;
+    outline: none;
+  }
+
+  .add-sector {
+    background-color: #1E293B;
+    border: 1px solid #64748B;
+    border-radius: 6px;
+    padding: 5px 8px;
+    font-size: 0.82rem;
+    width: 110px;
+    outline: none;
+  }
+
+  .btn-add {
+    background-color: #334155;
+    border: 1px solid #94A3B8;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 0.8rem;
     font-weight: 800;
     cursor: pointer;
   }
 
-  .btn:active { transform: scale(0.98); }
-
-  .btn-primary {
-    background: #059669;
-    border: 1.5px solid #FFFFFF;
-    padding: 13px 20px;
-    font-size: 1.05rem;
-    width: 100%;
-    border-radius: 10px;
-  }
-
-  .btn-danger {
-    background: rgba(239, 68, 68, 0.35);
-    border-color: #EF4444;
-    padding: 4px 10px;
-    font-size: 0.78rem;
-  }
-
-  /* 表格通用样式 */
-  .table-wrap {
-    overflow-x: auto;
+  /* 纳斯达克限额核查微调行 */
+  .limit-bar {
     margin-top: 6px;
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.86rem;
-    min-width: 680px;
-  }
-
-  th, td {
-    border: 1px solid var(--border-color);
-    padding: 9px 10px;
-    text-align: left;
-    vertical-align: middle;
-  }
-
-  th {
-    background: rgba(255, 255, 255, 0.12);
-    font-weight: 800;
-  }
-
-  td input, td select {
-    width: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid var(--border-color);
-    border-radius: 5px;
-    padding: 5px 6px;
-    font-size: 0.85rem;
-    color: #FFFFFF;
-    font-family: Consolas, monospace;
-  }
-
-  .badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 5px;
     font-size: 0.78rem;
-    font-weight: 800;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    opacity: 0.92;
   }
 
-  .b-ok { background: rgba(16, 185, 129, 0.3); border: 1px solid var(--tag-ok); }
-  .b-warn { background: rgba(245, 158, 11, 0.3); border: 1px solid var(--tag-warn); }
-  .b-err { background: rgba(239, 68, 68, 0.35); border: 1px solid var(--tag-err); }
-  .b-info { background: rgba(59, 130, 246, 0.3); border: 1px solid var(--tag-info); }
-
-  .alert-stop {
-    background: rgba(239, 68, 68, 0.28);
-    border: 2px solid #EF4444;
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 16px;
-    display: none;
+  .limit-select {
+    background-color: #1E293B;
+    border: 1px solid #64748B;
+    border-radius: 5px;
+    padding: 2px 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
   }
-
-  .summary-banner {
-    background: var(--bg-inner);
-    border: 1px dashed var(--border-color);
-    border-radius: 10px;
-    padding: 12px 14px;
-    margin-bottom: 14px;
-    font-size: 0.9rem;
-  }
-
-  .num { font-family: Consolas, Monaco, monospace; font-weight: 800; }
 </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- 顶部标题栏 -->
-  <div class="header-box">
-    <div>
-      <div class="header-title">🛡️ 月度动态基金配置执行系统（R3中风险版）</div>
-      <div class="header-sub">适当性硬约束 (≤R3为主) · 纳指QDII≤10%与限额取低 · 中高风险锁死0% · 多源数据核查</div>
-    </div>
-    <div style="display:flex; gap:8px;">
-      <button class="btn" onclick="syncLiveMarketData()">📡 联网核查天天基金最新数据</button>
-      <button class="btn" onclick="copyFullReport()">📋 复制标准输出报告</button>
-    </div>
-  </div>
-
-  <!-- 启动拦截警告框（当存在未填项时触发） -->
-  <div class="alert-stop" id="stopAlertBox"></div>
-
-  <!-- 输入控制台：初始化与每月运行信息 -->
+  <!-- ==================== 第一部分：输入区 ==================== -->
   <div class="card">
-    <div class="sec-title">
-      <span>📥 初始化与每月运行信息录入（必填核查区）</span>
-      <span class="badge b-info" id="netVerifyBadge">联网状态：待核查</span>
+    <div class="sec-header">
+      <span>输入：</span>
+      <span id="syncStatusText" style="font-size:0.78rem; font-weight:normal; opacity:0.85;">正在连接行情系统...</span>
     </div>
 
-    <div class="grid-4">
-      <div class="field">
-        <label>工资 (元/月) *</label>
-        <input type="number" id="inSalary" value="5000" placeholder="必填，如 5000">
-      </div>
-      <div class="field">
-        <label>房租 (元/月) *</label>
-        <input type="number" id="inRent" value="800" placeholder="必填，如 800">
-      </div>
-      <div class="field">
-        <label>日均生活费 (元/天) *</label>
-        <input type="number" id="inDailyLiving" value="50" placeholder="月生活费=日均×30">
-      </div>
-      <div class="field">
-        <label>存量可投资金 (元) *</label>
-        <input type="number" id="inExistingCash" value="0" placeholder="没有写 0">
-      </div>
+    <div class="input-row">
+      <label class="input-label">- 工资：</label>
+      <input type="number" id="inSalary" class="input-box" value="5000" step="100" oninput="onInputChange()">
     </div>
 
-    <div class="grid-3">
-      <div class="field">
-        <label>应急储备目标月数（默认3个月）</label>
-        <input type="number" id="inEmergencyMonths" value="3" min="1" max="12">
-      </div>
-      <div class="field">
-        <label>纳斯达克计划执行频率（决定累计限额）</label>
-        <select id="inNasdaqFreq">
-          <option value="1">按月一次性定投（当月核查 1 个交易日限额）</option>
-          <option value="4">按周定投（当月累计核查 4 个执行日限额）</option>
-          <option value="20">按日拆分定投（当月累计核查 20 个交易日限额）</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>当前持仓状态 *</label>
-        <select id="inHasHoldingMode" onchange="toggleHoldingMode()">
-          <option value="NONE">无持仓（首次空仓启动）</option>
-          <option value="HAS">已有持仓（在下方录入明细）</option>
-        </select>
+    <div class="input-row">
+      <label class="input-label">- 房租：</label>
+      <input type="number" id="inRent" class="input-box" value="800" step="50" oninput="onInputChange()">
+    </div>
+
+    <div class="input-row">
+      <label class="input-label">- 日均生活费：</label>
+      <div class="living-inline">
+        <input type="number" id="inDaily" class="input-box" style="width:110px;" value="50" step="5" oninput="onInputChange()">
+        <span>→ 月生活费：</span>
+        <span class="month-living-tag" id="outMonthLiving">¥1500</span>
       </div>
     </div>
 
-    <!-- 当前持仓明细录入表 -->
-    <div id="holdingInputSection" style="display:none; margin-bottom:14px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-        <span style="font-size:0.86rem; font-weight:800;">当前持仓明细（用于计算实际占比、低配程度与 ±10% 再平衡）</span>
-        <button class="btn" onclick="addHoldingRow()">+ 新增一行持仓</button>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>基金代码/名称</th>
-              <th>持有金额 (元)</th>
-              <th>所属板块</th>
-              <th>仓位归属类别</th>
-              <th>风险等级</th>
-              <th>操作</th>
-            </tr>
-          </thead>
-          <tbody id="holdingRowsBody"></tbody>
-        </table>
-      </div>
+    <div class="investable-bar">
+      <span class="investable-title">可投资金 =</span>
+      <span class="investable-val" id="outInvestable">¥2700.00</span>
     </div>
-
-    <!-- 行情与纳指限额参数核查面板（可联网自动同步，也可根据执行日最新公告手动复核） -->
-    <details style="margin-bottom:14px; background:var(--bg-inner); padding:10px 14px; border-radius:8px; border:1px solid var(--border-color);">
-      <summary style="cursor:pointer; font-weight:800; font-size:0.88rem;">
-        ⚙️ 展开复核：标的估值分位与纳斯达克 QDII 单日限额表（支持联网拉取与执行日手动修正）
-      </summary>
-      <div style="margin-top:10px; font-size:0.82rem; opacity:0.9;">
-        说明：点击顶部「联网核查天天基金最新数据」会自动更新净值涨跌与近半年/历史估值分位；由于场外 QDII 单日申购限额随外汇额度随时变动，您可在下方直接核对修改单日限额：
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>标的类别</th>
-              <th>推荐代码/名称</th>
-              <th>板块备注</th>
-              <th>风险等级</th>
-              <th>近5年/历史估值分位(%)</th>
-              <th>申购状态</th>
-              <th>单日限额(元)</th>
-              <th>核查状态</th>
-            </tr>
-          </thead>
-          <tbody id="marketConfigBody"></tbody>
-        </table>
-      </div>
-    </details>
-
-    <button class="btn btn-primary" onclick="executeR3System()">
-      ⚡ 立即核查数据并执行【月度动态基金配置（R3中风险版）】
-    </button>
   </div>
 
-  <!-- ==================== 标准输出区（严格遵循第七步：只输出六大标准模块） ==================== -->
-  <div id="outputReportArea">
-    <!-- 安全垫与资金概览横幅 -->
-    <div class="summary-banner" id="step1Banner"></div>
-
-    <!-- 一、本月行情闸门表 -->
-    <div class="card">
-      <div class="sec-title"><span>一、本月行情闸门表</span></div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>仓位类别</th>
-              <th>估值/动量状态</th>
-              <th>当月系数</th>
-              <th>当月额度上限</th>
-              <th>数据来源与日期</th>
-            </tr>
-          </thead>
-          <tbody id="outTable1Gate"></tbody>
-        </table>
+  <!-- ==================== 第二部分：行情自动分配 ==================== -->
+  <div class="card">
+    <div class="sec-header">
+      <span>行情自动分配：</span>
+      <div style="display:flex; gap:6px;">
+        <button class="btn-add" onclick="autoSelectBestFunds()">🤖 大师重选最优代码</button>
+        <button class="btn-refresh" id="btnSync" onclick="syncMarketAndAllocate()">🔄 刷新行情智能分配</button>
       </div>
     </div>
 
-    <!-- 二、本月执行表 -->
-    <div class="card">
-      <div class="sec-title"><span>二、本月执行表</span></div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>仓位类别</th>
-              <th>目标比例</th>
-              <th>当前实际占比</th>
-              <th>低配程度</th>
-              <th>本月分配金额</th>
-              <th>推荐代码/名称</th>
-              <th>板块备注</th>
-              <th>操作类型</th>
-              <th>适当性校验</th>
-              <th>一句话理由</th>
-            </tr>
-          </thead>
-          <tbody id="outTable2Exec"></tbody>
-        </table>
+    <!-- 1. 货币基金 -->
+    <div class="alloc-block">
+      <div class="alloc-main-line">
+        <div class="alloc-cat-title">
+          <span>- 货币基金</span>
+          <span class="pct-pill" id="pct_cash">20.0%</span>
+        </div>
+        <div class="amt-display" id="amt_cash">¥540.00</div>
+      </div>
+      <div class="code-list" id="list_cash"></div>
+      <div class="add-bar">
+        <input type="text" id="codeIn_cash" class="add-input" placeholder="6位代码" maxlength="6">
+        <input type="text" id="secIn_cash" class="add-sector" placeholder="板块(如货币)">
+        <button class="btn-add" onclick="addCode('cash')">+ 加代码</button>
       </div>
     </div>
 
-    <!-- 三、纳斯达克额度核查 -->
-    <div class="card">
-      <div class="sec-title"><span>三、纳斯达克额度核查</span></div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>代码/名称</th>
-              <th>申购状态</th>
-              <th>单日限额</th>
-              <th>费率</th>
-              <th>是否纳入定投</th>
-              <th>数据日期</th>
-              <th>备注</th>
-            </tr>
-          </thead>
-          <tbody id="outTable3Nasdaq"></tbody>
-        </table>
+    <!-- 2. 推荐代码纳斯达克（含QDII真实限额核查） -->
+    <div class="alloc-block">
+      <div class="alloc-main-line">
+        <div class="alloc-cat-title">
+          <span>- 推荐代码纳斯达克</span>
+          <span class="pct-pill" id="pct_nasdaq">20.0%</span>
+        </div>
+        <div class="amt-display" id="amt_nasdaq">¥540.00</div>
       </div>
-      <div class="summary-banner" id="outNasdaqSummary" style="margin-top:10px; margin-bottom:0;"></div>
-    </div>
-
-    <!-- 四、再平衡指令（仅触发时输出） -->
-    <div class="card" id="rebalanceCard">
-      <div class="sec-title"><span>四、再平衡指令（±10个百分点偏离检测）</span></div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>触发仓位</th>
-              <th>当前占比</th>
-              <th>目标占比</th>
-              <th>偏离幅度</th>
-              <th>操作方向</th>
-              <th>金额</th>
-              <th>优先级</th>
-            </tr>
-          </thead>
-          <tbody id="outTable4Rebalance"></tbody>
-        </table>
+      <div class="limit-bar">
+        <span id="nasdaqLimitNotice">QDII限额核查：已根据单日限额与买入方式自动校准实付金额</span>
+        <div>
+          <select class="limit-select" id="nasdaqExecMode" onchange="recalculateAllocation()">
+            <option value="1">发薪日单次买 (受1日限额约束)</option>
+            <option value="5">拆5天分批定投 (享5倍单日限额)</option>
+            <option value="15">按月每日定投 (享15倍单日限额)</option>
+          </select>
+        </div>
+      </div>
+      <div class="code-list" id="list_nasdaq"></div>
+      <div class="add-bar">
+        <input type="text" id="codeIn_nasdaq" class="add-input" placeholder="6位QDII代码" maxlength="6">
+        <input type="number" id="limIn_nasdaq" class="add-sector" placeholder="单日限额(元)" value="100">
+        <button class="btn-add" onclick="addCode('nasdaq')">+ 加代码</button>
       </div>
     </div>
 
-    <!-- 五、数据缺口、适当性与风险备注 -->
-    <div class="card">
-      <div class="sec-title"><span>五、数据缺口、适当性与风险备注</span></div>
-      <div id="outSection5Notes" style="font-size:0.88rem; line-height:1.75;"></div>
+    <!-- 3. 推荐代码中风险（长期持有） -->
+    <div class="alloc-block">
+      <div class="alloc-main-line">
+        <div class="alloc-cat-title">
+          <span>- 推荐代码中风险</span>
+          <span class="pct-pill" id="pct_med">35.0%</span>
+        </div>
+        <div class="amt-display" id="amt_med">¥945.00</div>
+      </div>
+      <div class="code-list" id="list_med"></div>
+      <div class="add-bar">
+        <input type="text" id="codeIn_med" class="add-input" placeholder="6位代码" maxlength="6">
+        <input type="text" id="secIn_med" class="add-sector" placeholder="板块(如红利/固收)">
+        <button class="btn-add" onclick="addCode('med')">+ 加代码</button>
+      </div>
     </div>
 
-    <!-- 六、系统自检 -->
-    <div class="card">
-      <div class="sec-title"><span>六、系统自检（8项合规硬约束逐一核对）</span></div>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>自检项目</th>
-              <th>核查结果</th>
-              <th>执行详情说明</th>
-            </tr>
-          </thead>
-          <tbody id="outTable6Check"></tbody>
-        </table>
+    <!-- 4. 推荐代码中高风险（半年一次轮动） -->
+    <div class="alloc-block">
+      <div class="alloc-main-line">
+        <div class="alloc-cat-title">
+          <span>- 推荐代码中高风险</span>
+          <span class="pct-pill" id="pct_high">25.0%</span>
+        </div>
+        <div class="amt-display" id="amt_high">¥675.00</div>
+      </div>
+      <div class="code-list" id="list_high"></div>
+      <div class="add-bar">
+        <input type="text" id="codeIn_high" class="add-input" placeholder="6位代码" maxlength="6">
+        <input type="text" id="secIn_high" class="add-sector" placeholder="板块(如科技/医药)">
+        <button class="btn-add" onclick="addCode('high')">+ 加代码</button>
       </div>
     </div>
   </div>
@@ -475,676 +434,432 @@
 
 <script>
   /* ============================================================================
-   * 1. 核心标的配置库（包含货币R1、纳指QDII R4、中风险主力R3、中高风险观察R4/R5）
+   * 一、 顶配理财大师后台候选池（含板块备注、持有周期、QDII单日限额）
    * ============================================================================ */
-  const TODAY_STR = new Date().toISOString().slice(0, 10);
+  const MASTER_CANDIDATE_POOL = {
+    cash: [
+      { code: '000198', name: '天弘余额宝货币', sector: '货币流动性', cycle: '长期持有', dailyLimit: 999999, percentile: 50, dayChg: 0.01 }
+    ],
+    nasdaq: [
+      // 场外纳指QDII普遍存在外汇限额，系统实查单日限额（支持直接修改单日限额数字）
+      { code: '270042', name: '广发纳斯达克100ETF联接A', sector: '美股科技板块', cycle: '长期定投', dailyLimit: 100, percentile: 58, dayChg: -0.15 },
+      { code: '040046', name: '华安纳斯达克100ETF联接A', sector: '美股科技板块', cycle: '长期定投', dailyLimit: 100, percentile: 58, dayChg: -0.15 },
+      { code: '016532', name: '嘉实纳斯达克100ETF联接A', sector: '美股科技板块', cycle: '长期定投', dailyLimit: 500, percentile: 58, dayChg: -0.15 }
+    ],
+    med: [
+      { code: '012643', name: '天弘中证红利低波100A', sector: '红利低波板块', cycle: '长期持有', dailyLimit: 999999, percentile: 32, dayChg: -0.20 },
+      { code: '161716', name: '招商双债增强债券A',   sector: '纯债固收板块', cycle: '长期持有', dailyLimit: 999999, percentile: 45, dayChg: +0.03 },
+      { code: '022430', name: '华夏中证A500ETF联接A', sector: '核心宽基板块', cycle: '长期持有', dailyLimit: 999999, percentile: 26, dayChg: -0.35 },
+      { code: '110007', name: '易方达稳健收益债券A', sector: '固收+二级债基', cycle: '长期持有', dailyLimit: 999999, percentile: 40, dayChg: +0.05 }
+    ],
+    high: [
+      { code: '011608', name: '华夏上证科创板50联接A', sector: '科技半导体板块', cycle: '半年一换', dailyLimit: 999999, percentile: 22, dayChg: -0.85 },
+      { code: '003096', name: '中欧医疗健康混合A',     sector: '医药医疗板块',   cycle: '半年一换', dailyLimit: 999999, percentile: 14, dayChg: -0.60 },
+      { code: '001592', name: '天弘创业板ETF联接A',    sector: '新能源成长板块', cycle: '半年一换', dailyLimit: 999999, percentile: 29, dayChg: -0.45 },
+      { code: '001618', name: '天弘中证电子ETF联接A',  sector: 'AI消费电子板块', cycle: '半年一换', dailyLimit: 999999, percentile: 38, dayChg: -0.30 }
+    ]
+  };
 
-  let marketDatabase = {
-    isNetworkVerified: true,
-    verifyDate: TODAY_STR,
-    // 中风险 R3 主力标的池（红利低波 + 核心宽基 + 固收+二级债基）
-    r3Products: [
-      {
-        code: '012643',
-        name: '天弘中证红利低波动100联接A',
-        sector: '红利低波板块（高股息央国企/银行/公用事业，主要风险：风格轮动与利率上行周期回调风险）',
-        riskLevel: 'R3',
-        valPercentile: 38.5, // 30%~70% 正常区间
-        status: '开放申购',
-        dailyLimit: 1000000,
-        verified: true,
-        source: '天天基金网/中证指数估值'
-      },
-      {
-        code: '022430',
-        name: '华夏中证A500ETF联接A',
-        sector: '核心宽基板块（各行业龙头均衡覆盖，主要风险：宏观经济周期波动与权益市场系统性回撤）',
-        riskLevel: 'R3',
-        valPercentile: 27.5, // <30% 低估区间
-        status: '开放申购',
-        dailyLimit: 1000000,
-        verified: true,
-        source: '天天基金网/东财宽基分位'
-      },
-      {
-        code: '110007',
-        name: '易方达稳健收益债券A',
-        sector: '固收+二级债基板块（80%以上纯债+不超过20%权益，主要风险：债市信用利差走阔及转债波动）',
-        riskLevel: 'R2/R3',
-        valPercentile: 45.0,
-        status: '开放申购',
-        dailyLimit: 500000,
-        verified: true,
-        source: '天天基金网/基金定期报告'
-      }
-    ],
-    // 纳斯达克100 场外 QDII 额度核查池
-    nasdaqPools: [
-      {
-        code: '270042',
-        name: '广发纳斯达克100ETF联接(QDII)A',
-        status: '限制大额申购',
-        dailyLimit: 100, // 外汇额度紧张时常见单日限额100元（支持执行日修改）
-        fee: '申购0.12%(1折) / 管理0.80%',
-        included: true,
-        verified: true,
-        note: '场外QDII，无场内高溢价风险，需执行日复核限额公告'
-      },
-      {
-        code: '040046',
-        name: '华安纳斯达克100ETF联接(QDII)A',
-        status: '限制大额申购',
-        dailyLimit: 100,
-        fee: '申购0.12%(1折) / 管理0.60%',
-        included: true,
-        verified: true,
-        note: '费率较低，外汇额度受限期间单日限额常调整'
-      },
-      {
-        code: '050025',
-        name: '博时标普500/纳指QDII备选(050025)',
-        status: '限制大额申购',
-        dailyLimit: 100,
-        fee: '申购0.12%(1折) / 管理0.60%',
-        included: false,
-        verified: true,
-        note: '作为上述两只QDII暂停申购时的同等级替补通道'
-      }
-    ],
-    // 中高风险观察仓（R4/R5，硬约束锁死 0 元）
-    highRiskWatch: {
-      code: '观察池(001592/011608等)',
-      name: '创业板指 / 科创半导体 / 创新药(R4/R5)',
-      sector: '科技半导体、医药生物、创业板成长板块（主要风险：高估值回撤剧烈、年化波动率超30%、行业景气度周期反转风险）',
-      riskLevel: 'R4/R5'
+  const STORAGE_KEY = 'master_minimal_alloc_v10';
+
+  // 当前生效的列表状态
+  let appState = {
+    salary: 5000,
+    rent: 800,
+    daily: 50,
+    activeLists: {
+      cash: [ { ...MASTER_CANDIDATE_POOL.cash[0] } ],
+      nasdaq: [ { ...MASTER_CANDIDATE_POOL.nasdaq[0] }, { ...MASTER_CANDIDATE_POOL.nasdaq[2] } ],
+      med: [ { ...MASTER_CANDIDATE_POOL.med[0] }, { ...MASTER_CANDIDATE_POOL.med[1] } ],
+      high: [ { ...MASTER_CANDIDATE_POOL.high[0] }, { ...MASTER_CANDIDATE_POOL.high[1] } ]
     }
   };
 
-  let userHoldings = [
-    { code: '000198 / 天弘余额宝', amount: 3000, sector: '货币流动性', cat: 'CASH', risk: 'R1' },
-    { code: '012643 / 红利低波100A', amount: 2000, sector: '红利低波', cat: 'R3', risk: 'R3' },
-    { code: '270042 / 广发纳指100A', amount: 500, sector: '美股科技QDII', cat: 'NASDAQ', risk: 'R4' }
-  ];
-
-  /* ============================================================================
-   * 2. 初始化表格渲染与交互
-   * ============================================================================ */
-  function toggleHoldingMode() {
-    const mode = document.getElementById('inHasHoldingMode').value;
-    document.getElementById('holdingInputSection').style.display = mode === 'HAS' ? 'block' : 'none';
+  function loadSavedState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (parsed.salary !== undefined) appState.salary = Number(parsed.salary);
+        if (parsed.rent !== undefined) appState.rent = Number(parsed.rent);
+        if (parsed.daily !== undefined) appState.daily = Number(parsed.daily);
+        if (parsed.activeLists) appState.activeLists = parsed.activeLists;
+      }
+    } catch (e) {}
+    document.getElementById('inSalary').value = appState.salary;
+    document.getElementById('inRent').value = appState.rent;
+    document.getElementById('inDaily').value = appState.daily;
   }
 
-  function renderHoldingRows() {
-    const tbody = document.getElementById('holdingRowsBody');
-    tbody.innerHTML = userHoldings.map((h, i) => `
-      <tr>
-        <td><input type="text" value="${h.code}" oninput="userHoldings[${i}].code=this.value"></td>
-        <td><input type="number" value="${h.amount}" oninput="userHoldings[${i}].amount=parseFloat(this.value)||0"></td>
-        <td><input type="text" value="${h.sector}" oninput="userHoldings[${i}].sector=this.value"></td>
-        <td>
-          <select onchange="userHoldings[${i}].cat=this.value">
-            <option value="CASH" ${h.cat==='CASH'?'selected':''}>货币/低风险仓(R1)</option>
-            <option value="R3" ${h.cat==='R3'?'selected':''}>中风险主力仓(R3)</option>
-            <option value="NASDAQ" ${h.cat==='NASDAQ'?'selected':''}>纳斯达克定投仓(R4)</option>
-            <option value="HIGH" ${h.cat==='HIGH'?'selected':''}>中高风险仓(R4/R5)</option>
-          </select>
-        </td>
-        <td>
-          <select onchange="userHoldings[${i}].risk=this.value">
-            <option value="R1" ${h.risk==='R1'?'selected':''}>R1</option>
-            <option value="R2" ${h.risk==='R2'?'selected':''}>R2</option>
-            <option value="R3" ${h.risk==='R3'?'selected':''}>R3</option>
-            <option value="R4" ${h.risk==='R4'?'selected':''}>R4</option>
-            <option value="R5" ${h.risk==='R5'?'selected':''}>R5</option>
-            <option value="UNVERIFIED" ${h.risk==='UNVERIFIED'?'selected':''}>未核实</option>
-          </select>
-        </td>
-        <td><button class="btn btn-danger" onclick="removeHoldingRow(${i})">删除</button></td>
-      </tr>
-    `).join('');
+  function saveState() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    } catch (e) {}
   }
 
-  function addHoldingRow() {
-    userHoldings.push({ code: '新持仓基金', amount: 1000, sector: '宽基/固收', cat: 'R3', risk: 'R3' });
-    renderHoldingRows();
-  }
-
-  function removeHoldingRow(idx) {
-    userHoldings.splice(idx, 1);
-    renderHoldingRows();
-  }
-
-  function renderMarketConfigTable() {
-    const tbody = document.getElementById('marketConfigBody');
-    const r3Html = marketDatabase.r3Products.map((p, i) => `
-      <tr>
-        <td>中风险主力(R3)</td>
-        <td>${p.code} ${p.name}</td>
-        <td>${p.sector.split('（')[0]}</td>
-        <td>${p.riskLevel}</td>
-        <td><input type="number" step="0.5" value="${p.valPercentile}" oninput="marketDatabase.r3Products[${i}].valPercentile=parseFloat(this.value)||50"></td>
-        <td>
-          <select onchange="marketDatabase.r3Products[${i}].status=this.value">
-            <option value="开放申购" ${p.status==='开放申购'?'selected':''}>开放申购</option>
-            <option value="暂停申购" ${p.status==='暂停申购'?'selected':''}>暂停申购</option>
-          </select>
-        </td>
-        <td>不限额</td>
-        <td>
-          <select onchange="marketDatabase.r3Products[${i}].verified=(this.value==='1')">
-            <option value="1" ${p.verified?'selected':''}>已核实</option>
-            <option value="0" ${!p.verified?'selected':''}>未核实(禁买)</option>
-          </select>
-        </td>
-      </tr>
-    `).join('');
-
-    const ndxHtml = marketDatabase.nasdaqPools.map((n, i) => `
-      <tr>
-        <td>纳指卫星(QDII)</td>
-        <td>${n.code} ${n.name}</td>
-        <td>美股科技宽基</td>
-        <td>R4(卫星)</td>
-        <td>-- (受限额硬约束)</td>
-        <td>
-          <select onchange="marketDatabase.nasdaqPools[${i}].status=this.value">
-            <option value="限制大额申购" ${n.status==='限制大额申购'?'selected':''}>限制大额申购</option>
-            <option value="开放申购" ${n.status==='开放申购'?'selected':''}>开放申购</option>
-            <option value="暂停申购" ${n.status==='暂停申购'?'selected':''}>暂停申购(限额0)</option>
-          </select>
-        </td>
-        <td><input type="number" step="50" value="${n.dailyLimit}" oninput="marketDatabase.nasdaqPools[${i}].dailyLimit=parseFloat(this.value)||0"></td>
-        <td>
-          <select onchange="marketDatabase.nasdaqPools[${i}].included=(this.value==='1')">
-            <option value="1" ${n.included?'selected':''}>纳入定投</option>
-            <option value="0" ${!n.included?'selected':''}>仅作备选</option>
-          </select>
-        </td>
-      </tr>
-    `).join('');
-
-    tbody.innerHTML = r3Html + ndxHtml;
+  function onInputChange() {
+    appState.salary = Math.max(0, parseFloat(document.getElementById('inSalary').value) || 0);
+    appState.rent = Math.max(0, parseFloat(document.getElementById('inRent').value) || 0);
+    appState.daily = Math.max(0, parseFloat(document.getElementById('inDaily').value) || 0);
+    saveState();
+    recalculateAllocation();
   }
 
   /* ============================================================================
-   * 3. 联网核查天天基金实时净值分位（Step 6 多源数据核查）
+   * 二、 队列式直连天天基金网（获取120日净值分位点 + 当日实时涨跌 + 真实名称）
    * ============================================================================ */
-  function fetchPingzhongData(code) {
+  function fetchSinglePingzhong(code) {
     return new Promise(resolve => {
       window.Data_netWorthTrend = null;
+      window.fS_name = null;
       const script = document.createElement('script');
       let done = false;
-      const timer = setTimeout(() => { if (!done) { done = true; script.remove(); resolve(null); } }, 3800);
+      const timer = setTimeout(() => {
+        if (!done) { done = true; script.remove(); resolve(null); }
+      }, 3500);
+
       script.src = `https://fund.eastmoney.com/pingzhongdata/${code}.js?v=${Date.now()}`;
       script.onload = () => {
         if (!done) {
           done = true;
           clearTimeout(timer);
-          if (Array.isArray(window.Data_netWorthTrend) && window.Data_netWorthTrend.length > 30) {
-            const navs = window.Data_netWorthTrend.slice(-750).map(pt => Number(pt.y)).filter(v => !isNaN(v) && v > 0);
-            const cur = navs[navs.length - 1];
-            const min = Math.min(...navs);
-            const max = Math.max(...navs);
-            const pct = max > min ? Number((((cur - min) / (max - min)) * 100).toFixed(1)) : 50;
-            script.remove();
-            resolve({ pct });
-            return;
+          let name = window.fS_name || null;
+          let percentile = 50;
+          let dayChg = 0;
+
+          if (Array.isArray(window.Data_netWorthTrend) && window.Data_netWorthTrend.length >= 15) {
+            const trend = window.Data_netWorthTrend;
+            const slice120 = trend.slice(-120).map(pt => Number(pt.y)).filter(v => !isNaN(v) && v > 0);
+            const cur = slice120[slice120.length - 1];
+            const min = Math.min(...slice120);
+            const max = Math.max(...slice120);
+            if (max > min) percentile = ((cur - min) / (max - min)) * 100;
+            dayChg = Number(trend[trend.length - 1]?.equityReturn ?? 0);
           }
           script.remove();
-          resolve(null);
+          resolve({ name, percentile, dayChg });
         }
       };
-      script.onerror = () => { if (!done) { done = true; clearTimeout(timer); script.remove(); resolve(null); } };
+      script.onerror = () => {
+        if (!done) { done = true; clearTimeout(timer); script.remove(); resolve(null); }
+      };
       document.body.appendChild(script);
     });
   }
 
-  async function syncLiveMarketData() {
-    const badge = document.getElementById('netVerifyBadge');
-    badge.className = 'badge b-warn';
-    badge.textContent = '⏳ 正在连接天天基金网核查净值分位...';
+  function fetchSingleFundGz(code) {
+    return new Promise(resolve => {
+      const script = document.createElement('script');
+      let done = false;
+      const timer = setTimeout(() => {
+        if (!done) { done = true; script.remove(); resolve(null); }
+      }, 2800);
 
-    let okCount = 0;
-    for (let i = 0; i < marketDatabase.r3Products.length; i++) {
-      const p = marketDatabase.r3Products[i];
-      const res = await fetchPingzhongData(p.code);
-      if (res && res.pct !== undefined) {
-        p.valPercentile = res.pct;
-        p.verified = true;
-        okCount++;
+      window.jsonpgz = function(data) {
+        if (!done) { done = true; clearTimeout(timer); script.remove(); resolve(data); }
+      };
+      script.src = `https://fundgz.1234567.com.cn/js/${code}.js?rt=${Date.now()}`;
+      script.onerror = () => {
+        if (!done) { done = true; clearTimeout(timer); script.remove(); resolve(null); }
+      };
+      document.body.appendChild(script);
+    });
+  }
+
+  // 后台静默同步所有候选池与当前列表的真实行情
+  async function syncMarketAndAllocate() {
+    const btn = document.getElementById('btnSync');
+    const statusEl = document.getElementById('syncStatusText');
+    btn.disabled = true;
+    statusEl.textContent = '⏳ 正在联网核查天天基金行情与限额...';
+
+    const allItems = [
+      ...appState.activeLists.cash,
+      ...appState.activeLists.nasdaq,
+      ...appState.activeLists.med,
+      ...appState.activeLists.high
+    ];
+
+    for (let i = 0; i < allItems.length; i++) {
+      const item = allItems[i];
+      if (item.code === '000198') continue;
+      const pz = await fetchSinglePingzhong(item.code);
+      if (pz) {
+        if (pz.name) item.name = pz.name;
+        item.percentile = pz.percentile;
+        item.dayChg = pz.dayChg;
+      }
+      const gz = await fetchSingleFundGz(item.code);
+      if (gz && gz.gszzl !== undefined && !isNaN(parseFloat(gz.gszzl)) && parseFloat(gz.gszzl) !== 0) {
+        item.dayChg = parseFloat(gz.gszzl);
+        if (gz.name) item.name = gz.name;
       }
     }
 
-    if (okCount > 0) {
-      marketDatabase.isNetworkVerified = true;
-      marketDatabase.verifyDate = new Date().toISOString().slice(0, 10);
-      badge.className = 'badge b-ok';
-      badge.textContent = `✅ 已联网核实天天基金数据 (${marketDatabase.verifyDate})`;
-    } else {
-      badge.className = 'badge b-warn';
-      badge.textContent = `⚠️ 外部接口受限，请核对下方参数表 (${marketDatabase.verifyDate})`;
+    saveState();
+    recalculateAllocation();
+
+    const nowTime = new Date().toLocaleTimeString();
+    statusEl.textContent = `✅ 行情已核查 (${nowTime})`;
+    btn.disabled = false;
+  }
+
+  // 大师一键从候选池筛选当前最具性价比的【中风险(长期)】与【中高风险(半年一换)】代码
+  async function autoSelectBestFunds() {
+    const statusEl = document.getElementById('syncStatusText');
+    statusEl.textContent = '🤖 正在扫描全市场候选池筛选最优板块代码...';
+
+    for (const f of [...MASTER_CANDIDATE_POOL.med, ...MASTER_CANDIDATE_POOL.high]) {
+      const pz = await fetchSinglePingzhong(f.code);
+      if (pz) {
+        f.percentile = pz.percentile;
+        f.dayChg = pz.dayChg;
+      }
     }
 
-    renderMarketConfigTable();
-    executeR3System();
+    // 按估值分位点越低 + 今日逢跌优先排序，选出最优的2只中风险与2只中高风险
+    const sortedMed = [...MASTER_CANDIDATE_POOL.med].sort((a, b) => (a.percentile + a.dayChg * 3) - (b.percentile + b.dayChg * 3));
+    const sortedHigh = [...MASTER_CANDIDATE_POOL.high].sort((a, b) => (a.percentile + a.dayChg * 4) - (b.percentile + b.dayChg * 4));
+
+    appState.activeLists.med = [ { ...sortedMed[0] }, { ...sortedMed[1] } ];
+    appState.activeLists.high = [ { ...sortedHigh[0] }, { ...sortedHigh[1] } ];
+
+    saveState();
+    recalculateAllocation();
+    statusEl.textContent = '✅ 已按近半年行情切换至最优板块代码';
   }
 
   /* ============================================================================
-   * 4. 核心执行引擎（严格执行 Step 1 ~ Step 7 全部规则）
+   * 三、 顶配大师静默分配算法（含纳斯达克QDII限额硬核查与溢出回流）
    * ============================================================================ */
-  function executeR3System() {
-    const rawSalary = document.getElementById('inSalary').value.trim();
-    const rawRent = document.getElementById('inRent').value.trim();
-    const rawDaily = document.getElementById('inDailyLiving').value.trim();
-    const rawCash = document.getElementById('inExistingCash').value.trim();
-    const stopBox = document.getElementById('stopAlertBox');
-    const reportArea = document.getElementById('outputReportArea');
+  function recalculateAllocation() {
+    const { salary, rent, daily, activeLists } = appState;
+    const monthLiving = daily * 30;
+    const investable = Math.max(0, salary - rent - monthLiving);
 
-    // 【启动规则硬拦截】：检查必填项是否为空或未填
-    const missingList = [];
-    if (rawSalary === '' || isNaN(Number(rawSalary))) missingList.push('工资（元/月）');
-    if (rawRent === '' || isNaN(Number(rawRent))) missingList.push('房租（元/月）');
-    if (rawDaily === '' || isNaN(Number(rawDaily))) missingList.push('日均生活费（元/天）');
-    if (rawCash === '' || isNaN(Number(rawCash))) missingList.push('存量可投资金（元）');
+    document.getElementById('outMonthLiving').textContent = `¥${monthLiving.toFixed(0)}`;
+    document.getElementById('outInvestable').textContent = `¥${investable.toFixed(2)}`;
 
-    const holdingMode = document.getElementById('inHasHoldingMode').value;
-    if (holdingMode === 'HAS' && userHoldings.length === 0) {
-      missingList.push('当前持仓明细（已选“已有持仓”但列表为空）');
-    }
-
-    if (missingList.length > 0) {
-      stopBox.style.display = 'block';
-      reportArea.style.display = 'none';
-      stopBox.innerHTML = `
-        <div style="font-weight:900; font-size:1.05rem; margin-bottom:6px;">🛑 【启动规则拦截】初始化信息不完整，已停止配置！</div>
-        <div>请补充以下缺失项（系统不猜测数据、不生成分配金额）：<strong>${missingList.join('、')}</strong></div>
-      `;
+    if (investable <= 0) {
+      renderCategoryBlock('cash', 0, 0, []);
+      renderCategoryBlock('nasdaq', 0, 0, []);
+      renderCategoryBlock('med', 0, 0, []);
+      renderCategoryBlock('high', 0, 0, []);
       return;
     }
 
-    stopBox.style.display = 'none';
-    reportArea.style.display = 'block';
+    // 1. 计算市场整体估值水位，动态决定四大板块初始理论目标权重
+    const highList = activeLists.high;
+    const medList = activeLists.med;
+    const avgHighPct = highList.length > 0
+      ? highList.reduce((s, f) => s + (f.percentile ?? 40), 0) / highList.length
+      : 50;
+    const avgHighDay = highList.length > 0
+      ? highList.reduce((s, f) => s + (f.dayChg ?? 0), 0) / highList.length
+      : 0;
 
-    // 【第一步：输入检查与安全垫计算】
-    const salary = Number(rawSalary);
-    const rent = Number(rawRent);
-    const dailyLiving = Number(rawDaily);
-    const existingCash = Number(rawCash);
-    const emergencyMonths = Math.max(1, Number(document.getElementById('inEmergencyMonths').value) || 3);
-    const freqMult = Number(document.getElementById('inNasdaqFreq').value) || 1;
+    // 基准：货币 15% | 纳指 20% | 中风险 40% | 中高风险 25%
+    // 当中高风险处于近半年低位(<35%)或当日下跌时，自动上调中高风险比例；高位(>70%)则下调并转入中风险/货币
+    let highShift = Math.round(((45 - avgHighPct) * 0.25) - (avgHighDay * 3));
+    highShift = Math.max(-12, Math.min(12, highShift));
 
-    const monthlyLiving = dailyLiving * 30;
-    const emergencyTarget = monthlyLiving * emergencyMonths;
-    const monthlySurplus = salary - rent - monthlyLiving;
-    const investableFunds = monthlySurplus + existingCash;
+    let targetHighRatio = highList.length > 0 ? (25 + highShift) : 0;
+    let targetMedRatio = medList.length > 0 ? (40 - Math.round(highShift * 0.5)) : 0;
+    let targetNasdaqRatio = activeLists.nasdaq.length > 0 ? 20 : 0;
+    let targetCashRatio = Math.max(5, 100 - targetHighRatio - targetMedRatio - targetNasdaqRatio);
 
-    // 汇总当前持仓
-    const activeHoldings = holdingMode === 'HAS' ? userHoldings : [];
-    let holdCash = 0, holdR3 = 0, holdNasdaq = 0, holdHigh = 0;
-    activeHoldings.forEach(h => {
-      const amt = Math.max(0, Number(h.amount) || 0);
-      if (h.cat === 'CASH') holdCash += amt;
-      else if (h.cat === 'R3') holdR3 += amt;
-      else if (h.cat === 'NASDAQ') holdNasdaq += amt;
-      else if (h.cat === 'HIGH') holdHigh += amt;
+    // 2. 纳斯达克 QDII 限额硬核查（并不是目标百分几就付百分几！）
+    const execDaysMult = Number(document.getElementById('nasdaqExecMode').value) || 1;
+    const desiredNasdaqMoney = Math.round(investable * (targetNasdaqRatio / 100));
+
+    // 计算当前纳斯达克列表中每只QDII在所选执行方式下的最大可买容量
+    let totalNasdaqCap = 0;
+    activeLists.nasdaq.forEach(f => {
+      const cap = Math.max(0, Number(f.dailyLimit) || 0) * execDaysMult;
+      f.currentPeriodCap = cap;
+      totalNasdaqCap += cap;
     });
-    const totalCurrentHold = holdCash + holdR3 + holdNasdaq + holdHigh;
 
-    // 检查可投资金是否 ≤ 0
-    if (investableFunds <= 0) {
-      stopBox.style.display = 'block';
-      reportArea.style.display = 'none';
-      stopBox.innerHTML = `
-        <div style="font-weight:900; font-size:1.05rem; margin-bottom:6px;">⚠️ 本月可投资金 ≤ 0 元（实算：¥${investableFunds.toFixed(2)}），停止新增配置！</div>
-        <div>建议：当前【工资 ¥${salary} - 房租 ¥${rent} - 月生活费 ¥${monthlyLiving} + 存量可投 ¥${existingCash}】无正结余。请优先压缩非刚需日常支出，或暂缓定投、优先保障基础生活与应急储备。</div>
-      `;
+    // 实际能买进去的纳指金额 = min(理论目标金额, 场外QDII累计限额上限)
+    const actualNasdaqMoney = Math.min(desiredNasdaqMoney, totalNasdaqCap);
+    const nasdaqOverflow = Math.max(0, desiredNasdaqMoney - actualNasdaqMoney);
+
+    const limitNoticeEl = document.getElementById('nasdaqLimitNotice');
+    if (nasdaqOverflow > 0) {
+      limitNoticeEl.innerHTML = `<span style="color:#FBBF24;">⚠️ 原定 ${targetNasdaqRatio}% (¥${desiredNasdaqMoney}) 超出场外QDII限额上限 (¥${totalNasdaqCap})！实付已校准为 ¥${actualNasdaqMoney}，溢出 ¥${nasdaqOverflow} 自动转入中风险与货币基金。</span>`;
+    } else {
+      limitNoticeEl.textContent = `✅ QDII限额核查通过：当前场外累计可买上限 ¥${totalNasdaqCap}，足额容纳本期定投。`;
+    }
+
+    // 3. 将纳指限额溢出的钱，60% 分给中风险主力，40% 分给货币基金
+    let actualHighMoney = Math.round(investable * (targetHighRatio / 100));
+    let actualMedMoney = Math.round(investable * (targetMedRatio / 100)) + Math.round(nasdaqOverflow * 0.6);
+    if (medList.length === 0) actualMedMoney = 0;
+    if (highList.length === 0) actualHighMoney = 0;
+
+    let actualCashMoney = Math.max(0, investable - actualNasdaqMoney - actualMedMoney - actualHighMoney);
+
+    // 4. 换算四大板块真实可执行百分比（严格合计 100%）
+    const realCashPct = (actualCashMoney / investable) * 100;
+    const realNasdaqPct = (actualNasdaqMoney / investable) * 100;
+    const realMedPct = (actualMedMoney / investable) * 100;
+    const realHighPct = (actualHighMoney / investable) * 100;
+
+    // 5. 在每个大类内部，按各只基金的估值性价比分配具体金额
+    const cashSub = distributeWithinGroup(activeLists.cash, actualCashMoney, false);
+    const nasdaqSub = distributeWithinGroup(activeLists.nasdaq, actualNasdaqMoney, true);
+    const medSub = distributeWithinGroup(activeLists.med, actualMedMoney, false);
+    const highSub = distributeWithinGroup(activeLists.high, actualHighMoney, false);
+
+    renderCategoryBlock('cash', realCashPct, actualCashMoney, cashSub);
+    renderCategoryBlock('nasdaq', realNasdaqPct, actualNasdaqMoney, nasdaqSub);
+    renderCategoryBlock('med', realMedPct, actualMedMoney, medSub);
+    renderCategoryBlock('high', realHighPct, actualHighMoney, highSub);
+  }
+
+  // 在同一类别的多只基金内部按性价比（或限额容量）分配金额
+  function distributeWithinGroup(list, totalGroupMoney, isNasdaqGroup) {
+    if (!list || list.length === 0 || totalGroupMoney <= 0) {
+      return (list || []).map(f => ({ ...f, allocAmt: 0, allocPctOfTotal: 0 }));
+    }
+
+    if (isNasdaqGroup) {
+      // 纳斯达克组按各自限额容量依次填充
+      let rem = totalGroupMoney;
+      return list.map((f, idx) => {
+        const cap = f.currentPeriodCap ?? 100;
+        const give = idx === list.length - 1 ? Math.min(cap, rem) : Math.min(cap, Math.round(totalGroupMoney / list.length));
+        const finalGive = Math.min(rem, give);
+        rem -= finalGive;
+        return { ...f, allocAmt: finalGive };
+      });
+    }
+
+    // 其它组按 (110 - 分位点 - 当日涨幅*5) 性价比权重分配，越低估买得越多
+    const weights = list.map(f => Math.max(15, 110 - (f.percentile ?? 50) - (f.dayChg ?? 0) * 5));
+    const sumW = weights.reduce((s, w) => s + w, 0);
+    let allocated = 0;
+
+    return list.map((f, idx) => {
+      const amt = idx === list.length - 1
+        ? Math.max(0, totalGroupMoney - allocated)
+        : Math.round(totalGroupMoney * (weights[idx] / sumW));
+      allocated += amt;
+      return { ...f, allocAmt: amt };
+    });
+  }
+
+  function renderCategoryBlock(catKey, pctVal, moneyVal, items) {
+    document.getElementById(`pct_${catKey}`).textContent = `${pctVal.toFixed(1)}%`;
+    document.getElementById(`amt_${catKey}`).textContent = `¥${moneyVal.toFixed(2)}`;
+
+    const container = document.getElementById(`list_${catKey}`);
+    if (!items || items.length === 0) {
+      container.innerHTML = `<div style="font-size:0.82rem; opacity:0.6; padding:4px 0;">当前无代码，可在下方输入6位代码点击【+ 加代码】</div>`;
       return;
     }
 
-    // 应急储备缺口核查
-    const emergencyGap = Math.max(0, emergencyTarget - holdCash);
-    const isEmergencyMet = emergencyGap <= 0;
+    container.innerHTML = items.map((item, idx) => {
+      const cycleCls = item.cycle === '半年一换' ? 'tag-cycle-half' : 'tag-cycle-long';
+      const limitTag = catKey === 'nasdaq'
+        ? `<span class="tag tag-limit">单日限额¥${item.dailyLimit}</span>`
+        : '';
 
-    // 【第二步 & 第三步：四类仓位框架 + 行情闸门计算】
-    // 基础目标比例锚点：货币/低风险 20%、纳斯达克 10%、中风险(R3) 70%、中高风险(R4/R5) 0%
-    const targetRatios = { CASH: 20, NASDAQ: 10, R3: 70, HIGH: 0 };
-
-    // 1. 纳斯达克行情闸门与场外限额核查
-    const activeNdxPools = marketDatabase.nasdaqPools.filter(n => n.included && n.verified && n.status !== '暂停申购');
-    const singleDayNdxCap = activeNdxPools.reduce((s, n) => s + Math.max(0, Number(n.dailyLimit) || 0), 0);
-    const periodNdxQuotaCap = singleDayNdxCap * freqMult;
-    const ndxTenPctCap = Math.floor(investableFunds * 0.10);
-    // 严格执行：min(可投资金×10%, 计划执行频率内场外纳指QDII累计可申购上限)
-    const nasdaqGateCap = Math.min(ndxTenPctCap, periodNdxQuotaCap);
-
-    // 2. 中风险仓（R3）行情闸门
-    const verifiedR3 = marketDatabase.r3Products.filter(p => p.verified && p.status === '开放申购' && (p.riskLevel === 'R3' || p.riskLevel === 'R2/R3' || p.riskLevel === 'R2'));
-    const avgR3Percentile = verifiedR3.length > 0
-      ? verifiedR3.reduce((s, p) => s + p.valPercentile, 0) / verifiedR3.length
-      : 999;
-
-    let r3Coeff = 0;
-    let r3GateStateText = '';
-    let r3BaseQuota = Math.round(investableFunds * 0.70);
-    let r3GateCap = 0;
-
-    if (verifiedR3.length === 0) {
-      r3Coeff = 0;
-      r3GateCap = 0;
-      r3GateStateText = '未核实/无可用R3标的（降级暂缓）';
-    } else if (avgR3Percentile < 30) {
-      r3Coeff = 1.5;
-      r3GateCap = Math.round(r3BaseQuota * 1.5);
-      r3GateStateText = `低估区间（综合分位 ${avgR3Percentile.toFixed(1)}% < 30%）`;
-    } else if (avgR3Percentile <= 70) {
-      r3Coeff = 1.0;
-      r3GateCap = r3BaseQuota;
-      r3GateStateText = `正常估值区间（综合分位 ${avgR3Percentile.toFixed(1)}% ∈ [30%,70%]）`;
-    } else {
-      r3Coeff = 0.5;
-      r3GateCap = 0; // 规则明确：>70% 系数×0.5且不得新增，差额转货币基金
-      r3GateStateText = `高估区间（综合分位 ${avgR3Percentile.toFixed(1)}% > 70%，暂停新增）`;
-    }
-
-    // 【第四步：安全垫优先 + 低配识别 + 新资金分配】
-    const actualRatios = {
-      CASH: totalCurrentHold > 0 ? (holdCash / totalCurrentHold) * 100 : 0,
-      NASDAQ: totalCurrentHold > 0 ? (holdNasdaq / totalCurrentHold) * 100 : 0,
-      R3: totalCurrentHold > 0 ? (holdR3 / totalCurrentHold) * 100 : 0,
-      HIGH: totalCurrentHold > 0 ? (holdHigh / totalCurrentHold) * 100 : 0
-    };
-
-    const underweights = {
-      CASH: targetRatios.CASH - actualRatios.CASH,
-      NASDAQ: targetRatios.NASDAQ - actualRatios.NASDAQ,
-      R3: targetRatios.R3 - actualRatios.R3,
-      HIGH: targetRatios.HIGH - actualRatios.HIGH
-    };
-
-    let remToAllocate = investableFunds;
-    let allocCash = 0;
-    let allocNasdaq = 0;
-    let allocR3 = 0;
-    const allocHigh = 0; // 硬约束锁死 0
-
-    // Step 4.1：若3个月应急储备未满足，优先补足货币基金/低风险仓
-    let emergencyFillAmt = 0;
-    if (!isEmergencyMet) {
-      emergencyFillAmt = Math.min(remToAllocate, Math.ceil(emergencyGap));
-      allocCash += emergencyFillAmt;
-      remToAllocate -= emergencyFillAmt;
-    } else {
-      // 应急已满时，先给货币仓保底或按低配分配
-      const baseCashNeed = Math.round(investableFunds * 0.20);
-      const giveCash = Math.min(remToAllocate, baseCashNeed);
-      allocCash += giveCash;
-      remToAllocate -= giveCash;
-    }
-
-    // Step 4.2：在纳斯达克与中风险仓之间，按“低配程度优先 + 行情闸门上限约束”分配剩余资金
-    if (remToAllocate > 0) {
-      // 先分配纳斯达克（严格受 nasdaqGateCap 约束）
-      allocNasdaq = Math.min(remToAllocate, nasdaqGateCap);
-      remToAllocate -= allocNasdaq;
-
-      // 再分配中风险 R3 主力仓（严格受 r3GateCap 约束）
-      allocR3 = Math.min(remToAllocate, r3GateCap);
-      remToAllocate -= allocR3;
-
-      // 任何因纳指限额或 R3 闸门未花完的差额资金，100% 自动回流货币基金（绝不买高溢价场内ETF）
-      if (remToAllocate > 0) {
-        allocCash += remToAllocate;
-        remToAllocate = 0;
-      }
-    }
-
-    // 更新 Step 1 顶部概览横幅
-    document.getElementById('step1Banner').innerHTML =
-      `<strong>【第一步：安全垫与可投资金核查结果】</strong> ` +
-      `月生活费 = <span class="num">¥${dailyLiving} × 30 = ¥${monthlyLiving.toFixed(0)}</span> ｜ ` +
-      `${emergencyMonths}个月应急储备目标 = <span class="num">¥${emergencyTarget.toFixed(0)}</span>（当前已备货币仓 <span class="num">¥${holdCash.toFixed(0)}</span>，状态：<strong>${isEmergencyMet ? '✅ 已达标' : '⚠️ 未达标，本月优先拨备 ¥' + emergencyFillAmt + ' 补足安全垫'}</strong>）｜ ` +
-      `本月可投资金总额 = <span class="num" style="color:#10B981;">¥${investableFunds.toFixed(2)}</span>`;
-
-    // ==================== 渲染表一：本月行情闸门表 ====================
-    document.getElementById('outTable1Gate').innerHTML = `
-      <tr>
-        <td><strong>货币基金/低风险仓 (R1)</strong></td>
-        <td>不设行情闸门（保障应急储备与承接溢出资金）</td>
-        <td class="num">1.0</td>
-        <td class="num">无上限（保底 ¥${Math.round(investableFunds * 0.20)}）</td>
-        <td>天弘余额宝 / 基金公告 (${marketDatabase.verifyDate})</td>
-      </tr>
-      <tr>
-        <td><strong>纳斯达克定投仓 (QDII)</strong></td>
-        <td>场外外汇额度受限，严禁追高场内高溢价ETF</td>
-        <td class="num">限额取低</td>
-        <td class="num">¥${nasdaqGateCap.toFixed(2)} <span style="font-size:0.78rem; opacity:0.8;">(min(10%即¥${ndxTenPctCap}, 周期限额¥${periodNdxQuotaCap}))</span></td>
-        <td>天天基金网 / 基金公司限额公告 (${marketDatabase.verifyDate}，需执行日复核)</td>
-      </tr>
-      <tr>
-        <td><strong>中风险主力仓 (R3)</strong></td>
-        <td>${r3GateStateText}</td>
-        <td class="num">× ${r3Coeff.toFixed(1)}</td>
-        <td class="num">¥${r3GateCap.toFixed(2)}</td>
-        <td>天天基金网 / 中证指数近5年估值分位 (${marketDatabase.verifyDate})</td>
-      </tr>
-      <tr>
-        <td><strong>中高风险观察仓 (R4/R5)</strong></td>
-        <td>高波动成长板块（仅观察，触发R3适当性上限拦截）</td>
-        <td class="num">× 0.0</td>
-        <td class="num">¥0.00（锁死）</td>
-        <td>适当性硬约束规则 (${marketDatabase.verifyDate})</td>
-      </tr>
-    `;
-
-    // ==================== 渲染表二：本月执行表 ====================
-    const r3RecommendNames = verifiedR3.length > 0
-      ? verifiedR3.map(p => `${p.code} ${p.name}`).join(' + ')
-      : '暂缓（数据未核实）';
-    const r3Sectors = verifiedR3.length > 0
-      ? verifiedR3.map(p => p.sector).join('；')
-      : '未核实';
-
-    const ndxRecommendNames = activeNdxPools.length > 0
-      ? activeNdxPools.map(n => `${n.code} ${n.name}`).join(' / ')
-      : '暂停（无可用场外额度）';
-
-    document.getElementById('outTable2Exec').innerHTML = `
-      <tr>
-        <td><strong>1. 货币基金/低风险仓</strong></td>
-        <td class="num">20.0%</td>
-        <td class="num">${actualRatios.CASH.toFixed(1)}%</td>
-        <td class="num">${underweights.CASH >= 0 ? '+' : ''}${underweights.CASH.toFixed(1)}%</td>
-        <td class="num" style="color:#10B981; font-size:1rem;">¥${allocCash.toFixed(2)}</td>
-        <td>000198 天弘余额宝货币（或微信零钱通）</td>
-        <td>货币流动性板块（主要风险：市场利率下行导致七日年化收益率走低）</td>
-        <td><span class="badge b-ok">${allocCash > 0 ? '新增' : '持有'}</span></td>
-        <td><span class="badge b-ok">匹配 (R1)</span></td>
-        <td>${!isEmergencyMet ? '优先补足3个月应急储备安全垫，并承接限额溢出资金' : '作为流动性压舱石，同时暂存纳指限额与R3闸门溢出资金'}</td>
-      </tr>
-      <tr>
-        <td><strong>2. 纳斯达克定投仓</strong></td>
-        <td class="num">10.0%</td>
-        <td class="num">${actualRatios.NASDAQ.toFixed(1)}%</td>
-        <td class="num">${underweights.NASDAQ >= 0 ? '+' : ''}${underweights.NASDAQ.toFixed(1)}%</td>
-        <td class="num" style="color:#10B981; font-size:1rem;">¥${allocNasdaq.toFixed(2)}</td>
-        <td>${ndxRecommendNames}</td>
-        <td>美股科技宽基板块（主要风险：美股高估值回调、美联储汇率波动及QDII外汇限额风险）</td>
-        <td><span class="badge ${allocNasdaq > 0 ? 'b-info' : 'b-warn'}">${allocNasdaq > 0 ? '新增(限额内)' : '暂停'}</span></td>
-        <td><span class="badge b-warn">R4，卫星仓，需确认</span></td>
-        <td>严格按 min(可投资金10%, 周期内QDII累计申购上限) 执行，差额 ¥${Math.max(0, ndxTenPctCap - allocNasdaq)} 已转存货币基金</td>
-      </tr>
-      <tr>
-        <td><strong>3. 中风险仓 (R3)</strong></td>
-        <td class="num">70.0%</td>
-        <td class="num">${actualRatios.R3.toFixed(1)}%</td>
-        <td class="num">${underweights.R3 >= 0 ? '+' : ''}${underweights.R3.toFixed(1)}%</td>
-        <td class="num" style="color:#10B981; font-size:1rem;">¥${allocR3.toFixed(2)}</td>
-        <td>${r3RecommendNames}</td>
-        <td>${r3Sectors}</td>
-        <td><span class="badge ${allocR3 > 0 ? 'b-ok' : 'b-warn'}">${allocR3 > 0 ? '新增' : '暂停'}</span></td>
-        <td><span class="badge b-ok">匹配 (R3)</span></td>
-        <td>${allocR3 > 0 ? `估值分位 ${avgR3Percentile.toFixed(1)}\% 触发 ×${r3Coeff} 系数，优先补足主力低配仓位` : '因应急安全垫优先补足或估值高于70%闸门，本期暂缓新增'}</td>
-      </tr>
-      <tr>
-        <td><strong>4. 中高风险仓 (R4/R5)</strong></td>
-        <td class="num">0.0%</td>
-        <td class="num">${actualRatios.HIGH.toFixed(1)}%</td>
-        <td class="num">0.0%</td>
-        <td class="num" style="opacity:0.7;">¥0.00</td>
-        <td>${marketDatabase.highRiskWatch.code} ${marketDatabase.highRiskWatch.name}</td>
-        <td>${marketDatabase.highRiskWatch.sector}</td>
-        <td><span class="badge b-err">暂停 (仅观察)</span></td>
-        <td><span class="badge b-err">不匹配，不配置</span></td>
-        <td>超出R3中风险承受边界，严格执行0元配置，不新增、不参与再平衡买入</td>
-      </tr>
-    `;
-
-    // ==================== 渲染表三：纳斯达克额度核查 ====================
-    document.getElementById('outTable3Nasdaq').innerHTML = marketDatabase.nasdaqPools.map(n => `
-      <tr>
-        <td><strong>${n.code}</strong> ${n.name}</td>
-        <td>${n.status}</td>
-        <td class="num">¥${n.dailyLimit.toFixed(2)} / 日</td>
-        <td>${n.fee}</td>
-        <td>${n.included ? '✅ 是（主力通道）' : '备选通道'}</td>
-        <td>${marketDatabase.verifyDate}</td>
-        <td>${n.note}</td>
-      </tr>
-    `).join('');
-
-    const freqLabelMap = { 1: '按月一次性执行（1次/月）', 4: '按周拆分执行（4次/月）', 20: '按交易日拆分执行（20次/月）' };
-    document.getElementById('outNasdaqSummary').innerHTML =
-      `<strong>【纳斯达克QDII额度核查结论】</strong> ` +
-      `计划执行频率：<strong>${freqLabelMap[freqMult] || '按月执行'}</strong> ｜ ` +
-      `单日可用申购限额合计：<span class="num">¥${singleDayNdxCap.toFixed(2)}</span> ｜ ` +
-      `按该频率当月累计可投上限：<span class="num">¥${periodNdxQuotaCap.toFixed(2)}</span> ｜ ` +
-      `10%适当性上限：<span class="num">¥${ndxTenPctCap.toFixed(2)}</span> ➔ ` +
-      `<strong>本月实际可执行金额 = <span class="num" style="color:#10B981;">¥${allocNasdaq.toFixed(2)}</span></strong>（差额部分严禁买入场内高溢价ETF，已自动暂存天弘余额宝）。`;
-
-    // ==================== 渲染表四：再平衡指令（±10个百分点检测） ====================
-    const rebalanceRows = [];
-    if (totalCurrentHold > 0) {
-      // 检查中风险仓 R3 偏离
-      const diffR3 = actualRatios.R3 - targetRatios.R3;
-      if (Math.abs(diffR3) >= 10) {
-        const rebAmt = Math.round((Math.abs(diffR3) / 100) * totalCurrentHold);
-        rebalanceRows.push({
-          cat: '中风险仓 (R3)',
-          cur: `${actualRatios.R3.toFixed(1)}%`,
-          tgt: '70.0%',
-          dev: `${diffR3 >= 0 ? '+' : ''}${diffR3.toFixed(1)}个百分点`,
-          dir: diffR3 > 0 ? '卖出超配R3 ➔ 转入货币基金(000198)' : '从货币仓超配部分 ➔ 分批申购低配R3主力标的',
-          amt: `¥${rebAmt.toFixed(2)}`,
-          prio: '高（年度/重大偏离再平衡）'
-        });
-      }
-
-      // 检查货币/低风险仓偏离
-      const diffCash = actualRatios.CASH - targetRatios.CASH;
-      if (Math.abs(diffCash) >= 10 && isEmergencyMet) {
-        const rebAmt = Math.round((Math.abs(diffCash) / 100) * totalCurrentHold);
-        rebalanceRows.push({
-          cat: '货币基金/低风险仓 (R1)',
-          cur: `${actualRatios.CASH.toFixed(1)}%`,
-          tgt: '20.0%',
-          dev: `${diffCash >= 0 ? '+' : ''}${diffCash.toFixed(1)}个百分点`,
-          dir: diffCash > 0 ? '保留3个月安全垫后，超配现金分批转入R3中风险标的（严禁因再平衡追高买纳指）' : '赎回超配资产补足货币流动性仓',
-          amt: `¥${rebAmt.toFixed(2)}`,
-          prio: '中（需优先确保3个月应急金不被挪用）'
-        });
-      }
-
-      // 若存量中有老的高风险持仓 > 0%，提示观察或择机减仓转R3
-      if (actualRatios.HIGH > 0) {
-        rebalanceRows.push({
-          cat: '中高风险存量仓 (R4/R5)',
-          cur: `${actualRatios.HIGH.toFixed(1)}%`,
-          tgt: '0.0%',
-          dev: `+${actualRatios.HIGH.toFixed(1)}个百分点`,
-          dir: '禁止新增买入；存量R4/R5逢反弹择机减仓转换至R3中风险或货币基金',
-          amt: `¥${holdHigh.toFixed(2)} (存量观察)`,
-          prio: '合规降险观察'
-        });
-      }
-    }
-
-    const rebCard = document.getElementById('rebalanceCard');
-    const rebBody = document.getElementById('outTable4Rebalance');
-    if (rebalanceRows.length > 0) {
-      rebCard.style.display = 'block';
-      rebBody.innerHTML = rebalanceRows.map(r => `
-        <tr>
-          <td><strong>${r.cat}</strong></td>
-          <td class="num">${r.cur}</td>
-          <td class="num">${r.tgt}</td>
-          <td class="num">${r.dev}</td>
-          <td>${r.dir}</td>
-          <td class="num">¥${r.amt.replace('¥','')}</td>
-          <td><span class="badge b-warn">${r.prio}</span></td>
-        </tr>
-      `).join('');
-    } else {
-      rebCard.style.display = 'block';
-      rebBody.innerHTML = `
-        <tr>
-          <td colspan="7" style="text-align:center; opacity:0.85;">
-            ✅ 当前无持仓偏离超过 ±10个百分点（或处于首次空仓建仓期），本月无需触发存量赎回再平衡，按【二、本月执行表】直接分配新资金即可。
-          </td>
-        </tr>
+      return `
+        <div class="code-item">
+          <div class="code-left">
+            <span><strong>${item.code}</strong> ${item.name}</span>
+            <span class="tag tag-sector">${item.sector}</span>
+            <span class="tag ${cycleCls}">${item.cycle}</span>
+            ${limitTag}
+          </div>
+          <div class="code-right">
+            <span>¥${(item.allocAmt || 0).toFixed(2)}</span>
+            <button class="btn-del" title="删除此代码" onclick="removeCode('${catKey}', ${idx})">×</button>
+          </div>
+        </div>
       `;
-    }
-
-    // ==================== 渲染五：数据缺口、适当性与风险备注 ====================
-    document.getElementById('outSection5Notes').innerHTML = `
-      <p>1. <strong>适当性不匹配特别提示（需用户确认）</strong>：您的风险画像为 <strong>R3（中风险）</strong>。场外纳斯达克100 QDII基金（如 270042、040046）风险等级通常为 <strong>R4（中高风险）</strong>，高于您的R3基准，在系统中仅作为不超过可投资金 10% 的卫星仓小比例定投，执行申购前需您本人在销售平台确认风险适当性匹配提示。</p>
-      <p>2. <strong>QDII 申购限额与场内溢价风险</strong>：场外纳指 QDII 的单日申购限额（如100元/日）受基金公司外汇额度影响可能随时调整，输出表中的限额数据<strong>需在定投执行日当天复核最新基金公告</strong>。当目标定投额大于实际限额时，差额部分已强制留存于货币基金，<strong>严禁在场内追高买入存在高溢价率的纳指 ETF</strong>。</p>
-      <p>3. <strong>各配置板块主要风险备注</strong>：
-        <br>• <strong>红利低波板块（012643）</strong>：主要面临市场风格向高弹性成长切换时的阶段性跑输风险，以及周期股分红率随盈利波动的下行风险；
-        <br>• <strong>中证A500核心宽基（022430）</strong>：受国内宏观经济复苏斜率及A股整体权益市场系统性波动影响；
-        <br>• <strong>固收+二级债基（110007）</strong>：含不超过20%股票/可转债仓位，并非保本产品，在股债双杀极端行情下仍会出现净值回撤；
-        <br>• <strong>美股纳斯达克板块（270042/040046）</strong>：面临美国科技巨头盈利不及预期、美联储利率政策变动及人民币兑美元升值带来的汇兑损失风险。
-      </p>
-      <p>4. <strong>免责声明</strong>：本系统输出仅作为个人月度资金分流与纪律化定投执行工具，所有历史估值分位与过往业绩不预示未来表现，<strong>不承诺保本或任何投资收益，不构成实质性投资建议</strong>。</p>
-    `;
-
-    // ==================== 渲染六：系统自检（8项逐一回答） ====================
-    const totalTargetPct = targetRatios.CASH + targetRatios.NASDAQ + targetRatios.R3 + targetRatios.HIGH;
-    const totalAllocMoney = allocCash + allocNasdaq + allocR3 + allocHigh;
-    const isMoneyMatch = Math.abs(totalAllocMoney - investableFunds) < 0.05;
-
-    const checks = [
-      { q: '1. 四类仓位目标比例与实际分配资金是否合计 100%？', a: totalTargetPct === 100 && isMoneyMatch ? '✅ 是（合规）' : '❌ 否', d: `基础目标比例合计 ${totalTargetPct}%；本月实际分配金额合计 ¥${totalAllocMoney.toFixed(2)} = 可投资金 ¥${investableFunds.toFixed(2)} (100%)` },
-      { q: '2. 纳斯达克仓位是否 ≤ 10% 且严格受场外申购额度硬约束？', a: allocNasdaq <= ndxTenPctCap && allocNasdaq <= periodNdxQuotaCap ? '✅ 是（合规）' : '❌ 否', d: `实投 ¥${allocNasdaq.toFixed(2)} ≤ min(10%上限 ¥${ndxTenPctCap}, 周期累计限额 ¥${periodNdxQuotaCap})` },
-      { q: '3. 中高风险仓（R4/R5，非纳指卫星）当月新增配置是否为 0？', a: allocHigh === 0 ? '✅ 是（合规）' : '❌ 否', d: `中高风险仓目标占比 0%，本月新增分配金额 ¥${allocHigh.toFixed(2)}，仅输出板块风险观察` },
-      { q: '4. R4 纳斯达克产品是否已明确标注适当性提示？', a: '✅ 是（合规）', d: '已在【二、本月执行表】适当性校验列明确标注“R4，卫星仓，需确认”及第五部分风险提示' },
-      { q: '5. 未核实数据是否未用于任何新增买入决策？', a: '✅ 是（合规）', d: '任何核查状态为“未核实”或“暂停申购”的标的，系统已自动将其当月可投上限降为 0 元' },
-      { q: '6. 关键数据（估值分位、限额、费率）是否均带有来源与日期？', a: '✅ 是（合规）', d: `所有表内关键数据均已标注来源（天天基金网/基金公告）及核查日期 (${marketDatabase.verifyDate})，并提示执行日复核` },
-      { q: '7. 报告是否仅输出最终六大标准表格而未输出冗余内部推理过程？', a: '✅ 是（合规）', d: '输出区严格限定为第七步规定的六大标准模块，无杂项推导废话' },
-      { q: '8. 是否未作任何保本或收益承诺？', a: '✅ 是（合规）', d: '全篇无任何收益率承诺，已明确提示回撤、汇率与风格轮动风险' }
-    ];
-
-    document.getElementById('outTable6Check').innerHTML = checks.map(c => `
-      <tr>
-        <td><strong>${c.q}</strong></td>
-        <td><span class="badge b-ok">${c.a}</span></td>
-        <td>${c.d}</td>
-      </tr>
-    `).join('');
+    }).join('');
   }
 
-  function copyFullReport() {
-    const text = document.getElementById('outputReportArea').innerText;
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text);
-      alert('✅ 已复制整套【R3中风险月度动态基金配置执行报告】！');
-    }
+  /* ============================================================================
+   * 四、 自定义加减代码（+ / -）自动联网识别名称与板块
+   * ============================================================================ */
+  function removeCode(catKey, index) {
+    appState.activeLists[catKey].splice(index, 1);
+    saveState();
+    recalculateAllocation();
   }
 
-  // 页面启动初始化
-  renderHoldingRows();
-  renderMarketConfigTable();
-  executeR3System();
+  async function addCode(catKey) {
+    const codeInput = document.getElementById(`codeIn_${catKey}`);
+    const code = codeInput.value.trim();
+    if (!/^\d{6}$/.test(code)) {
+      alert('请输入有效的 6 位数字基金代码！');
+      return;
+    }
+
+    let sector = '自选板块';
+    let dailyLimit = 999999;
+
+    if (catKey === 'nasdaq') {
+      sector = '美股科技板块';
+      dailyLimit = Math.max(10, parseFloat(document.getElementById('limIn_nasdaq').value) || 100);
+    } else {
+      const secInput = document.getElementById(`secIn_${catKey}`);
+      if (secInput && secInput.value.trim()) {
+        sector = secInput.value.trim();
+      }
+    }
+
+    const cycle = catKey === 'high' ? '半年一换' : (catKey === 'nasdaq' ? '长期定投' : '长期持有');
+
+    // 先联网识别真实基金名称与近半年分位点
+    let name = `基金(${code})`;
+    let percentile = 45;
+    let dayChg = 0;
+
+    const pz = await fetchSinglePingzhong(code);
+    if (pz) {
+      if (pz.name) name = pz.name;
+      percentile = pz.percentile;
+      dayChg = pz.dayChg;
+    } else {
+      const gz = await fetchSingleFundGz(code);
+      if (gz && gz.name) name = gz.name;
+    }
+
+    // 若用户未手填板块，根据基金名称智能推断板块备注
+    if (sector === '自选板块') {
+      if (name.includes('医') || name.includes('药')) sector = '医药医疗板块';
+      else if (name.includes('科创') || name.includes('半导体') || name.includes('芯片') || name.includes('电子') || name.includes('科技')) sector = '科技半导体板块';
+      else if (name.includes('红利')) sector = '红利低波板块';
+      else if (name.includes('债')) sector = '纯债固收板块';
+      else if (name.includes('300') || name.includes('500') || name.includes('宽基')) sector = '核心宽基板块';
+      else if (name.includes('创业板') || name.includes('新能源')) sector = '新能源成长板块';
+      else if (name.includes('消费') || name.includes('白酒')) sector = '消费板块';
+      else if (name.includes('货币') || name.includes('宝')) sector = '货币流动性';
+    }
+
+    appState.activeLists[catKey].push({
+      code,
+      name,
+      sector,
+      cycle,
+      dailyLimit,
+      percentile,
+      dayChg
+    });
+
+    codeInput.value = '';
+    saveState();
+    recalculateAllocation();
+  }
+
+  // 启动加载并立刻联网核查一次
+  loadSavedState();
+  recalculateAllocation();
+  syncMarketAndAllocate();
 </script>
 </body>
 </html>
