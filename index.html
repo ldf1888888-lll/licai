@@ -2,1003 +2,295 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark"><meta name="theme-color" content="#0b1120">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<title>极简智能行情定投分配系统（终极完全体）</title>
+<title>极简智能行情定投分配系统 · 最终版</title>
 <style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    color: #FFFFFF;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  body {
-    background-color: #0B1120;
-    padding: 20px 14px 50px;
-    line-height: 1.55;
-  }
-
-  .container {
-    max-width: 620px;
-    margin: 0 auto;
-  }
-
-  .card {
-    background-color: #1E293B;
-    border: 1.5px solid #475569;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 16px;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5);
-  }
-
-  .sec-header {
-    font-size: 1.15rem;
-    font-weight: 900;
-    padding-bottom: 12px;
-    margin-bottom: 16px;
-    border-bottom: 1.5px solid #334155;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  /* 输入区行样式 */
-  .input-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-
-  .input-label {
-    font-size: 1rem;
-    font-weight: 800;
-    min-width: 110px;
-  }
-
-  .input-box {
-    background-color: #0F172A;
-    border: 1.5px solid #64748B;
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 1.15rem;
-    font-weight: 800;
-    font-family: Consolas, Monaco, monospace;
-    width: 150px;
-    text-align: right;
-    outline: none;
-  }
-
-  .input-box:focus {
-    border-color: #FFFFFF;
-    background-color: #020617;
-  }
-
-  .living-inline {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    flex: 1;
-  }
-
-  .month-living-tag {
-    background-color: #0F172A;
-    border: 1px solid #475569;
-    padding: 6px 10px;
-    border-radius: 8px;
-    font-size: 0.95rem;
-    font-weight: 800;
-    font-family: Consolas, Monaco, monospace;
-  }
-
-  .investable-bar {
-    margin-top: 14px;
-    padding: 14px 16px;
-    background-color: #0F172A;
-    border: 2px solid #10B981;
-    border-radius: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .investable-title {
-    font-size: 1.1rem;
-    font-weight: 900;
-  }
-
-  .investable-val {
-    font-size: 1.75rem;
-    font-weight: 900;
-    font-family: Consolas, Monaco, monospace;
-    color: #10B981;
-  }
-
-  /* 按钮样式 */
-  .btn-refresh {
-    background-color: #10B981;
-    border: 1.5px solid #FFFFFF;
-    border-radius: 8px;
-    padding: 7px 14px;
-    font-size: 0.86rem;
-    font-weight: 900;
-    cursor: pointer;
-  }
-
-  .btn-refresh:active { transform: scale(0.97); }
-  .btn-refresh:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* 四大分配区块 */
-  .alloc-block {
-    background-color: #0F172A;
-    border: 1.5px solid #334155;
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 14px;
-  }
-
-  .alloc-block:last-child { margin-bottom: 0; }
-
-  .alloc-main-line {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    padding-bottom: 10px;
-    border-bottom: 1px dashed #334155;
-  }
-
-  .alloc-cat-title {
-    font-size: 1.05rem;
-    font-weight: 900;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .pct-pill {
-    background-color: #1E293B;
-    border: 1.5px solid #94A3B8;
-    padding: 2px 9px;
-    border-radius: 6px;
-    font-family: Consolas, Monaco, monospace;
-    font-size: 1rem;
-    font-weight: 900;
-  }
-
-  .amt-display {
-    font-size: 1.45rem;
-    font-weight: 900;
-    font-family: Consolas, Monaco, monospace;
-    color: #10B981;
-    white-space: nowrap;
-  }
-
-  /* 推荐基金代码子项 */
-  .code-list {
-    margin-top: 10px;
-  }
-
-  .code-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: rgba(255, 255, 255, 0.05);
-    border: 1px solid #334155;
-    border-radius: 8px;
-    padding: 8px 10px;
-    margin-bottom: 6px;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .code-left {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: wrap;
-    font-size: 0.9rem;
-    font-weight: 700;
-  }
-
-  .tag {
-    display: inline-block;
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-size: 0.75rem;
-    font-weight: 800;
-  }
-
-  .tag-sector { background-color: #1D4ED8; border: 1px solid #60A5FA; }
-  .tag-cycle-long { background-color: #047857; border: 1px solid #34D399; }
-  .tag-cycle-half { background-color: #B45309; border: 1px solid #FBBF24; }
-  .tag-limit { background-color: #7C2D12; border: 1px solid #FB923C; }
-
-  .code-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-family: Consolas, Monaco, monospace;
-    font-weight: 800;
-    font-size: 0.95rem;
-  }
-
-  .btn-del {
-    background-color: rgba(239, 68, 68, 0.3);
-    border: 1px solid #EF4444;
-    border-radius: 5px;
-    padding: 1px 7px;
-    font-size: 0.8rem;
-    font-weight: 900;
-    cursor: pointer;
-  }
-
-  /* 加减代码操作栏 */
-  .add-bar {
-    display: flex;
-    gap: 6px;
-    margin-top: 8px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-
-  .add-input {
-    background-color: #1E293B;
-    border: 1px solid #64748B;
-    border-radius: 6px;
-    padding: 5px 8px;
-    font-size: 0.82rem;
-    font-family: Consolas, Monaco, monospace;
-    width: 95px;
-    outline: none;
-  }
-
-  .add-sector {
-    background-color: #1E293B;
-    border: 1px solid #64748B;
-    border-radius: 6px;
-    padding: 5px 8px;
-    font-size: 0.82rem;
-    width: 115px;
-    outline: none;
-  }
-
-  .btn-add {
-    background-color: #334155;
-    border: 1px solid #94A3B8;
-    border-radius: 6px;
-    padding: 5px 10px;
-    font-size: 0.8rem;
-    font-weight: 800;
-    cursor: pointer;
-  }
-
-  .btn-add:active { transform: scale(0.97); }
-
-  /* 辅助微调行 */
-  .sub-ctrl-bar {
-    margin-top: 6px;
-    font-size: 0.78rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 6px;
-    opacity: 0.92;
-  }
-
-  .limit-select {
-    background-color: #1E293B;
-    border: 1px solid #64748B;
-    border-radius: 5px;
-    padding: 2px 6px;
-    font-size: 0.78rem;
-    font-weight: 700;
-  }
-
-  .switch-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: 800;
-    background-color: #1E293B;
-    border: 1px solid #64748B;
-    padding: 3px 8px;
-    border-radius: 6px;
-  }
+:root{--bg:#0b1120;--card:#1e293b;--inner:#0f172a;--edge:#42536d;--edge2:#314056;--txt:#f8fafc;--muted:#a8b7cb;--green:#10b981;--blue:#367af5;--orange:#f0aa42;--red:#f87171}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.48;padding:14px 10px 55px}
+button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}button:active{transform:scale(.985)}input,select{color:#fff;outline:none}input:focus,select:focus{border-color:#9cc5ff!important}input[type=checkbox]{accent-color:var(--green);width:15px;height:15px;vertical-align:middle}input[type=number]{appearance:textfield;-moz-appearance:textfield}input::-webkit-inner-spin-button,input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+.shell{max-width:625px;margin:auto}.top{display:flex;gap:10px;align-items:center;margin:0 2px 17px;min-height:36px}.logo{font-size:23px}.top-title{font-size:clamp(15px,4vw,20px);font-weight:800;flex:1;letter-spacing:.2px}.quick-refresh{font-size:23px;background:none;border:0;color:#eee;padding:0 6px}
+.card{background:var(--card);border:1.5px solid var(--edge);border-radius:16px;padding:18px 16px;margin:0 0 14px;box-shadow:0 10px 28px #0005}.head{display:flex;align-items:center;justify-content:space-between;gap:9px;flex-wrap:wrap;border-bottom:1px solid var(--edge2);padding-bottom:13px;margin-bottom:13px}.head strong{font-weight:900;font-size:16px}.small{font-size:11px;color:var(--muted)}.status{font-size:11px;color:#a4ddc8;max-width:70%;text-align:right}.warn{color:#f8cd87!important}.bad{color:#fda4af!important}
+.field-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:11px 0;min-height:36px}.field-label{font-weight:750;font-size:14px;min-width:100px}.input-num{background:#111a2e;border:1.5px solid #596980;border-radius:8px;padding:7px 10px;text-align:right;max-width:125px;width:41%;font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}.mini-total{text-align:right;margin-top:-4px;font-size:12px;color:#becce0}.mini-total b{color:white;border:1px solid var(--edge);border-radius:5px;padding:3px 6px;display:inline-block;background:#101829}.invest{background:var(--inner);border:1.5px solid var(--green);border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:13px 12px;margin-top:18px}.invest strong{font-size:16px}.money-main{font:900 clamp(21px,6vw,29px)/1.1 Consolas,monospace;color:var(--green);white-space:nowrap}
+.btn{background:#31445b;border:1px solid #657891;border-radius:7px;color:#fff;padding:8px 10px;font-size:12px;font-weight:800}.btn-green{background:#0d9c70;border-color:#7ce5bd}.btn-outline{background:#203046}.buttons{display:flex;gap:7px;flex-wrap:wrap}.helper{color:var(--muted);font-size:11px;line-height:1.55}.subsection{display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;gap:7px;margin:9px 0}.checkline{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--edge);background:#1d2a3d;border-radius:6px;padding:5px 7px;font-size:11px;font-weight:700}
+.summary-strip{background:#111b2d;border:1px solid #334155;border-radius:10px;padding:10px 11px;margin:0 0 13px;display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:12px}.summary-strip b{color:var(--green);font-size:16px;font-family:Consolas,monospace}
+.block{background:var(--inner);border:1.5px solid var(--edge2);border-radius:12px;padding:13px 12px;margin:0 0 12px}.block:last-child{margin-bottom:0}.block-title{display:flex;justify-content:space-between;align-items:center;gap:7px;flex-wrap:wrap;border-bottom:1px dashed var(--edge2);padding-bottom:10px}.block-name{font-weight:850;font-size:15px}.pct{display:inline-block;border:1.5px solid #8ca1bd;background:#1b2a40;border-radius:6px;padding:2px 7px;font-weight:900;font-family:Consolas,monospace;font-size:13px;margin-left:4px}.money{font:900 clamp(17px,4.5vw,22px)/1.1 Consolas,monospace;color:var(--green);white-space:nowrap}.block-desc{margin:8px 0;color:#b6c6d9;font-size:11px}.tiny-select{max-width:100%;border:1px solid #58697f;border-radius:6px;padding:5px;background:#233247;font-size:11px}.limit-info{font-size:11px;margin:7px 0;color:#b6c6d9}.funds{margin-top:9px}.fund{background:#1e293f;border:1px solid #354258;border-radius:9px;padding:10px;margin-bottom:7px}.fund-top{display:flex;align-items:flex-start;justify-content:space-between;gap:7px;flex-wrap:wrap}.fund-title{font-size:12.5px;font-weight:850;overflow-wrap:anywhere}.fund-side{text-align:right;white-space:nowrap}.fund-amount{font:800 18px Consolas,monospace}.operation{font-size:11px;color:#a4e5cb}.pill{display:inline-block;background:#1f58b8;border:1px solid #4387ed;border-radius:4px;padding:2px 5px;margin:4px 4px 0 0;font-size:10px;font-weight:800}.pill-green{background:#07785e;border-color:#1aa67e}.pill-orange{background:#a65c05;border-color:#e5a13c}.pill-muted{background:#37465a;border-color:#66768c}.fund-tools{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:7px;flex-wrap:wrap}.delete{background:#552e37;border:1px solid #c4546b;border-radius:5px;color:white;padding:2px 8px;font-size:12px}.tag-note{font-size:10px;color:#9daec6}.fund-holding{display:flex;gap:6px;align-items:center;font-size:11px;margin-top:7px;padding-top:7px;border-top:1px solid #324056}.fund-holding input{margin-left:auto;width:103px;background:#10182a;border:1px solid #65758b;border-radius:6px;padding:5px 7px;text-align:right;font-size:12px}.empty{color:#94a7c1;font-size:11px;margin:9px 0}.add-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px}.add-row input{border:1px solid #576781;border-radius:6px;background:#1e2a3e;padding:7px 8px;min-width:0;font-size:12px}.code-in{width:92px}.sec-in{width:122px;flex:1;max-width:168px}.limit-in{width:128px}.add-row .btn{padding:6px 9px}.footer-info{color:#9badc5;font-size:11px;line-height:1.7;margin:11px 2px}.footer-info summary{cursor:pointer;color:#cad6e5}.note-panel{background:#111a2a;border:1px solid var(--edge2);border-radius:9px;margin-top:10px;padding:10px 11px}.portfolio-note{background:#122238;border:1px solid #40617b;border-radius:9px;margin:9px 0 12px;padding:10px;font-size:12px}.summary-btns{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}.right-input{width:104px;padding:5px 6px;border:1px solid #61738a;border-radius:6px;background:#11192d;text-align:right}.line-dash{height:1px;border-bottom:1px dashed var(--edge2);margin:10px 0}.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);max-width:90vw;background:#23374e;border:1px solid #8fa2bb;padding:10px 14px;border-radius:9px;box-shadow:0 8px 20px #0008;font-size:12px;z-index:30;display:none}.toast.show{display:block}
+@media(max-width:370px){body{padding:11px 8px 45px}.card{padding:16px 13px}.block{padding:12px 10px}.block-name{font-size:14px}.money{font-size:17px}.fund-side{width:100%;text-align:left}.top-title{font-size:15px}}@media(min-width:600px){body{padding-top:28px}}
 </style>
 </head>
 <body>
-
-<div class="container">
-  <!-- ==================== 第一部分：输入区 ==================== -->
-  <div class="card">
-    <div class="sec-header">
-      <span>输入：</span>
-      <span id="syncStatusText" style="font-size:0.78rem; font-weight:normal; opacity:0.9;">正在连接多源行情系统...</span>
-    </div>
-
-    <div class="input-row">
-      <label class="input-label">- 工资：</label>
-      <input type="number" id="inSalary" class="input-box" value="5000" step="100" oninput="onInputChange()">
-    </div>
-
-    <div class="input-row">
-      <label class="input-label">- 房租：</label>
-      <input type="number" id="inRent" class="input-box" value="800" step="50" oninput="onInputChange()">
-    </div>
-
-    <div class="input-row">
-      <label class="input-label">- 日均生活费：</label>
-      <div class="living-inline">
-        <input type="number" id="inDaily" class="input-box" style="width:110px;" value="50" step="5" oninput="onInputChange()">
-        <span>→ 月生活费：</span>
-        <span class="month-living-tag" id="outMonthLiving">¥1500</span>
-      </div>
-    </div>
-
-    <div class="investable-bar">
-      <span class="investable-title">可投资金 =</span>
-      <span class="investable-val" id="outInvestable">¥2700.00</span>
-    </div>
-  </div>
-
-  <!-- ==================== 第二部分：行情自动分配 ==================== -->
-  <div class="card">
-    <div class="sec-header">
-      <span>行情自动分配：</span>
-      <div style="display:flex; gap:6px; flex-wrap:wrap;">
-        <button class="btn-add" onclick="autoSelectBestFunds()">🤖 按行情重选最优代码</button>
-        <button class="btn-refresh" id="btnSync" onclick="syncMarketAndAllocate()">🔄 刷新行情智能分配</button>
-      </div>
-    </div>
-
-    <!-- 1. 货币基金（含“应急金已存满(0%)”智能开关） -->
-    <div class="alloc-block">
-      <div class="alloc-main-line">
-        <div class="alloc-cat-title">
-          <span>- 货币基金</span>
-          <span class="pct-pill" id="pct_cash">15.0%</span>
-        </div>
-        <div class="amt-display" id="amt_cash">¥405.00</div>
-      </div>
-      <div class="sub-ctrl-bar">
-        <span id="cashRoleNotice">紧急备用金 + 暴跌补仓弹药库</span>
-        <label class="switch-label">
-          <input type="checkbox" id="cashFullToggle" onchange="onCashToggleChange()">
-          应急金已存满（全投基金）
-        </label>
-      </div>
-      <div class="code-list" id="list_cash"></div>
-      <div class="add-bar">
-        <input type="text" id="codeIn_cash" class="add-input" placeholder="6位代码" maxlength="6">
-        <input type="text" id="secIn_cash" class="add-sector" placeholder="板块(如货币)">
-        <button class="btn-add" onclick="addCode('cash')">+ 加代码</button>
-      </div>
-    </div>
-
-    <!-- 2. 推荐代码纳斯达克（含QDII真实限额核查 + 估值自适应） -->
-    <div class="alloc-block">
-      <div class="alloc-main-line">
-        <div class="alloc-cat-title">
-          <span>- 推荐代码纳斯达克</span>
-          <span class="pct-pill" id="pct_nasdaq">20.0%</span>
-        </div>
-        <div class="amt-display" id="amt_nasdaq">¥540.00</div>
-      </div>
-      <div class="sub-ctrl-bar">
-        <span id="nasdaqLimitNotice">QDII限额核查：已按行情与场外限额校准实付金额</span>
-        <select class="limit-select" id="nasdaqExecMode" onchange="onExecModeChange()">
-          <option value="1">发薪日单次买 (受1日限额约束)</option>
-          <option value="5" selected>拆5天分批定投 (享5倍单日限额)</option>
-          <option value="15">按月每日定投 (享15倍单日限额)</option>
-        </select>
-      </div>
-      <div class="code-list" id="list_nasdaq"></div>
-      <div class="add-bar">
-        <input type="text" id="codeIn_nasdaq" class="add-input" placeholder="6位QDII代码" maxlength="6">
-        <input type="number" id="limIn_nasdaq" class="add-sector" placeholder="单日限额(元)" value="100">
-        <button class="btn-add" onclick="addCode('nasdaq')">+ 加代码</button>
-      </div>
-    </div>
-
-    <!-- 3. 推荐代码中风险（长期持有） -->
-    <div class="alloc-block">
-      <div class="alloc-main-line">
-        <div class="alloc-cat-title">
-          <span>- 推荐代码中风险</span>
-          <span class="pct-pill" id="pct_med">40.0%</span>
-        </div>
-        <div class="amt-display" id="amt_med">¥1080.00</div>
-      </div>
-      <div class="code-list" id="list_med"></div>
-      <div class="add-bar">
-        <input type="text" id="codeIn_med" class="add-input" placeholder="6位代码" maxlength="6">
-        <input type="text" id="secIn_med" class="add-sector" placeholder="板块(如红利/固收)">
-        <button class="btn-add" onclick="addCode('med')">+ 加代码</button>
-      </div>
-    </div>
-
-    <!-- 4. 推荐代码中高风险（半年一次轮动） -->
-    <div class="alloc-block">
-      <div class="alloc-main-line">
-        <div class="alloc-cat-title">
-          <span>- 推荐代码中高风险</span>
-          <span class="pct-pill" id="pct_high">25.0%</span>
-        </div>
-        <div class="amt-display" id="amt_high">¥675.00</div>
-      </div>
-      <div class="code-list" id="list_high"></div>
-      <div class="add-bar">
-        <input type="text" id="codeIn_high" class="add-input" placeholder="6位代码" maxlength="6">
-        <input type="text" id="secIn_high" class="add-sector" placeholder="板块(如科技/医药)">
-        <button class="btn-add" onclick="addCode('high')">+ 加代码</button>
-      </div>
-    </div>
-  </div>
+<div class="shell">
+<header class="top"><span class="logo">☑</span><div class="top-title">极简智能行情定投分配系统（终极完全体）</div><button id="quickRefresh" class="quick-refresh" title="刷新行情">⟳</button></header>
+<section class="card">
+ <div class="head"><strong>输入：</strong><span id="sourceState" class="status">数据状态：等待更新</span></div>
+ <div class="field-row"><label for="salary" class="field-label">- 工资：</label><input id="salary" class="input-num" type="number" inputmode="decimal" min="0" placeholder="输入工资" aria-label="月收入"></div>
+ <div class="field-row"><label for="rent" class="field-label">- 房租：</label><input id="rent" class="input-num" type="number" inputmode="decimal" min="0" placeholder="输入房租"></div>
+ <div class="field-row"><label for="daily" class="field-label">- 日均生活费：</label><input id="daily" class="input-num" type="number" inputmode="decimal" min="0" placeholder="输入日均生活费"></div>
+ <div class="mini-total">→ 月生活费： <b id="monthLiving">¥0.00</b></div>
+ <div class="invest"><strong>可投资金 =</strong><span id="investable" class="money-main">¥0.00</span></div>
+ <div id="budgetNote" class="helper" style="margin-top:8px">按月收入－房租－日均生活费×30天计算。</div>
+</section>
+<section class="card">
+ <div class="head"><strong>行情自动分配：</strong><div class="buttons"><button id="chooseBtn" class="btn">🤖 按行情优选代码</button><button id="refreshBtn" class="btn btn-green">🔄 刷新行情智能分配</button></div></div>
+ <div id="sumStrip" class="summary-strip"><span>本月计划投入总额</span><b id="sumAllocated">¥0.00</b></div>
+ <div class="block" data-cat="cash">
+  <div class="block-title"><div class="block-name">- 货币基金 <span id="pct_cash" class="pct">0.0%</span></div><span id="amt_cash" class="money">¥0.00</span></div>
+  <div class="block-desc" id="cashNote">🛡️ 预备金与临时防守资金，按行情调整。</div>
+  <label class="checkline"><input id="cashFull" type="checkbox"> 应急金已存满（新增资金不留现金）</label>
+  <div id="list_cash" class="funds"></div>
+  <div class="add-row"><input class="code-in" id="new_cash" placeholder="6位代码" maxlength="6" inputmode="numeric"><input class="sec-in" id="sector_cash" placeholder="板块(如货币)"><button class="btn btn-outline" data-add="cash">+ 加代码</button></div>
+ </div>
+ <div class="block" data-cat="nasdaq">
+  <div class="block-title"><div class="block-name">- 推荐代码纳斯达克 <span id="pct_nasdaq" class="pct">0.0%</span></div><span id="amt_nasdaq" class="money">¥0.00</span></div>
+  <div class="block-desc" id="nasNote">🌐 QDII定投：金额按单日限额和买入天数校准（限额需自行核实）。</div>
+  <select id="execDays" class="tiny-select"><option value="1">发薪日一次买入（1日额度）</option><option value="5">拆5个开放日买入（最多5日额度）</option><option value="15">拆15个开放日定投（最多15日额度）</option></select>
+  <div id="limitStatus" class="limit-info">额度状态：待核实。</div>
+  <div id="list_nasdaq" class="funds"></div>
+  <div class="add-row"><input class="code-in" id="new_nasdaq" placeholder="6位QDII代码" maxlength="6" inputmode="numeric"><input class="limit-in" id="limit_nasdaq" type="number" min="0" inputmode="decimal" placeholder="核实后填日限额"><button class="btn btn-outline" data-add="nasdaq">+ 加代码</button></div>
+ </div>
+ <div class="block" data-cat="med">
+  <div class="block-title"><div class="block-name">- 推荐代码中风险 <span id="pct_med" class="pct">0.0%</span></div><span id="amt_med" class="money">¥0.00</span></div>
+  <div class="block-desc">🧱 长期配置。这里的“中风险”是组合分区名称，非基金官方风险等级。</div>
+  <div id="list_med" class="funds"></div>
+  <div class="add-row"><input class="code-in" id="new_med" placeholder="6位代码" maxlength="6" inputmode="numeric"><input class="sec-in" id="sector_med" placeholder="板块(如红利/债券)"><button class="btn btn-outline" data-add="med">+ 加代码</button></div>
+ </div>
+ <div class="block" data-cat="high">
+  <div class="block-title"><div class="block-name">- 推荐代码中高风险 <span id="pct_high" class="pct">0.0%</span></div><span id="amt_high" class="money">¥0.00</span></div>
+  <div class="block-desc">🔁 半年检查一次是否轮换；不自动卖出。A/C份额需核对实际费用，初选倾向适合短持有的C类。</div>
+  <div id="list_high" class="funds"></div>
+  <div class="add-row"><input class="code-in" id="new_high" placeholder="6位代码" maxlength="6" inputmode="numeric"><input class="sec-in" id="sector_high" placeholder="板块(如科技/医药)"><button class="btn btn-outline" data-add="high">+ 加代码</button></div>
+ </div>
+ <div id="portfolioPanel" class="note-panel"><label class="checkline"><input type="checkbox" id="rebalanceToggle"> 开启持仓纠偏（显示追加/减仓金额）</label><p id="rebalanceTip" class="helper" style="margin-top:7px">默认仅计算新增工资的每月定投。若要计算减仓，开启后录入所有基金当前市值，且只应把本系统覆盖的投资组合纳入计算。</p></div>
+ <div class="summary-btns"><button class="btn" id="copyBtn">复制本月执行清单</button><button class="btn" id="exportBtn">备份设置</button><button class="btn" id="importBtn">恢复备份</button><button class="btn" id="restoreBtn">恢复初始基金</button><input type="file" id="importFile" accept="application/json,.json" hidden></div>
+</section>
+<details class="footer-info"><summary>数据来源、策略说明及风险提示（点击展开）</summary><div class="note-panel" style="margin-top:10px">
+ <p>① 资金分配沿用原有四组权重框架与公式：货币基准15%、纳斯达克20%、中风险40%、中高风险25%；结合最近120个净值点的位置、60点均线偏离、区间回撤和最近净值涨跌调整。这里是<strong>历史净值技术指标，不等于股票市场真实估值</strong>。</p>
+ <p>② 行情尝试从天天基金的公开脚本端点读取<strong>历史确认净值</strong>，不是实时可成交价格；网络失败或数据滞后时自动降级为中性参数/缓存，页面明确标记。浏览器、网络及数据平台可能阻止此接口。</p>
+ <p>③ QDII额度无法由该净值接口获得，须在每只基金的“单日限额”栏填入申购渠道当前实际数值。未填写时显示拟投入金额，<strong>不代表能够实际下单</strong>。5天/15天只做固定额度假设，若额度变化、暂停申购、节假日，实际可买金额会不同。</p>
+ <p>④ 持仓纠偏仅是数学模拟：按这四组及其所列基金构成完整组合来计算，不考虑场外其他资产、交易费用、税费、持有期赎回费、到账周期以及适当性。应急金已存满时，货币基金既有持仓不自动卖出。减仓前尤其要核对费用、持有期和自身承受能力。</p>
+ <p>⑤ 半年轮换指每半年<strong>复核</strong>持仓，不代表必须换。短持有选A或C应结合最新申购折扣、销售服务费和赎回费核算，不能仅凭字母决定。系统不会自动买卖证券，也不构成收益承诺。</p>
+ <p>⑥ 保存只在当前浏览器本机，清理数据可能丢失，建议用“备份设置”。</p>
+ </div></details>
+<div class="footer-info" style="text-align:center">个人定投辅助工具 · 不自动下单 · 不保证收益 · 所有金额单位人民币</div>
 </div>
-
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
-  /* ============================================================================
-   * 一、 顶配大师全市场精选候选池（覆盖各大核心板块，后台根据实时行情自动PK筛选）
-   * ============================================================================ */
-  const MASTER_CANDIDATE_POOL = {
-    cash: [
-      { code: '000198', name: '天弘余额宝货币', sector: '货币流动性', cycle: '长期持有', dailyLimit: 999999, percentile: 50, maBias: 0, maxDD: 0, dayChg: 0.01 }
-    ],
-    nasdaq: [
-      { code: '270042', name: '广发纳斯达克100ETF联接A', sector: '美股科技板块', cycle: '长期定投', dailyLimit: 100, percentile: 55, maBias: 1.2, maxDD: -6.5, dayChg: -0.15 },
-      { code: '016532', name: '嘉实纳斯达克100ETF联接A', sector: '美股科技板块', cycle: '长期定投', dailyLimit: 500, percentile: 55, maBias: 1.2, maxDD: -6.5, dayChg: -0.15 },
-      { code: '040046', name: '华安纳斯达克100ETF联接A', sector: '美股科技板块', cycle: '长期定投', dailyLimit: 100, percentile: 55, maBias: 1.2, maxDD: -6.5, dayChg: -0.15 }
-    ],
-    med: [
-      { code: '012643', name: '天弘中证红利低波100A', sector: '红利低波板块', cycle: '长期持有', dailyLimit: 999999, percentile: 30, maBias: -1.5, maxDD: -8.2, dayChg: -0.25 },
-      { code: '161716', name: '招商双债增强债券A',   sector: '纯债固收板块', cycle: '长期持有', dailyLimit: 999999, percentile: 42, maBias: 0.2,  maxDD: -1.1, dayChg: +0.03 },
-      { code: '022430', name: '华夏中证A500ETF联接A', sector: '核心宽基板块', cycle: '长期持有', dailyLimit: 999999, percentile: 24, maBias: -2.8, maxDD: -12.4, dayChg: -0.40 },
-      { code: '110020', name: '易方达沪深300ETF联接A', sector: '蓝筹宽基板块', cycle: '长期持有', dailyLimit: 999999, percentile: 26, maBias: -2.3, maxDD: -11.8, dayChg: -0.35 },
-      { code: '110007', name: '易方达稳健收益债券A', sector: '固收+二级债基', cycle: '长期持有', dailyLimit: 999999, percentile: 38, maBias: 0.4,  maxDD: -2.0, dayChg: +0.04 }
-    ],
-    high: [
-      { code: '011608', name: '华夏上证科创板50联接A', sector: '科技半导体板块', cycle: '半年一换', dailyLimit: 999999, percentile: 19, maBias: -4.5, maxDD: -18.5, dayChg: -0.95 },
-      { code: '003096', name: '中欧医疗健康混合A',     sector: '医药医疗板块',   cycle: '半年一换', dailyLimit: 999999, percentile: 12, maBias: -5.2, maxDD: -22.0, dayChg: -0.65 },
-      { code: '001592', name: '天弘创业板ETF联接A',    sector: '新能源成长板块', cycle: '半年一换', dailyLimit: 999999, percentile: 25, maBias: -3.1, maxDD: -16.8, dayChg: -0.50 },
-      { code: '001618', name: '天弘中证电子ETF联接A',  sector: 'AI消费电子板块', cycle: '半年一换', dailyLimit: 999999, percentile: 34, maBias: -1.8, maxDD: -14.2, dayChg: -0.30 },
-      { code: '004854', name: '广发中证传媒ETF联接A',  sector: 'AI游戏传媒板块', cycle: '半年一换', dailyLimit: 999999, percentile: 31, maBias: -2.0, maxDD: -15.5, dayChg: -0.40 }
-    ]
-  };
-
-  const STORAGE_KEY = 'master_minimal_ultimate_v12';
-
-  let appState = {
-    salary: 5000,
-    rent: 800,
-    daily: 50,
-    cashFull: false,
-    nasdaqExecMode: 5,
-    activeLists: {
-      cash: [ { ...MASTER_CANDIDATE_POOL.cash[0] } ],
-      nasdaq: [ { ...MASTER_CANDIDATE_POOL.nasdaq[0] }, { ...MASTER_CANDIDATE_POOL.nasdaq[1] } ],
-      med: [ { ...MASTER_CANDIDATE_POOL.med[0] }, { ...MASTER_CANDIDATE_POOL.med[1] } ],
-      high: [ { ...MASTER_CANDIDATE_POOL.high[0] }, { ...MASTER_CANDIDATE_POOL.high[1] } ]
-    }
-  };
-
-  function loadSavedState() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (parsed.salary !== undefined) appState.salary = Number(parsed.salary);
-        if (parsed.rent !== undefined) appState.rent = Number(parsed.rent);
-        if (parsed.daily !== undefined) appState.daily = Number(parsed.daily);
-        if (parsed.cashFull !== undefined) appState.cashFull = Boolean(parsed.cashFull);
-        if (parsed.nasdaqExecMode !== undefined) appState.nasdaqExecMode = Number(parsed.nasdaqExecMode);
-        if (parsed.activeLists) appState.activeLists = parsed.activeLists;
-      }
-    } catch (e) {}
-    document.getElementById('inSalary').value = appState.salary;
-    document.getElementById('inRent').value = appState.rent;
-    document.getElementById('inDaily').value = appState.daily;
-    document.getElementById('cashFullToggle').checked = appState.cashFull;
-    document.getElementById('nasdaqExecMode').value = String(appState.nasdaqExecMode);
+'use strict';
+/* 单文件版，无框架依赖。全部金额以分计算，防止四舍五入后总额不相等。 */
+const KEY='smart_dca_final_v1', OLD_KEY='master_minimal_ultimate_v12';
+const CATS=['cash','nasdaq','med','high'];
+const CAT_NAME={cash:'货币基金',nasdaq:'纳斯达克',med:'中风险',high:'中高风险'};
+function seed(code,name,sector,cycle,limit=null){return {code,name,sector,cycle,dailyLimit:limit,holding:'',quote:null};}
+const POOL={
+ cash:[seed('000198','天弘余额宝货币','货币流动性','长期持有')],
+ nasdaq:[seed('270042','广发纳斯达克100ETF联接A','纳斯达克','长期定投'),seed('016532','嘉实纳斯达克100ETF联接A','纳斯达克','长期定投'),seed('040046','华安纳斯达克100ETF联接A','纳斯达克','长期定投')],
+ med:[seed('012643','天弘中证红利低波100A','红利低波','长期持有'),seed('161716','招商双债增强债券A','增强债券','长期持有'),seed('022430','华夏中证A500ETF联接A','核心宽基','长期持有'),seed('110020','易方达沪深300ETF联接A','核心宽基','长期持有'),seed('110007','易方达稳健收益债券A','增强债券','长期持有')],
+ high:[seed('011613','华夏科创50ETF联接C','科技科创','半年复核'),seed('003096','中欧医疗健康混合C','医药医疗','半年复核'),seed('001593','天弘创业板ETF联接C','创业板成长','半年复核'),seed('001618','天弘中证电子ETF联接C','电子科技','半年复核')]
+};
+const newDefault=()=>({salary:'',rent:'',daily:'',cashFull:false,execDays:5,rebalance:false,lastReview:null, lists:{cash:[clone(POOL.cash[0])],nasdaq:[clone(POOL.nasdaq[0]),clone(POOL.nasdaq[1])],med:[clone(POOL.med[0]),clone(POOL.med[1])],high:[clone(POOL.high[2]),clone(POOL.high[3])]}});
+function clone(x){return JSON.parse(JSON.stringify(x));}
+const $=id=>document.getElementById(id);
+let state=newDefault(),calculation=null,isBusy=false,requestErrors=[];
+function money(cents){return '¥'+(Math.max(0,cents)/100).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function valCents(raw){if(raw===''||raw===null||raw===undefined)return 0;let v=Number(raw);return Number.isFinite(v)?Math.max(0,Math.round(v*100)):0;}
+function clamp(a,min,max){return Math.min(max,Math.max(min,a));}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function notify(str){$('toast').textContent=str;$('toast').classList.add('show');clearTimeout(notify.t);notify.t=setTimeout(()=>$('toast').classList.remove('show'),3300);}
+function cleanCode(o,cat){
+ if(!o||typeof o.code!=='string'||!/^[0-9]{6}$/.test(o.code))return null;
+ let p=POOL[cat].find(z=>z.code===o.code);
+ const daily=Number(o.dailyLimit);
+ const limit=o.dailyLimit===''||o.dailyLimit===null||o.dailyLimit===undefined?null:(Number.isFinite(daily)&&daily>=0?daily:null);
+ const quote=(o.quote&&Number.isFinite(+o.quote.percentile)&&Number.isFinite(+o.quote.maBias)&&Number.isFinite(+o.quote.maxDD)&&Number.isFinite(+o.quote.dayChg)&&typeof o.quote.date==='string'&&+o.quote.timestamp>0)?o.quote:null;
+ return {code:o.code,name:String(o.name||p?.name||('待识别基金 '+o.code)).slice(0,70),sector:String(o.sector||p?.sector||'自选板块').slice(0,35),cycle:cat==='high'?'半年复核':cat==='nasdaq'?'长期定投':'长期持有',dailyLimit:cat==='nasdaq'?limit:null,holding:o.holding===''?'':(Number.isFinite(Number(o.holding))&&Number(o.holding)>=0?String(o.holding):''),quote};
+}
+function acceptState(data){
+ if(!data||typeof data!=='object')return false;
+ const next=newDefault();for(const k of ['salary','rent','daily'])if(data[k]!==undefined&&Number.isFinite(Number(data[k]))&&Number(data[k])>=0)next[k]=String(data[k]);
+ next.cashFull=!!data.cashFull;next.execDays=[1,5,15].includes(Number(data.execDays??data.nasdaqExecMode))?Number(data.execDays??data.nasdaqExecMode):5;
+ next.rebalance=!!data.rebalance;next.lastReview=typeof data.lastReview==='string'?data.lastReview:null;
+ const oldLists=data.lists||data.activeLists;const seen=new Set();if(oldLists&&typeof oldLists==='object')for(const c of CATS){if(Array.isArray(oldLists[c]))next.lists[c]=oldLists[c].map(z=>cleanCode(z,c)).filter(f=>{if(!f||seen.has(f.code))return false;seen.add(f.code);return true;}).slice(0,25);}
+ state=next;return true;
+}
+function load(){try{let s=localStorage.getItem(KEY);if(s&&acceptState(JSON.parse(s)))return;let old=localStorage.getItem(OLD_KEY);if(old&&acceptState(JSON.parse(old))){state.rebalance=false;save();}}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){$('sourceState').textContent='本地存储不可用，请备份设置';}}
+function fillInputs(){for(const k of ['salary','rent','daily'])$(k).value=state[k];$('cashFull').checked=state.cashFull;$('execDays').value=String(state.execDays);$('rebalanceToggle').checked=state.rebalance;}
+function usable(q){return q&&Number.isFinite(+q.percentile)&&Number.isFinite(+q.maBias)&&Number.isFinite(+q.maxDD)&&Number.isFinite(+q.dayChg)&&Date.now()-Number(q.timestamp)<10*86400000;}
+function attractiveness(f){const q=usable(f.quote)?f.quote:null;if(!q)return 50;const raw=(100-q.percentile)*.55+clamp(-q.maBias,-12,15)*1.4+Math.min(25,Math.abs(q.maxDD))*.6-q.dayChg*3.5;return clamp(raw,10,100);}
+function avg(arr,fn,def=50){return arr.length?arr.reduce((t,z)=>t+fn(z),0)/arr.length:def;}
+/* 整数分配：严格守恒、支持单个标的上下限 */
+function proportional(total,weights){if(!weights.length)return [];const sum=weights.reduce((a,b)=>a+Math.max(0,b),0);if(sum<=0)return proportional(total,weights.map(()=>1));const raws=weights.map(w=>total*Math.max(0,w)/sum),out=raws.map(Math.floor);let left=total-out.reduce((a,b)=>a+b,0);let order=raws.map((v,i)=>({i,rem:v-out[i]})).sort((a,b)=>b.rem-a.rem||a.i-b.i);for(let j=0;j<left;j++)out[order[j%order.length].i]++;return out;}
+function capAllocate(total,list){const caps=list.map(f=>f.dailyLimit===null?Infinity:Math.max(0,Math.round(f.dailyLimit*100))*state.execDays);const got=list.map(()=>0);let left=total,remaining=Array.from(list.keys());while(left>0&&remaining.length){let n=remaining.length,progress=0;for(let k=0;k<remaining.length;k++){const i=remaining[k],room=caps[i]-got[i];const amount=Math.min(room,Math.ceil(left/(n-k)));if(amount>0){got[i]+=amount;left-=amount;progress+=amount;}}remaining=remaining.filter(i=>caps[i]>got[i]);if(!progress)break;}return {amounts:got,left,unverified:list.some(f=>f.dailyLimit===null)};}
+function statusPercent(arr,total){if(total<=0)return arr.map(()=>'0.0%');return proportional(1000,arr).map(z=>(z/10).toFixed(1)+'%');}
+function calculate(){
+ const income=valCents(state.salary),rent=valCents(state.rent),living=valCents(state.daily)*30;
+ const can=Math.max(0,income-rent-living),ls=state.lists;
+ const highAttr=avg(ls.high,attractiveness),medAttr=avg(ls.med,attractiveness);
+ const nasPct=avg(ls.nasdaq,f=>usable(f.quote)?f.quote.percentile:50);
+ const nasDay=avg(ls.nasdaq,f=>usable(f.quote)?f.quote.dayChg:0,0);
+ let pn=ls.nasdaq.length?clamp(nasPct>88?8:20+(50-nasPct)*.14-nasDay*1.5,8,28):0;
+ let pc=state.cashFull?0:clamp(15+(50-highAttr)*.18,8,25);
+ let remaining=Math.max(0,100-pc-pn),pm=0,ph=0;
+ if(ls.med.length&&ls.high.length){const hs=clamp(.38+(highAttr-50)*.0055,.22,.62);ph=remaining*hs;pm=remaining-ph;}
+ else if(ls.med.length)pm=remaining;
+ else if(ls.high.length)ph=remaining;
+ else pc+=remaining; /* 全部候选删除则暂存现金，不会消失 */
+ const desired=proportional(can,[pc,pn,pm,ph]);
+ let amounts={cash:desired[0],nasdaq:desired[1],med:desired[2],high:desired[3]},overflow=0,unverified=false;
+ const nasSplit=capAllocate(amounts.nasdaq,ls.nasdaq);
+ overflow=nasSplit.left;unverified=nasSplit.unverified;
+ if(overflow){amounts.nasdaq-=overflow;
+   if(state.cashFull){const extraHigh=ls.high.length&&highAttr>55?Math.round(overflow*.4):0;const extraMed=ls.med.length?overflow-extraHigh:0;amounts.high+=extraHigh;amounts.med+=extraMed;amounts.cash+=overflow-extraHigh-extraMed;}
+   else{const extraMed=ls.med.length?Math.round(overflow*.65):0;amounts.med+=extraMed;amounts.cash+=overflow-extraMed;}
+ }
+ const allocations={cash:proportional(amounts.cash,ls.cash.map(f=>Math.pow(attractiveness(f),1.6))),nasdaq:nasSplit.amounts,med:proportional(amounts.med,ls.med.map(f=>Math.pow(attractiveness(f),1.6))),high:proportional(amounts.high,ls.high.map(f=>Math.pow(attractiveness(f),1.6)))};
+ /* 删除全部货币基金时保留银行卡现金；其它类空列表不会产生分配。 */
+ const pct=statusPercent(CATS.map(c=>amounts[c]),can);
+ const shares={};const ref=[];
+ for(const cat of CATS)ls[cat].forEach((f,i)=>ref.push({cat,index:i,code:f.code,amount:allocations[cat][i]||0,holding:f.holding}));
+ const holdingsReady=state.rebalance&&ref.filter(f=>!(state.cashFull&&f.cat==='cash')).length>0&&ref.filter(f=>!(state.cashFull&&f.cat==='cash')).every(f=>f.holding!==''&&Number.isFinite(Number(f.holding)));
+ const holdings={};let holdingsTotal=0;
+ ref.forEach(f=>{const v=valCents(f.holding);holdings[f.code]=v;if(!(state.cashFull&&f.cat==='cash'))holdingsTotal+=v;});
+ let plan={};let sell=0,buy=0,clamped=0;
+ if(holdingsReady){
+  const eligible=ref.filter(f=>!(state.cashFull&&f.cat==='cash'));
+  const portfolioValue=holdingsTotal+can;
+  const desiredBuys=eligible.map(f=>f.amount);
+  let totalInEligible=eligible.reduce((t,f)=>t+f.amount,0);
+  /* 现金空基金的现金余额不属于可操作的持仓；资金应优先留存。 */
+  const cashBank=ls.cash.length?0:amounts.cash;
+  const targetFundValue=Math.max(0,portfolioValue-cashBank);
+  let ratios=desiredBuys.some(Boolean)?desiredBuys:eligible.map(()=>1);
+  let targets=proportional(targetFundValue,ratios);
+  eligible.forEach((f,i)=>plan[f.code]={buy:Math.max(0,targets[i]-holdings[f.code]),sell:Math.max(0,holdings[f.code]-targets[i])});
+  /* 持仓模式下，QDII新增买入同样不能超过所填期间额度。被限制部分留在现金，不冒充已分配给基金。 */
+  for(const f of eligible.filter(f=>f.cat==='nasdaq')){const lim=ls.nasdaq[f.index].dailyLimit;if(lim!==null){const cap=Math.round(lim*100)*state.execDays;if(plan[f.code].buy>cap){clamped+=plan[f.code].buy-cap;plan[f.code].buy=cap;}}}
+  eligible.forEach(f=>{buy+=plan[f.code].buy;sell+=plan[f.code].sell;});
+ } else ref.forEach(f=>plan[f.code]={buy:f.amount,sell:0});
+ return {can,living,deficit:income-rent-living,amounts,allocations,pct,overflow,unverified,ref,plan,holdingsReady,holdingsTotal,buy,sell,clamped,highAttr,medAttr,cashBank:ls.cash.length?0:amounts.cash,stale:ref.filter(f=>f.cat!=='cash'&&!usable(ls[f.cat][f.index].quote)).length};
+}
+function render(){
+ calculation=calculate();const a=calculation;
+ $('monthLiving').textContent=money(a.living);$('investable').textContent=money(a.can);$('sumAllocated').textContent=money(a.can);
+ $('budgetNote').textContent=a.deficit<0?'⚠️ 本月预算缺口 '+money(-a.deficit)+'，已暂停新增定投，建议先保障基本生活和备用金。':'按月收入－房租－日均生活费×30天计算；投资资金不能替代必要的生活备用金。';
+ $('cashNote').textContent=state.cashFull?'✅ 应急金已存满：不再从新收入主动留现金；原有应急金不自动卖出。':'🛡️ 储备期按行情预留约8%～25%的现金；下跌不代表必须立即补仓。';
+ const missing=state.lists.nasdaq.filter(z=>z.dailyLimit===null).length;
+ $('limitStatus').className='limit-info'+(a.overflow||missing?' warn':'');
+ $('limitStatus').textContent=a.overflow?'⚠️ 已填额度不足，纳指计划有 '+money(a.overflow)+' 转至其他分区。':missing?'⚠️ 有 '+missing+' 只QDII尚未填写真实单日限额，当前金额属于待核实计划，不保证可以买足。':'✅ 已依据手工填写的单日限额计算（非实时限额查询，实际以申购页面为准）。';
+ CATS.forEach((cat,i)=>{const list=state.lists[cat];$('pct_'+cat).textContent=a.pct[i];$('amt_'+cat).textContent=money(a.amounts[cat]);
+  const container=$('list_'+cat);const html=list.map((f,j)=>{
+    const amt=a.allocations[cat][j]||0;const trade=a.plan[f.code]||{buy:amt,sell:0};let label='本月定投';let display=amt;
+    if(a.holdingsReady&&!(state.cashFull&&cat==='cash')){if(trade.sell>0){label='参考减仓';display=trade.sell;}else if(trade.buy>0){label='建议追加';display=trade.buy;}else{label='暂不操作';display=0;}}
+    if(a.holdingsReady&&state.cashFull&&cat==='cash'){label='备用金保留';display=0;}
+    let q=f.quote,quoteLabel=cat==='cash'?'现金备用':usable(q)?'净值日 '+q.date:(q?'行情已过期':'行情未获取');
+    return `<div class="fund"><div class="fund-top"><div style="flex:1;min-width:155px"><div class="fund-title">${esc(f.code)} ${esc(f.name)}</div><span class="pill">${esc(f.sector)}</span><span class="pill ${cat==='high'?'pill-orange':'pill-green'}">${esc(f.cycle)}</span>${cat==='nasdaq'?`<span class="pill pill-muted">单日限额 ${f.dailyLimit===null?'待核实':money(Math.round(f.dailyLimit*100))}</span>`:''}</div><div class="fund-side"><div class="fund-amount">${money(display)}</div><div class="operation">${label}</div></div></div><div class="fund-tools"><span class="tag-note">${esc(quoteLabel)}${a.holdingsReady&&!(state.cashFull&&cat==='cash')?' · 常规月配 '+money(amt):''}</span><button type="button" class="delete" data-remove="${cat}" data-index="${j}" aria-label="删除 ${esc(f.code)}">×</button></div>${cat==='nasdaq'?`<div class="fund-holding">单日申购限额（元）<input data-limit="${cat}" data-index="${j}" inputmode="decimal" type="number" min="0" placeholder="未核实" value="${f.dailyLimit===null?'':esc(f.dailyLimit)}"></div>`:''}${state.rebalance?`<div class="fund-holding">当前持仓市值（元）<input data-holding="${cat}" data-index="${j}" inputmode="decimal" type="number" min="0" placeholder="所有基金均需填" value="${esc(f.holding)}"></div>`:''}</div>`;
+  }).join('');
+  const empty=`<div class="empty">当前无代码，可在下方输入6位代码，点击【+ 加代码】。</div>`;
+  container.innerHTML=html||(cat==='cash'&&a.amounts.cash>0?`<div class="empty">${money(a.amounts.cash)} 暂留银行卡或活期账户，尚未绑定货币基金。</div>`:empty);
+ });
+ $('rebalanceTip').innerHTML=a.holdingsReady?`✅ 持仓纠偏已启用：已有持仓 ${money(a.holdingsTotal)}；根据全组合目标比例估算，参考追加 ${money(a.buy)}，参考减仓 ${money(a.sell)}。${a.clamped?' 其中纳指额度限制 '+money(a.clamped)+' 的新增买入仍需暂缓/留现金。':''}<strong>交易前核对赎回费、现有账户余额和实际申购额度。</strong>`:state.rebalance?'⚠️ 请把全部已列基金当前市值填齐（没有持仓也填0）。未填齐之前，暂按新增收入显示本月定投，不做减仓测算。':'默认只分配新增工资，显示每月定投金额。想知道“追加多少/减仓多少”，勾选后录入全部持仓市值；开启才计算，绝不自动下单。';
+}
+function syncStatus(message,klass=''){let n=$('sourceState');n.textContent=message;n.className='status '+klass;}
+function onChangeNums(){for(const id of ['salary','rent','daily'])state[id]=$(id).value;save();render();}
+function updateFund(cat,index,key,val){const f=state.lists[cat]?.[index];if(!f)return;if(key==='dailyLimit')f[key]=(val===''?null:(Number.isFinite(Number(val))&&Number(val)>=0?Number(val):null));else f[key]=val;save();clearTimeout(updateFund.paintTimer);updateFund.paintTimer=setTimeout(render,0);}
+function addFund(cat){const input=$('new_'+cat),code=input.value.trim();if(!/^\d{6}$/.test(code))return notify('请输入有效的6位基金代码');if(CATS.some(c=>state.lists[c].some(f=>f.code===code)))return notify('该代码已存在，避免重复持有同一基金');
+ const poolItem=Object.values(POOL).flat().find(z=>z.code===code);
+ const name=poolItem?.name||('基金 '+code+'（待联网识别）');
+ const sector=cat==='nasdaq'?'纳斯达克':(($('sector_'+cat)?.value||'').trim().slice(0,35)||poolItem?.sector||'自选板块');
+ const limit=cat==='nasdaq'&&$('limit_nasdaq').value!==''?Number($('limit_nasdaq').value):null;
+ let item=seed(code,name,sector,cat==='high'?'半年复核':cat==='nasdaq'?'长期定投':'长期持有',limit);
+ state.lists[cat].push(item);input.value='';if($('sector_'+cat))$('sector_'+cat).value='';save();render();
+ updateOne(item).then(ok=>{if(ok){save();render();}else notify('已添加代码；行情接口未返回有效数据，请核实名称和代码');});
+}
+function removeFund(cat,index){let f=state.lists[cat]?.[index];if(!f)return;if(!confirm('确定移除 '+f.code+' 吗？若已持有，此操作只修改规划列表，不会卖出基金。'))return;state.lists[cat].splice(index,1);save();render();}
+/* 天天基金的此端点属于第三方历史净值脚本，直接从HTML请求可能失败；只串行加载，避免全局变量污染。 */
+function fetchNetValue(code){return new Promise(resolve=>{
+ const script=document.createElement('script'),old=Date.now();let done=false;
+ window.Data_netWorthTrend=null;window.fS_name=null;
+ function end(value){if(done)return;done=true;clearTimeout(timer);script.remove();window.Data_netWorthTrend=null;window.fS_name=null;resolve(value);}
+ const timer=setTimeout(()=>end(null),3100);
+ script.src='https://fund.eastmoney.com/pingzhongdata/'+encodeURIComponent(code)+'.js?v='+old;
+ script.async=true;
+ script.onload=()=>{
+  const data=window.Data_netWorthTrend, fundname=window.fS_name;
+  if(!Array.isArray(data)||data.length<20)return end(null);
+  const points=data.filter(x=>Number.isFinite(+x.y)&&+x.y>0&&Number.isFinite(+x.x)).slice(-120);
+  if(points.length<20)return end(null);
+  const latest=points[points.length-1],values=points.map(x=>+x.y),cur=values[values.length-1],min=Math.min(...values),max=Math.max(...values);
+  if(!Number.isFinite(cur)||max<=0)return end(null);
+  const ma=values.slice(-60).reduce((a,b)=>a+b,0)/Math.min(60,values.length);
+  let peak=0,draw=0;for(const v of values){peak=Math.max(peak,v);draw=Math.min(draw,(v/peak-1)*100);}
+  const ts=Number(latest.x),dt=new Date(ts);if(!Number.isFinite(ts)||ts>Date.now()+86400000||ts<Date.now()-366*86400000)return end(null);
+  const d=dt.toLocaleDateString('zh-CN',{year:'numeric',month:'2-digit',day:'2-digit'});
+  const change=Number(latest.equityReturn);
+  const q={percentile:max>min?(cur-min)/(max-min)*100:50,maBias:ma>0?(cur/ma-1)*100:0,maxDD:draw,dayChg:Number.isFinite(change)?change:0,date:d,timestamp:ts,updatedAt:Date.now()};
+  return end({name:typeof fundname==='string'&&fundname.length<100?fundname:null,quote:q});
+ };
+ script.onerror=()=>end(null);
+ document.head.appendChild(script);
+});}
+/* 所有网络更新在单一队列中运行，避免多个同名全局回调覆盖数据。 */
+let networkQueue=Promise.resolve();
+function getQuote(code){const run=()=>fetchNetValue(code);const task=networkQueue.then(run,run);networkQueue=task.catch(()=>null);return task;}
+async function updateOne(f){if(f.code==='000198')return true;const result=await getQuote(f.code);if(!result)return false;f.quote=result.quote;if(result.name)f.name=result.name;return true;}
+async function syncAll(){if(isBusy)return notify('正在更新，请稍候');isBusy=true;refreshButtons(true);
+ const list=CATS.flatMap(c=>state.lists[c]).filter(f=>f.code!=='000198');let ok=0,failed=0;
+ for(let i=0;i<list.length;i++){syncStatus('净值同步 '+(i+1)+'/'+list.length);try{if(await updateOne(list[i]))ok++;else failed++;}catch(e){failed++;}save();render();}
+ if(!list.length)syncStatus('仅配置现金基金，暂无待更新净值');
+ else if(ok)syncStatus('已读取 '+ok+'/'+list.length+' 只 · 其余采用基准/缓存',failed?'warn':'');
+ else syncStatus('接口不可用 · 已保留基准/有效缓存','warn');
+ isBusy=false;refreshButtons(false);render();
+}
+function refreshButtons(flag){$('refreshBtn').disabled=flag;$('chooseBtn').disabled=flag;$('quickRefresh').disabled=flag;}
+/* 小候选池筛选，不称为全市场扫描；仅在候选数据足够新时更换。 */
+async function selectBest(){if(isBusy)return;if([...state.lists.med,...state.lists.high].some(f=>valCents(f.holding)>0)){notify('当前记录了持仓；请先核对现有基金，不自动替换持仓列表');return;}if(!confirm('将从内置候选池替换中风险及中高风险的计划基金，不会自动买卖。确认继续吗？'))return;isBusy=true;refreshButtons(true);syncStatus('候选池评分中…');
+ const candidates=[...POOL.med,...POOL.high].map(clone);let n=0;
+ for(let i=0;i<candidates.length;i++){
+  const f=candidates[i],active=CATS.flatMap(c=>state.lists[c]).find(z=>z.code===f.code);
+  if(usable(active?.quote)){f.quote=active.quote;f.name=active.name;n++;}
+  else if(await updateOne(f))n++;
+  syncStatus('候选池 '+(i+1)+'/'+candidates.length);render();
+ }
+ const medCandidates=candidates.filter(f=>POOL.med.some(x=>x.code===f.code)&&usable(f.quote));
+ const highCandidates=candidates.filter(f=>POOL.high.some(x=>x.code===f.code)&&usable(f.quote));
+ if(medCandidates.filter(f=>!f.sector.includes('债')).length&&medCandidates.filter(f=>f.sector.includes('债')).length&&highCandidates.length>=2){
+  const sort=(x,y)=>attractiveness(y)-attractiveness(x);
+  const medEq=medCandidates.filter(f=>!f.sector.includes('债')).sort(sort)[0];
+  const medB=medCandidates.filter(f=>f.sector.includes('债')).sort(sort)[0];
+  const rank=highCandidates.sort(sort);const hs=[rank[0],rank.find(f=>f.sector!==rank[0].sector)].filter(Boolean).slice(0,2);
+  if(hs.length===2){
+   const previous=CATS.flatMap(c=>state.lists[c]);for(const f of [medEq,medB,...hs]){const old=previous.find(z=>z.code===f.code);if(old)f.holding=old.holding;}
+   state.lists.med=[medEq,medB];state.lists.high=hs;state.lastReview=new Date().toISOString();save();notify('已从内置候选池按可用净值筛选，换仓前请自行确认费用');
   }
-
-  function saveState() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
-    } catch (e) {}
-  }
-
-  function onInputChange() {
-    appState.salary = Math.max(0, parseFloat(document.getElementById('inSalary').value) || 0);
-    appState.rent = Math.max(0, parseFloat(document.getElementById('inRent').value) || 0);
-    appState.daily = Math.max(0, parseFloat(document.getElementById('inDaily').value) || 0);
-    saveState();
-    recalculateAllocation();
-  }
-
-  function onCashToggleChange() {
-    appState.cashFull = document.getElementById('cashFullToggle').checked;
-    saveState();
-    recalculateAllocation();
-  }
-
-  function onExecModeChange() {
-    appState.nasdaqExecMode = Number(document.getElementById('nasdaqExecMode').value) || 1;
-    saveState();
-    recalculateAllocation();
-  }
-
-  /* ============================================================================
-   * 二、 多源行情静默抓取（天天基金 120日净值序列 + 盘中实时估值 + 东财宽基指数）
-   * ============================================================================ */
-  // 1. 解析天天基金 pingzhongdata：提取真实基金名、120日净值分位点、60日均线乖离率、最大回撤、最新收盘涨跌
-  function fetchSinglePingzhong(code) {
-    return new Promise(resolve => {
-      window.Data_netWorthTrend = null;
-      window.fS_name = null;
-      const script = document.createElement('script');
-      let done = false;
-      const timer = setTimeout(() => {
-        if (!done) { done = true; script.remove(); resolve(null); }
-      }, 3500);
-
-      script.src = `https://fund.eastmoney.com/pingzhongdata/${code}.js?v=${Date.now()}`;
-      script.onload = () => {
-        if (!done) {
-          done = true;
-          clearTimeout(timer);
-          let name = window.fS_name || null;
-          let percentile = 50;
-          let maBias = 0;
-          let maxDD = -5;
-          let dayChg = 0;
-
-          if (Array.isArray(window.Data_netWorthTrend) && window.Data_netWorthTrend.length >= 20) {
-            const trend = window.Data_netWorthTrend;
-            const slice120 = trend.slice(-120).map(pt => Number(pt.y)).filter(v => !isNaN(v) && v > 0);
-            const len = slice120.length;
-            const cur = slice120[len - 1];
-            const min = Math.min(...slice120);
-            const max = Math.max(...slice120);
-
-            if (max > min) percentile = ((cur - min) / (max - min)) * 100;
-            maxDD = ((cur - max) / max) * 100;
-
-            const ma60Slice = slice120.slice(-Math.min(60, len));
-            const ma60 = ma60Slice.reduce((s, v) => s + v, 0) / ma60Slice.length;
-            if (ma60 > 0) maBias = ((cur - ma60) / ma60) * 100;
-
-            dayChg = Number(trend[trend.length - 1]?.equityReturn ?? 0);
-          }
-          script.remove();
-          resolve({ name, percentile, maBias, maxDD, dayChg });
-        }
-      };
-      script.onerror = () => {
-        if (!done) { done = true; clearTimeout(timer); script.remove(); resolve(null); }
-      };
-      document.body.appendChild(script);
-    });
-  }
-
-  // 2. 抓取天天基金盘中实时估值涨跌幅
-  function fetchSingleFundGz(code) {
-    return new Promise(resolve => {
-      const script = document.createElement('script');
-      let done = false;
-      const timer = setTimeout(() => {
-        if (!done) { done = true; script.remove(); resolve(null); }
-      }, 2500);
-
-      window.jsonpgz = function(data) {
-        if (!done) { done = true; clearTimeout(timer); script.remove(); resolve(data); }
-      };
-      script.src = `https://fundgz.1234567.com.cn/js/${code}.js?rt=${Date.now()}`;
-      script.onerror = () => {
-        if (!done) { done = true; clearTimeout(timer); script.remove(); resolve(null); }
-      };
-      document.body.appendChild(script);
-    });
-  }
-
-  // 同步当前激活列表的所有基金最新行情并重算百分比
-  async function syncMarketAndAllocate() {
-    const btn = document.getElementById('btnSync');
-    const statusEl = document.getElementById('syncStatusText');
-    btn.disabled = true;
-    statusEl.textContent = '⏳ 正在实时分析全市场行情与限额...';
-
-    const allItems = [
-      ...appState.activeLists.cash,
-      ...appState.activeLists.nasdaq,
-      ...appState.activeLists.med,
-      ...appState.activeLists.high
-    ];
-
-    for (let i = 0; i < allItems.length; i++) {
-      const item = allItems[i];
-      if (item.code === '000198') continue;
-
-      const pz = await fetchSinglePingzhong(item.code);
-      if (pz) {
-        if (pz.name) item.name = pz.name;
-        item.percentile = pz.percentile;
-        item.maBias = pz.maBias;
-        item.maxDD = pz.maxDD;
-        item.dayChg = pz.dayChg;
-      }
-
-      const gz = await fetchSingleFundGz(item.code);
-      if (gz && gz.gszzl !== undefined && !isNaN(parseFloat(gz.gszzl)) && parseFloat(gz.gszzl) !== 0) {
-        item.dayChg = parseFloat(gz.gszzl);
-        if (gz.name) item.name = gz.name;
-      }
-    }
-
-    saveState();
-    recalculateAllocation();
-
-    statusEl.textContent = `✅ 行情分配已更新 (${new Date().toLocaleTimeString()})`;
-    btn.disabled = false;
-  }
-
-  // 大师一键扫描整个候选库，自动挑选当期最具性价比的「中风险(长期)」与「中高风险(半年一换)」代码
-  async function autoSelectBestFunds() {
-    const statusEl = document.getElementById('syncStatusText');
-    const btn = document.getElementById('btnSync');
-    btn.disabled = true;
-    statusEl.textContent = '🤖 正在扫描全市场候选库筛选当期最优代码...';
-
-    const candidates = [...MASTER_CANDIDATE_POOL.med, ...MASTER_CANDIDATE_POOL.high];
-    for (let i = 0; i < candidates.length; i++) {
-      const f = candidates[i];
-      const pz = await fetchSinglePingzhong(f.code);
-      if (pz) {
-        f.percentile = pz.percentile;
-        f.maBias = pz.maBias;
-        f.maxDD = pz.maxDD;
-        f.dayChg = pz.dayChg;
-      }
-    }
-
-    // 计算每只候选基金的综合低吸价值分（分位越低、均线负乖离越大、回撤越深、当日越跌，得分越高）
-    const scoreFn = (f) => {
-      const pScore = (100 - (f.percentile ?? 50)) * 0.50;
-      const biasScore = Math.max(-15, Math.min(15, -(f.maBias ?? 0))) * 1.5;
-      const ddScore = Math.min(25, Math.abs(f.maxDD ?? 5)) * 0.8;
-      const dayScore = -(f.dayChg ?? 0) * 4.0;
-      return pScore + biasScore + ddScore + dayScore;
-    };
-
-    // 中风险选出1只最优宽基/红利 + 1只纯债防守压舱
-    const medEquities = MASTER_CANDIDATE_POOL.med.filter(f => !f.sector.includes('债')).sort((a, b) => scoreFn(b) - scoreFn(a));
-    const medBonds = MASTER_CANDIDATE_POOL.med.filter(f => f.sector.includes('债'));
-    appState.activeLists.med = [
-      { ...(medEquities[0] || MASTER_CANDIDATE_POOL.med[0]) },
-      { ...(medBonds[0] || MASTER_CANDIDATE_POOL.med[1]) }
-    ];
-
-    // 中高风险（半年一换）选出综合性价比最高的前 2 只不同板块代码
-    const sortedHigh = [...MASTER_CANDIDATE_POOL.high].sort((a, b) => scoreFn(b) - scoreFn(a));
-    appState.activeLists.high = [
-      { ...sortedHigh[0] },
-      { ...sortedHigh[1] }
-    ];
-
-    saveState();
-    recalculateAllocation();
-    statusEl.textContent = '✅ 已按最新行情换入最优板块代码';
-    btn.disabled = false;
-  }
-
-  /* ============================================================================
-   * 三、 四维量化大师分配引擎（每个月投百分之几 100% 随行情动态变化 + 纳指限额实查）
-   * ============================================================================ */
-  // 计算单只基金的实时低吸吸引力指数 (10 ~ 100)
-  function computeAttractiveness(f) {
-    const pct = f.percentile ?? 50;
-    const bias = f.maBias ?? 0;
-    const dd = Math.abs(f.maxDD ?? 5);
-    const day = f.dayChg ?? 0;
-
-    // 越处于半年低位、越低于60日均线、回撤越深、今日越跌 -> 吸引力越高
-    const raw = (100 - pct) * 0.55 + Math.max(-12, Math.min(15, -bias)) * 1.4 + Math.min(25, dd) * 0.6 - day * 3.5;
-    return Math.max(10, Math.min(100, raw));
-  }
-
-  function recalculateAllocation() {
-    const { salary, rent, daily, cashFull, activeLists } = appState;
-    const monthLiving = daily * 30;
-    const investable = Math.max(0, salary - rent - monthLiving);
-
-    document.getElementById('outMonthLiving').textContent = `¥${monthLiving.toFixed(0)}`;
-    document.getElementById('outInvestable').textContent = `¥${investable.toFixed(2)}`;
-
-    if (investable <= 0) {
-      renderCategoryBlock('cash', 0, 0, []);
-      renderCategoryBlock('nasdaq', 0, 0, []);
-      renderCategoryBlock('med', 0, 0, []);
-      renderCategoryBlock('high', 0, 0, []);
-      return;
-    }
-
-    // 1. 计算各大类的实时行情温度与吸引力
-    const highList = activeLists.high;
-    const medList = activeLists.med;
-    const nasdaqList = activeLists.nasdaq;
-
-    const avgHighAttr = highList.length > 0
-      ? highList.reduce((s, f) => s + computeAttractiveness(f), 0) / highList.length
-      : 50;
-    const avgMedAttr = medList.length > 0
-      ? medList.reduce((s, f) => s + computeAttractiveness(f), 0) / medList.length
-      : 50;
-    const avgNdxPct = nasdaqList.length > 0
-      ? nasdaqList.reduce((s, f) => s + (f.percentile ?? 55), 0) / nasdaqList.length
-      : 55;
-    const avgNdxDay = nasdaqList.length > 0
-      ? nasdaqList.reduce((s, f) => s + (f.dayChg ?? 0), 0) / nasdaqList.length
-      : 0;
-
-    // 2. 根据行情动态计算【货币、纳指、中风险、中高风险】四大板块的理论百分比
-    // (A) 纳斯达克理论比例：基准 20%，随美股半年分位点与当日涨跌在 12% ~ 28% 之间智能浮动（若超88%极度高估则压至8%）
-    let rawNasdaqPct = 20 + ((50 - avgNdxPct) * 0.14) - (avgNdxDay * 1.5);
-    if (avgNdxPct > 88) rawNasdaqPct = 8;
-    rawNasdaqPct = nasdaqList.length > 0 ? Math.max(8, Math.min(28, rawNasdaqPct)) : 0;
-
-    // (B) 货币基金主动留存比例：
-    // 若用户勾选了“应急金已存满”，主动留存为 0%；
-    // 若未勾选，则基准 15%，且当大盘高估(吸引力低)时自动多留现金(最高25%)，大盘低估抄底时自动少留现金(最低8%)
-    let rawCashPct = 0;
-    const cashNoticeEl = document.getElementById('cashRoleNotice');
-    if (cashFull || activeLists.cash.length === 0) {
-      rawCashPct = 0;
-      cashNoticeEl.textContent = '⚡ 已开启【应急金存满模式】：主动留存 0%，资金全额投入基金滚雪球';
-    } else {
-      rawCashPct = Math.max(8, Math.min(25, 15 + (50 - avgHighAttr) * 0.18));
-      cashNoticeEl.textContent = '🛡️ 应急金储备中：比例随行情高低在 8%~25% 之间智能伸缩';
-    }
-
-    // (C) 剩余比例在「中风险」与「中高风险」之间按实时行情吸引力动态分配
-    const remainForEqAndBond = Math.max(0, 100 - rawCashPct - rawNasdaqPct);
-    let rawHighPct = 0;
-    let rawMedPct = 0;
-
-    if (highList.length > 0 && medList.length > 0) {
-      // 当中高风险板块（科技/医药/创业板）大跌处于低位时，avgHighAttr 升高，中高风险占比可在 15% ~ 48% 间大幅摆动
-      const highShare = Math.max(0.22, Math.min(0.62, 0.38 + (avgHighAttr - 50) * 0.0055));
-      rawHighPct = remainForEqAndBond * highShare;
-      rawMedPct = remainForEqAndBond - rawHighPct;
-    } else if (highList.length > 0) {
-      rawHighPct = remainForEqAndBond;
-    } else if (medList.length > 0) {
-      rawMedPct = remainForEqAndBond;
-    } else {
-      rawCashPct += remainForEqAndBond;
-    }
-
-    // 3. 纳斯达克场外 QDII 限额硬核查（绝不盲目按百分比算钱！）
-    const execMult = Number(document.getElementById('nasdaqExecMode').value) || 1;
-    const desiredNasdaqMoney = Math.round(investable * (rawNasdaqPct / 100));
-
-    let totalNasdaqCap = 0;
-    nasdaqList.forEach(f => {
-      const cap = Math.max(0, Number(f.dailyLimit) || 0) * execMult;
-      f.currentPeriodCap = cap;
-      totalNasdaqCap += cap;
-    });
-
-    const actualNasdaqMoney = Math.min(desiredNasdaqMoney, totalNasdaqCap);
-    const nasdaqOverflow = Math.max(0, desiredNasdaqMoney - actualNasdaqMoney);
-
-    const limitNoticeEl = document.getElementById('nasdaqLimitNotice');
-    if (nasdaqOverflow > 0) {
-      limitNoticeEl.innerHTML = `<span style="color:#FBBF24;">⚠️ 行情目标 ${rawNasdaqPct.toFixed(1)}% (¥${desiredNasdaqMoney}) 触发QDII限购上限 (¥${totalNasdaqCap})！实付已校准为 ¥${actualNasdaqMoney}，溢出 ¥${nasdaqOverflow} 已按行情自动转入其他基金。</span>`;
-    } else {
-      limitNoticeEl.textContent = `✅ QDII限额核查通过：当前累计限额上限 ¥${totalNasdaqCap}，可足额买入行情目标金额。`;
-    }
-
-    // 4. 处理纳指限额溢出资金的去向：
-    // 若勾选了“应急金已存满”，溢出资金优先按吸引力分给【中风险】和【中高风险】；若未勾选，则分给【中风险】和【货币基金】
-    let actualHighMoney = Math.round(investable * (rawHighPct / 100));
-    let actualMedMoney = Math.round(investable * (rawMedPct / 100));
-
-    if (nasdaqOverflow > 0) {
-      if (cashFull) {
-        // 应急金已满：如果当前中高风险处于低位好机会(吸引力>55)，溢出资金 40% 加码中高风险、60% 进中风险；否则全部进中风险稳健固收
-        const addHigh = (highList.length > 0 && avgHighAttr > 55) ? Math.round(nasdaqOverflow * 0.4) : 0;
-        const addMed = medList.length > 0 ? (nasdaqOverflow - addHigh) : 0;
-        actualHighMoney += addHigh;
-        actualMedMoney += addMed;
-      } else {
-        const addMed = medList.length > 0 ? Math.round(nasdaqOverflow * 0.65) : 0;
-        actualMedMoney += addMed;
-      }
-    }
-
-    let actualCashMoney = Math.max(0, investable - actualNasdaqMoney - actualMedMoney - actualHighMoney);
-
-    // 5. 根据真实成交金额反推最终精确百分比（四项严格合计 100.0%）
-    const realCashPct = (actualCashMoney / investable) * 100;
-    const realNasdaqPct = (actualNasdaqMoney / investable) * 100;
-    const realMedPct = (actualMedMoney / investable) * 100;
-    const realHighPct = (actualHighMoney / investable) * 100;
-
-    // 6. 在各大类内部，按每只基金各自的四维行情吸引力进行非线性二次方加权分配
-    const cashSub = distributeWithinGroup(activeLists.cash, actualCashMoney, false);
-    const nasdaqSub = distributeWithinGroup(activeLists.nasdaq, actualNasdaqMoney, true);
-    const medSub = distributeWithinGroup(activeLists.med, actualMedMoney, false);
-    const highSub = distributeWithinGroup(activeLists.high, actualHighMoney, false);
-
-    renderCategoryBlock('cash', realCashPct, actualCashMoney, cashSub);
-    renderCategoryBlock('nasdaq', realNasdaqPct, actualNasdaqMoney, nasdaqSub);
-    renderCategoryBlock('med', realMedPct, actualMedMoney, medSub);
-    renderCategoryBlock('high', realHighPct, actualHighMoney, highSub);
-  }
-
-  // 组内多只基金按行情性价比二次方拉开差距分配
-  function distributeWithinGroup(list, totalGroupMoney, isNasdaqGroup) {
-    if (!list || list.length === 0 || totalGroupMoney <= 0) {
-      return (list || []).map(f => ({ ...f, allocAmt: 0 }));
-    }
-
-    if (isNasdaqGroup) {
-      let rem = totalGroupMoney;
-      return list.map((f, idx) => {
-        const cap = f.currentPeriodCap ?? 100;
-        const targetShare = idx === list.length - 1 ? rem : Math.round(totalGroupMoney / list.length);
-        const finalGive = Math.min(rem, cap, targetShare);
-        rem -= finalGive;
-        return { ...f, allocAmt: finalGive };
-      });
-    }
-
-    // 二次方加权：让同组内跌得深、分位点更低的基金明显多买
-    const poweredWeights = list.map(f => Math.pow(computeAttractiveness(f), 1.6));
-    const sumW = poweredWeights.reduce((s, w) => s + w, 0);
-    let allocated = 0;
-
-    return list.map((f, idx) => {
-      const amt = idx === list.length - 1
-        ? Math.max(0, totalGroupMoney - allocated)
-        : Math.round(totalGroupMoney * (poweredWeights[idx] / sumW));
-      allocated += amt;
-      return { ...f, allocAmt: amt };
-    });
-  }
-
-  function renderCategoryBlock(catKey, pctVal, moneyVal, items) {
-    document.getElementById(`pct_${catKey}`).textContent = `${pctVal.toFixed(1)}%`;
-    document.getElementById(`amt_${catKey}`).textContent = `¥${moneyVal.toFixed(2)}`;
-
-    const container = document.getElementById(`list_${catKey}`);
-    if (!items || items.length === 0) {
-      container.innerHTML = `<div style="font-size:0.82rem; opacity:0.6; padding:4px 0;">当前无代码，可在下方输入6位代码点击【+ 加代码】</div>`;
-      return;
-    }
-
-    container.innerHTML = items.map((item, idx) => {
-      const cycleCls = item.cycle === '半年一换' ? 'tag-cycle-half' : 'tag-cycle-long';
-      const limitTag = catKey === 'nasdaq'
-        ? `<span class="tag tag-limit">单日限额¥${item.dailyLimit}</span>`
-        : '';
-
-      return `
-        <div class="code-item">
-          <div class="code-left">
-            <span><strong>${item.code}</strong> ${item.name}</span>
-            <span class="tag tag-sector">${item.sector}</span>
-            <span class="tag ${cycleCls}">${item.cycle}</span>
-            ${limitTag}
-          </div>
-          <div class="code-right">
-            <span>¥${(item.allocAmt || 0).toFixed(2)}</span>
-            <button class="btn-del" title="删除此代码" onclick="removeCode('${catKey}', ${idx})">×</button>
-          </div>
-        </div>
-      `;
-    }).join('');
-  }
-
-  /* ============================================================================
-   * 四、 自定义加减代码（+ / -）自动联网识别名称、板块与行情分位
-   * ============================================================================ */
-  function removeCode(catKey, index) {
-    appState.activeLists[catKey].splice(index, 1);
-    saveState();
-    recalculateAllocation();
-  }
-
-  async function addCode(catKey) {
-    const codeInput = document.getElementById(`codeIn_${catKey}`);
-    const code = codeInput.value.trim();
-    if (!/^\d{6}$/.test(code)) {
-      alert('请输入有效的 6 位数字基金代码！');
-      return;
-    }
-
-    let sector = '自选板块';
-    let dailyLimit = 999999;
-
-    if (catKey === 'nasdaq') {
-      sector = '美股科技板块';
-      dailyLimit = Math.max(10, parseFloat(document.getElementById('limIn_nasdaq').value) || 100);
-    } else {
-      const secInput = document.getElementById(`secIn_${catKey}`);
-      if (secInput && secInput.value.trim()) {
-        sector = secInput.value.trim();
-      }
-    }
-
-    const cycle = catKey === 'high' ? '半年一换' : (catKey === 'nasdaq' ? '长期定投' : '长期持有');
-
-    let name = `基金(${code})`;
-    let percentile = 45;
-    let maBias = 0;
-    let maxDD = -8;
-    let dayChg = 0;
-
-    const pz = await fetchSinglePingzhong(code);
-    if (pz) {
-      if (pz.name) name = pz.name;
-      percentile = pz.percentile;
-      maBias = pz.maBias;
-      maxDD = pz.maxDD;
-      dayChg = pz.dayChg;
-    } else {
-      const gz = await fetchSingleFundGz(code);
-      if (gz && gz.name) name = gz.name;
-    }
-
-    // 根据基金名称自动归类板块备注
-    if (sector === '自选板块') {
-      if (name.includes('医') || name.includes('药')) sector = '医药医疗板块';
-      else if (name.includes('科创') || name.includes('半导体') || name.includes('芯片') || name.includes('电子') || name.includes('科技')) sector = '科技半导体板块';
-      else if (name.includes('红利')) sector = '红利低波板块';
-      else if (name.includes('债')) sector = '纯债固收板块';
-      else if (name.includes('300') || name.includes('500') || name.includes('宽基')) sector = '核心宽基板块';
-      else if (name.includes('创业板') || name.includes('新能源')) sector = '新能源成长板块';
-      else if (name.includes('消费') || name.includes('白酒')) sector = '消费板块';
-      else if (name.includes('传媒') || name.includes('游戏') || name.includes('人工智能')) sector = 'AI传媒板块';
-      else if (name.includes('货币') || name.includes('宝')) sector = '货币流动性';
-    }
-
-    appState.activeLists[catKey].push({
-      code,
-      name,
-      sector,
-      cycle,
-      dailyLimit,
-      percentile,
-      maBias,
-      maxDD,
-      dayChg
-    });
-
-    codeInput.value = '';
-    saveState();
-    recalculateAllocation();
-  }
-
-  // 页面启动即加载本地记忆并联网同步最新行情分配
-  loadSavedState();
-  recalculateAllocation();
-  syncMarketAndAllocate();
+ }else notify('候选数据不足或过期，未擅自更换基金代码');
+ isBusy=false;refreshButtons(false);syncStatus('候选池可用 '+n+'/'+candidates.length+' · 仅供参考',n<candidates.length?'warn':'');render();
+}
+function planText(){const a=calculation;let out=['智能定投执行清单（'+new Date().toLocaleDateString('zh-CN')+'）','本月可投资：'+money(a.can),'净值行情：'+$('sourceState').textContent];
+ for(let i=0;i<CATS.length;i++){let cat=CATS[i];out.push(CAT_NAME[cat]+'｜'+a.pct[i]+'｜'+money(a.amounts[cat]));state.lists[cat].forEach((f,j)=>{const p=a.plan[f.code]||{buy:a.allocations[cat][j]||0,sell:0};let label=a.holdingsReady&&p.sell>0?'参考减仓':a.holdingsReady?'参考追加':'每月定投';let sum=a.holdingsReady?(p.sell>0?p.sell:p.buy):a.allocations[cat][j]||0;if(state.cashFull&&cat==='cash'&&a.holdingsReady){label='应急金保留';sum=0;}out.push('  '+f.code+' '+f.name+' '+label+money(sum));});if(cat==='cash'&&!state.lists.cash.length&&a.amounts.cash)out.push('  未绑定基金，建议银行卡预留 '+money(a.amounts.cash));}
+ out.push('QDII限额为手工录入、非实查；持仓纠偏需核实费用及交易条件；请勿直接视为买卖指令。');return out.join('\n');}
+async function copyPlan(){const content=planText();try{await navigator.clipboard.writeText(content);notify('已复制本月执行清单');}catch(e){let el=document.createElement('textarea');el.value=content;document.body.appendChild(el);el.select();try{document.execCommand('copy');notify('已复制本月执行清单');}catch(_) {prompt('复制以下清单：',content);}el.remove();}}
+function exportSettings(){const blob=new Blob([JSON.stringify({format:'smart_dca_final_v1',date:new Date().toISOString(),state},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='智能定投设置备份_'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);notify('已导出备份，记得保存文件');}
+function initEvents(){for(const id of ['salary','rent','daily'])$(id).addEventListener('input',onChangeNums);
+ $('cashFull').addEventListener('change',e=>{state.cashFull=e.target.checked;save();render();});
+ $('execDays').addEventListener('change',e=>{state.execDays=Number(e.target.value);save();render();});
+ $('rebalanceToggle').addEventListener('change',e=>{state.rebalance=e.target.checked;save();render();});
+ $('refreshBtn').addEventListener('click',syncAll);$('quickRefresh').addEventListener('click',syncAll);$('chooseBtn').addEventListener('click',selectBest);
+ document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>addFund(b.dataset.add)));
+ document.querySelectorAll('.code-in').forEach(b=>b.addEventListener('keydown',e=>{if(e.key==='Enter'){const cat=b.id.slice(4);addFund(cat);}}));
+ document.querySelectorAll('.funds').forEach(c=>{
+  c.addEventListener('click',e=>{const t=e.target.closest('[data-remove]');if(t)removeFund(t.dataset.remove,Number(t.dataset.index));});
+  /* 使用change而不是input，防止输入中的表单因重绘而失焦 */
+  c.addEventListener('change',e=>{const t=e.target;if(t.dataset.holding)updateFund(t.dataset.holding,Number(t.dataset.index),'holding',t.value);if(t.dataset.limit)updateFund(t.dataset.limit,Number(t.dataset.index),'dailyLimit',t.value);});
+ });
+ $('copyBtn').addEventListener('click',copyPlan);$('exportBtn').addEventListener('click',exportSettings);
+ $('importBtn').addEventListener('click',()=>$('importFile').click());
+ $('importFile').addEventListener('change',async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>2e6)throw Error('备份文件过大');let raw=JSON.parse(await file.text());if(!acceptState(raw.state||raw))throw Error('格式错误');save();fillInputs();render();notify('备份恢复成功');}catch(err){notify('恢复失败：'+err.message);}e.target.value='';});
+ $('restoreBtn').addEventListener('click',()=>{if(!confirm('确定恢复初始基金名单？将保留收入和开关，但自选基金及其持仓输入会被替换。'))return;let fresh=newDefault();state.lists=fresh.lists;state.rebalance=false;save();fillInputs();render();notify('已恢复初始基金');});
+}
+load();fillInputs();initEvents();render();
+/* 打开即尝试获取最新已确认净值；失败时仍可离线计算清晰标注的基准分配 */
+setTimeout(syncAll,450);
 </script>
 </body>
 </html>
