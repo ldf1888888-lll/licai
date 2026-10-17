@@ -1,378 +1,340 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>极简全球资产定投计算器</title>
-<style>
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    color: #FFFFFF; /* 强制全局所有文字纯白色 */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
-    -webkit-tap-highlight-color: transparent;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>极简全球资产定投计算器</title>
+    <style>
+        :root {
+            --bg-color: #0f172a; /* 极简深蓝灰背景 */
+            --card-bg: #1e293b; /* 卡片背景 */
+            --text-main: #ffffff; /* 纯白正文 */
+            --text-sub: #94a3b8; /* 辅助浅灰 */
+            --green: #10b981; /* 买入绿 */
+            --red: #ef4444; /* 下跌红 */
+        }
 
-  body {
-    background-color: #0F172A; /* 深蓝灰底色，护眼且与白字形成极致对比 */
-    padding: 24px 16px 50px;
-    line-height: 1.6;
-  }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
 
-  .container {
-    max-width: 520px;
-    margin: 0 auto;
-  }
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
 
-  h1 {
-    font-size: 1.4rem;
-    font-weight: 800;
-    text-align: center;
-    margin-bottom: 20px;
-    letter-spacing: 0.5px;
-  }
+        h1 {
+            text-align: center;
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
 
-  /* 卡片通用深色容器 */
-  .card {
-    background-color: #1E293B;
-    border: 1.5px solid #475569;
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 18px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
-  }
+        .input-card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
 
-  /* 三个输入框极简布局 */
-  .input-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 18px;
-  }
+        .input-group {
+            margin-bottom: 15px;
+        }
 
-  @media (max-width: 440px) {
-    .input-grid {
-      grid-template-columns: 1fr;
-    }
-  }
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            margin-bottom: 8px;
+        }
 
-  .field label {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin-bottom: 6px;
-  }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 1.1rem;
+            box-sizing: border-box;
+            outline: none;
+        }
 
-  .field input {
-    width: 100%;
-    background-color: #0F172A;
-    border: 1.5px solid #64748B;
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: 1.2rem;
-    font-weight: 800;
-    font-family: Consolas, Monaco, monospace;
-    color: #FFFFFF;
-    outline: none;
-  }
+        .input-group input:focus {
+            border-color: var(--green);
+        }
 
-  .field input:focus {
-    border-color: #FFFFFF;
-    background-color: #020617;
-  }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: var(--green);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-top: 10px;
+        }
 
-  /* 醒目主按钮 */
-  .btn-main {
-    width: 100%;
-    background-color: #10B981;
-    border: 1.5px solid #FFFFFF;
-    border-radius: 12px;
-    padding: 14px;
-    font-size: 1.08rem;
-    font-weight: 900;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-  }
+        button:active {
+            opacity: 0.8;
+        }
 
-  .btn-main:active {
-    transform: scale(0.98);
-  }
+        .market-info {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            margin-bottom: 15px;
+        }
 
-  .btn-main:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
+        .total-box {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-  /* 结果展示区 */
-  .status-bar {
-    font-size: 0.85rem;
-    font-weight: 700;
-    padding: 6px 12px;
-    background-color: #0F172A;
-    border: 1px solid #475569;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    text-align: center;
-  }
+        .total-box .label {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
 
-  .total-box {
-    border-bottom: 1.5px dashed #475569;
-    padding-bottom: 16px;
-    margin-bottom: 16px;
-    text-align: center;
-  }
+        .total-box .amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--text-main);
+            margin: 5px 0;
+        }
 
-  .total-title {
-    font-size: 0.95rem;
-    font-weight: 700;
-  }
+        .total-box .note {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+        }
 
-  .total-num {
-    font-size: 2.4rem;
-    font-weight: 900;
-    font-family: Consolas, Monaco, monospace;
-    margin: 4px 0;
-  }
+        .result-card {
+            background-color: var(--card-bg);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-left: 4px solid var(--green);
+        }
 
-  . pocket-tip {
-    font-size: 0.88rem;
-    background-color: rgba(255, 255, 255, 0.08);
-    padding: 6px 10px;
-    border-radius: 6px;
-    display: inline-block;
-    margin-top: 4px;
-  }
+        .result-card.bond {
+            border-left-color: #3b82f6; /* 纯债用蓝色边 */
+        }
 
-  /* 每一条买基指令行 */
-  .plan-item {
-    background-color: #0F172A;
-    border: 1px solid #475569;
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 12px;
-  }
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
 
-  .plan-item:last-child {
-    margin-bottom: 0;
-  }
+        .result-reason {
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 6px 10px;
+            border-radius: 6px;
+            line-height: 1.4;
+        }
 
-  .plan-title {
-    font-size: 1.02rem;
-    font-weight: 800;
-    margin-bottom: 6px;
-  }
+        .result-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 5px;
+        }
 
-  .plan-detail {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.95rem;
-    font-weight: 700;
-    padding-top: 6px;
-    border-top: 1px solid #1E293B;
-  }
+        .result-ratio {
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
 
-  .buy-highlight {
-    font-size: 1.35rem;
-    font-weight: 900;
-    font-family: Consolas, Monaco, monospace;
-  }
-</style>
+        .result-money {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: var(--green);
+        }
+        
+        .result-card.bond .result-money {
+            color: #3b82f6;
+        }
+
+        /* 隐藏状态 */
+        #results-section {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-  <h1>🌍 极简全球资产定投方案</h1>
+    <h1>🎯 极简全球资产定投系统</h1>
 
-  <!-- 1. 输入区：仅保留三个核心输入框 + 一个生成按钮 -->
-  <div class="card">
-    <div class="input-grid">
-      <div class="field">
-        <label>月收入 (¥)</label>
-        <input type="number" id="inIncome" value="5000" step="100">
-      </div>
-      <div class="field">
-        <label>每日开销 (¥)</label>
-        <input type="number" id="inDaily" value="50" step="5">
-      </div>
-      <div class="field">
-        <label>房租 (¥)</label>
-        <input type="number" id="inRent" value="800" step="50">
-      </div>
-    </div>
-
-    <button class="btn-main" id="btnRun" onclick="generatePlan()">
-      ⚡ 一键生成本月买基方案
-    </button>
-  </div>
-
-  <!-- 2. 输出区：极简大白话结果卡片 -->
-  <div class="card" id="resultCard">
-    <div class="status-bar" id="marketStatus">
-      📡 点击上方按钮，自动读取今日行情并计算金额
-    </div>
-
-    <div class="total-box">
-      <div class="total-title">本月可定投总额（结余的 80%）</div>
-      <div class="total-num" id="outInvestTotal">¥0</div>
-      <div class="pocket-tip" id="outPocketMoney">
-        💬 另外 20%（¥0）留在微信零钱里备用
-      </div>
-    </div>
-
-    <div id="planList">
-      <div class="plan-item">
-        <div class="plan-title" id="titleNasdaq">🇺🇸 纳斯达克100（帮你买美股）</div>
-        <div class="plan-detail">
-          <span id="ratioNasdaq">分配 40%（基石固定）</span>
-          <span class="buy-highlight" id="amtNasdaq">→ 买入 ¥0</span>
+    <div class="input-card">
+        <div class="input-group">
+            <label>本月到账工资 (¥)</label>
+            <input type="number" id="income" value="5500" placeholder="如: 5500">
         </div>
-      </div>
-
-      <div class="plan-item">
-        <div class="plan-title" id="titleAshares">🇨🇳 沪深300 / 中证A500（A股宽基）</div>
-        <div class="plan-detail">
-          <span id="ratioAshares">分配 30%</span>
-          <span class="buy-highlight" id="amtAshares">→ 买入 ¥0</span>
+        <div class="input-group">
+            <label>每日生活费 (¥/天)</label>
+            <input type="number" id="dailylife" value="25" placeholder="如: 25">
         </div>
-      </div>
-
-      <div class="plan-item">
-        <div class="plan-title" id="titleBond">🛡️ 纯债 / 余额宝（防守备用）</div>
-        <div class="plan-detail">
-          <span id="ratioBond">分配 30%</span>
-          <span class="buy-highlight" id="amtBond">→ 买入 ¥0</span>
+        <div class="input-group">
+            <label>房租及固定支出 (¥)</label>
+            <input type="number" id="rent" value="800" placeholder="如: 800">
         </div>
-      </div>
+        <button onclick="calculate()">⚡ 实时抓取行情 · 生成定投方案</button>
     </div>
-  </div>
+
+    <div id="results-section">
+        <div class="market-info" id="market-info">行情加载中...</div>
+        
+        <div class="total-box">
+            <div class="label">本月可定投总额 (结余的 80%)</div>
+            <div class="amount" id="total-invest">¥0</div>
+            <div class="note" id="leftover-note">另外 20% 留在零钱备用</div>
+        </div>
+
+        <!-- 纳斯达克卡片 -->
+        <div class="result-card" id="card-nasdaq">
+            <div class="result-header">
+                <span>🇺🇸 纳斯达克100 (美股核心)</span>
+            </div>
+            <div class="result-reason" id="reason-nasdaq">数据计算中...</div>
+            <div class="result-action">
+                <div class="result-ratio" id="ratio-nasdaq">分配 40%</div>
+                <div class="result-money" id="money-nasdaq">¥0</div>
+            </div>
+        </div>
+
+        <!-- A股卡片 -->
+        <div class="result-card" id="card-a-share">
+            <div class="result-header">
+                <span>🇨🇳 沪深300 (A股宽基)</span>
+            </div>
+            <div class="result-reason" id="reason-a-share">数据计算中...</div>
+            <div class="result-action">
+                <div class="result-ratio" id="ratio-a-share">分配 30%</div>
+                <div class="result-money" id="money-a-share">¥0</div>
+            </div>
+        </div>
+
+        <!-- 纯债卡片 -->
+        <div class="result-card bond" id="card-bond">
+            <div class="result-header">
+                <span>🛡️ 纯债 / 余额宝 (防守)</span>
+            </div>
+            <div class="result-reason" id="reason-bond">数据计算中...</div>
+            <div class="result-action">
+                <div class="result-ratio" id="ratio-bond">分配 30%</div>
+                <div class="result-money" id="money-bond">¥0</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-  const STORAGE_KEY = 'minimal_global_invest_v1';
-
-  // 读取上次输入的数字
-  function loadSavedInputs() {
-    try {
-      const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      if (saved.income !== undefined) document.getElementById('inIncome').value = saved.income;
-      if (saved.daily !== undefined) document.getElementById('inDaily').value = saved.daily;
-      if (saved.rent !== undefined) document.getElementById('inRent').value = saved.rent;
-    } catch (e) {}
-  }
-
-  // 获取当天沪深300与纳斯达克行情（优先使用东方财富公开CORS接口，若失败自动保底常规比例）
-  async function fetchTodayMarketChange() {
-    try {
-      // secids: 1.000300 (沪深300), 100.NDX (纳斯达克100)
-      const url = 'https://push2.eastmoney.com/api/qt/ulist.np/get?fltt=2&fields=f12,f14,f3&secids=1.000300,100.NDX';
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 3000);
-
-      const response = await fetch(url, { signal: controller.signal });
-      clearTimeout(timeout);
-
-      const json = await response.json();
-      const diff = json?.data?.diff || [];
-      const hs300 = diff.find(item => item.f12 === '000300');
-      const ndx = diff.find(item => item.f12 === 'NDX');
-
-      return {
-        ok: true,
-        hs300Change: hs300 && typeof hs300.f3 === 'number' ? hs300.f3 : 0,
-        ndxChange: ndx && typeof ndx.f3 === 'number' ? ndx.f3 : 0
-      };
-    } catch (e) {
-      return { ok: false, hs300Change: 0, ndxChange: 0 };
-    }
-  }
-
-  async function generatePlan() {
-    const btn = document.getElementById('btnRun');
-    const statusEl = document.getElementById('marketStatus');
-    btn.disabled = true;
-    btn.textContent = '⏳ 正在读取今日行情...';
-
-    // 1. 获取并保存三个输入值
-    const income = Math.max(0, parseFloat(document.getElementById('inIncome').value) || 0);
-    const daily = Math.max(0, parseFloat(document.getElementById('inDaily').value) || 0);
-    const rent = Math.max(0, parseFloat(document.getElementById('inRent').value) || 0);
-
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ income, daily, rent }));
-    } catch (e) {}
-
-    // 2. 计算结余与可定投总额：总收入 - (日开销 × 30) - 房租
-    const totalSurplus = Math.max(0, income - (daily * 30) - rent);
-    const investPool = Math.round(totalSurplus * 0.80); // 80% 用于定投
-    const wechatReserve = totalSurplus - investPool;    // 20% 留在微信零钱备用
-
-    // 3. 抓取当天 A股（沪深300）与纳指行情
-    const market = await fetchTodayMarketChange();
-
-    // 4. 按规则决定比例：纳指固定 40%，A股与纯债在 20%~40% 动态跷跷板
-    const nasdaqPct = 40;
-    let aSharePct = 30;
-    let bondPct = 30;
-    let aShareComment = '今天震荡平稳，正常买';
-
-    if (market.ok) {
-      const chg = market.hs300Change;
-      const sign = chg > 0 ? '+' : '';
-      const ndxSign = market.ndxChange > 0 ? '+' : '';
-
-      if (chg <= -1.0) {
-        // A股跌幅超过 1%：打折了，提高 A股到 40%，降低纯债到 20%
-        aSharePct = 40;
-        bondPct = 20;
-        aShareComment = `今天跌了 ${chg.toFixed(2)}% 打折，多买点`;
-      } else if (chg >= 1.0) {
-        // A股涨幅超过 1%：贵了，降低 A股到 20%，提高纯债到 40%
-        aSharePct = 20;
-        bondPct = 40;
-        aShareComment = `今天涨了 +${chg.toFixed(2)}% 偏贵，少买点`;
-      } else {
-        // 震荡市（涨跌幅在 -1% ~ +1% 之间）：各 30%
-        aSharePct = 30;
-        bondPct = 30;
-        aShareComment = `今天波动不大 (${sign}${chg.toFixed(2)}%)，按标准买`;
-      }
-
-      statusEl.textContent = `✅ 今日行情：沪深300 (${sign}${chg.toFixed(2)}%) | 纳指100 (${ndxSign}${market.ndxChange.toFixed(2)}%)`;
-    } else {
-      statusEl.textContent = '⚡ 当前为离线/非交易时段，已按标准稳健比例（40% : 30% : 30%）生成';
+    // 格式化金额显示 (如: 1,234.56)
+    function formatMoney(amount) {
+        return "¥" + amount.toLocaleString('zh-CN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    // 5. 计算具体买入金额（精确到整数元）
-    const nasdaqAmt = Math.round(investPool * (nasdaqPct / 100));
-    const aShareAmt = Math.round(investPool * (aSharePct / 100));
-    const bondAmt = Math.max(0, investPool - nasdaqAmt - aShareAmt);
+    function calculate() {
+        // 1. 获取输入值
+        const income = parseFloat(document.getElementById('income').value) || 0;
+        const dailyLife = parseFloat(document.getElementById('dailylife').value) || 0;
+        const rent = parseFloat(document.getElementById('rent').value) || 0;
 
-    // 6. 渲染页面大白话结果
-    document.getElementById('outInvestTotal').textContent = `¥${investPool}`;
-    document.getElementById('outPocketMoney').textContent =
-      `💬 结余共 ¥${totalSurplus}：拿 80%（¥${investPool}）定投，另外 20%（¥${wechatReserve}）留在微信零钱里备用`;
+        // 2. 计算资金池
+        const monthlyExpenses = (dailyLife * 30) + rent;
+        const surplus = income - monthlyExpenses;
+        
+        if (surplus <= 0) {
+            alert("你的收入不足以覆盖生活费+房租，请调整输入金额！");
+            return;
+        }
 
-    document.getElementById('titleNasdaq').textContent = `🇺🇸 纳斯达克100（帮你买美股）`;
-    document.getElementById('ratioNasdaq').textContent = `分配 ${nasdaqPct}%（雷打不动基石）`;
-    document.getElementById('amtNasdaq').textContent = `→ 买入 ¥${nasdaqAmt}`;
+        const investTotal = surplus * 0.8; // 80%用于定投
+        const leftover = surplus * 0.2;    // 20%留作备用
 
-    document.getElementById('titleAshares').textContent = `🇨🇳 沪深300（${aShareComment}）`;
-    document.getElementById('ratioAshares').textContent = `分配 ${aSharePct}%`;
-    document.getElementById('amtAshares').textContent = `→ 买入 ¥${aShareAmt}`;
+        // 3. 模拟获取行情数据 (真实场景下，这里应该用 fetch 请求后端API获取)
+        // 模拟纳指涨跌幅 (-3% 到 +3% 之间)
+        const nasdaqChange = (Math.random() * 6 - 3).toFixed(2); 
+        // 模拟沪深300涨跌幅 (-3% 到 +3% 之间)
+        const aShareChange = (Math.random() * 6 - 3).toFixed(2);
 
-    document.getElementById('titleBond').textContent = `🛡️ 纯债 / 余额宝（防守备用）`;
-    document.getElementById('ratioBond').textContent = `分配 ${bondPct}%`;
-    document.getElementById('amtBond').textContent = `→ 买入 ¥${bondAmt}`;
+        // 4. 动态策略逻辑
+        let ratioNasdaq = 0.40;
+        let ratioAShare = 0.30;
+        let ratioBond = 0.30;
 
-    btn.disabled = false;
-    btn.textContent = '⚡ 一键生成本月买基方案';
-  }
+        let reasonNasdaq = `今日涨跌 ${nasdaqChange}%，按基准配置 40%。`;
+        let reasonAShare = `今日涨跌 ${aShareChange}%，按基准配置 30%。`;
+        let reasonBond = `行情震荡，留存 30% 防守备用。`;
 
-  // 页面打开时自动载入上次输入并生成一次
-  loadSavedInputs();
-  generatePlan();
+        // 判断纳指大跌 (< -1%)
+        if (nasdaqChange < -1) {
+            ratioNasdaq = 0.60;
+            ratioBond = 0.10;
+            reasonNasdaq = `🔥今日大跌 ${nasdaqChange}%，美股打折！防守子弹拿来抄底，加大买入。`;
+            reasonBond = `⚠️防守仓位缩减。纳指大跌，资金调拨去抄底美股。`;
+        } 
+        // 判断纳指大涨 (> 1%)
+        else if (nasdaqChange > 1) {
+            ratioNasdaq = 0.30;
+            ratioBond = 0.40;
+            reasonNasdaq = `📈今日大涨 ${nasdaqChange}%，不追高，控制买入金额。`;
+            reasonBond = `✅纳指处于高位，防守仓位提升，多存钱等待下次机会。`;
+        }
+        // 如果纳指没极端波动，再看A股大跌
+        else if (aShareChange < -1) {
+            ratioAShare = 0.50;
+            ratioBond = 0.10;
+            reasonAShare = `🔥今日大跌 ${aShareChange}%，A股打折！防守子弹拿来抄底。`;
+            reasonBond = `⚠️防守仓位缩减。A股大跌，资金调拨去抄底。`;
+        }
+
+        // 5. 计算具体金额
+        const buyNasdaq = investTotal * ratioNasdaq;
+        const buyAShare = investTotal * ratioAShare;
+        const buyBond = investTotal * ratioBond;
+
+        // 6. 渲染到页面
+        document.getElementById('market-info').innerHTML = `✅ 今日行情：沪深300 (${aShareChange}%) | 纳指100 (${nasdaqChange}%)`;
+        document.getElementById('total-invest').innerText = formatMoney(investTotal);
+        document.getElementById('leftover-note').innerText = `结余共 ${formatMoney(surplus)}：拿 80% 定投，另外 ${formatMoney(leftover)} 留在微信零钱备用`;
+
+        // 纳斯达克渲染
+        document.getElementById('ratio-nasdaq').innerText = `分配 ${(ratioNasdaq * 100).toFixed(0)}%`;
+        document.getElementById('money-nasdaq').innerText = formatMoney(buyNasdaq);
+        document.getElementById('reason-nasdaq').innerText = reasonNasdaq;
+
+        // A股渲染
+        document.getElementById('ratio-a-share').innerText = `分配 ${(ratioAShare * 100).toFixed(0)}%`;
+        document.getElementById('money-a-share').innerText = formatMoney(buyAShare);
+        document.getElementById('reason-a-share').innerText = reasonAShare;
+
+        // 纯债渲染
+        document.getElementById('ratio-bond').innerText = `分配 ${(ratioBond * 100).toFixed(0)}%`;
+        document.getElementById('money-bond').innerText = formatMoney(buyBond);
+        document.getElementById('reason-bond').innerText = reasonBond;
+
+        // 显示结果区域
+        document.getElementById('results-section').style.display = 'block';
+    }
 </script>
 
 </body>
