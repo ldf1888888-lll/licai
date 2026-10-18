@@ -3718,13 +3718,15 @@ function queuePurchaseLookup(codes) {
   });
   pumpPurchaseQueue();
 }
-function purchaseBadge(code) {
-  const p = purchaseOf(code);
+function purchaseBadgeFrom(p) {
   if (!p) return '';
   if (p.suspended) return `<span class="buy-badge buy-stop">暂停申购</span>`;
   if (p.max) return `<span class="buy-badge buy-limited">限购 ${money(p.max, 0)}/日</span>`;
   if (p.limited) return `<span class="buy-badge buy-limited">限大额</span>`;
   return `<span class="buy-badge buy-open">可申购</span>`;
+}
+function purchaseBadge(code) {
+  return purchaseBadgeFrom(purchaseOf(code));
 }
 function purchaseMonthlyCap(p) {
   if (!p || p.suspended) return 0;
@@ -3827,23 +3829,42 @@ const PERIOD_CACHE_KEY = 'hengce_periods_v1';
 let periodCache = {};
 try { periodCache = JSON.parse(localStorage.getItem(PERIOD_CACHE_KEY) || '{}') || {}; } catch (e) { periodCache = {}; }
 function savePeriodCache() { try { localStorage.setItem(PERIOD_CACHE_KEY, JSON.stringify(periodCache)); } catch (e) {} }
-function fetchFundPeriod(code) {
-  if (periodCache[code] && periodCache[code].day === new Date().toISOString().slice(0, 10)) {
-    return Promise.resolve(periodCache[code]);
-  }
-  // 天天基金历史净值脚本：浏览器可直接加载，不依赖 Referer
-  return loadFundHistoryFromEastmoney(code).then(item => {
-    if (!item) return null;
-    const data = {
-      code, day: new Date().toISOString().slice(0, 10),
-      m1: item.syl1m, m3: item.syl3m, m6: item.syl6m, y1: item.syl1y,
-      y2: null, y3: null, ytd: null, since: null,
-      maxDD: item.maxDD, vol: item.vol
+async function loadFundHistoryFromApi(code) {
+  if (!(backendAvailable() && BACKEND.online)) return null;
+  try {
+    const res = await fetch(`/api/fundhistory?code=${code}`, { cache: 'no-store' });
+    if (!res.ok) return null;
+    const json = await res.json();
+    const rows = json && json.Datas;
+    if (!Array.isArray(rows) || rows.length < 30) return null;
+    const ascending = rows.slice().reverse();
+    const closes = ascending.map(r => Number(r.DWJZ)).filter(v => Number.isFinite(v) && v > 0);
+    if (closes.length < 30) return null;
+    const metrics = metricsFromCloses(closes.slice(-260));
+    if (!metrics) return null;
+    return {
+      code, name: '', closes: closes.slice(-260), dates: ascending.map(r => r.FSRQ),
+      syl1m: metrics.r20, syl3m: metrics.r60, syl6m: metrics.r120, syl1y: metrics.r250,
+      vol: metrics.vol, maxDD: metrics.maxDD, sharpe: metrics.sharpe
     };
-    periodCache[code] = data;
-    savePeriodCache();
-    return data;
-  }).catch(() => null);
+  } catch (e) { return null; }
+}
+async function fetchFundPeriod(code, lightOnly = false) {
+  if (periodCache[code] && periodCache[code].day === new Date().toISOString().slice(0, 10)) {
+    return periodCache[code];
+  }
+  let item = await loadFundHistoryFromApi(code);
+  if (!item && !lightOnly) item = await loadFundHistoryFromEastmoney(code);
+  if (!item) return null;
+  const data = {
+    code, day: new Date().toISOString().slice(0, 10),
+    m1: item.syl1m, m3: item.syl3m, m6: item.syl6m, y1: item.syl1y,
+    y2: null, y3: null, ytd: null, since: null,
+    maxDD: item.maxDD, vol: item.vol
+  };
+  periodCache[code] = data;
+  savePeriodCache();
+  return data;
 }
 function applyPeriod(code, data) {
   const f = LIVE.allFunds.find(x => x.code === code);
@@ -4355,7 +4376,7 @@ function openFundDetail(code) {
     <div class="tag-list" style="margin-top:0">
       <span>${esc(group)}</span><span>${code}</span>${q ? `<span>净值 ${q.nav.toFixed(4)}</span><span>${q.date}</span>` : ''}
       ${Number.isFinite(score) ? `<span>AI ${Math.round(score)}</span>` : ''}
-      ${purchaseBadge(code)}
+      ${purchaseBadgeFrom(p)}
     </div>
     <div class="fund-detail-grid">
       <div class="fund-detail-item"><span>最新净值</span><b>${q ? q.nav.toFixed(4) : (f.nav ? f.nav.toFixed(4) : '—')}</b></div>
@@ -4391,6 +4412,15 @@ function openFundDetail(code) {
     fetchPurchaseInfo(code).then(updated => {
       detailPurchasePending.delete(code);
       if (!updated) return;
+      if (!$id('modal').classList.contains('is-hidden') && $id('modalTitle').textContent === f.name) openFundDetail(code);
+    });
+  }
+  if (!Number.isFinite(y1) && !periodCache[code] && /^\d{6}$/.test(code) && !detailPeriodPending.has(code)) {
+    detailPeriodPending.add(code);
+    fetchFundPeriod(code, true).then(d => {
+      detailPeriodPending.delete(code);
+      if (!d) return;
+      applyPeriod(code, d);
       if (!$id('modal').classList.contains('is-hidden') && $id('modalTitle').textContent === f.name) openFundDetail(code);
     });
   }
