@@ -3619,6 +3619,7 @@ let purchaseRenderTimer = null;
 let purchaseSaveTimer = null;
 const detailPurchasePending = new Set();
 const detailPeriodPending = new Set();
+const detailHistoryFailed = new Set();
 
 function purchaseOf(code) {
   return (LIVE.purchase && LIVE.purchase[code]) || (purchaseCache.data && purchaseCache.data[code]) || null;
@@ -4277,7 +4278,7 @@ function openModal(title, html) {
   $id('modalBody').innerHTML = html;
   $id('modal').classList.remove('is-hidden');
 }
-function closeModal() { $id('modal').classList.add('is-hidden'); }
+function closeModal() { $id('modal').classList.add('is-hidden'); try { detailHistoryFailed.clear(); } catch (e) {} }
 
 
 function requestNotify() {
@@ -4398,9 +4399,8 @@ function openFundDetail(code) {
     ${p && p.suspended ? '<p class="amber">当前暂停申购/封闭，页面 1 不会给它分配本月加仓金额；赎回通常不受影响，以基金公告为准。</p>' : ''}
     ${p && p.max ? `<p class="hint">单日限购 ${money(p.max, 0)}，按每月约 20 个交易日估算，本月最多约 ${money(p.max * 20, 0)}；超过部分需分多日或留现金。</p>` : ''}
     <h3>AI 判断</h3>
-    <p>${Number.isFinite(y1) ? `近1年 ${pct1(y1)}、近6月 ${pct1(m6)}；${(score || 0) >= 65 ? '趋势与稳定性较好，可作为长期定投候选。' : (score || 0) >= 50 ? '中性偏稳，建议分批、不要一次重仓。' : '当前评分偏弱，先观察或小仓位。'}` : '长周期历史净值尚未加载。点下方“加载完整历史净值”再读取，不会在点击时自动下载大文件。'}</p>
+    <p>${Number.isFinite(y1) ? `近1年 ${pct1(y1)}、近6月 ${pct1(m6)}；${(score || 0) >= 65 ? '趋势与稳定性较好，可作为长期定投候选。' : (score || 0) >= 50 ? '中性偏稳，建议分批、不要一次重仓。' : '当前评分偏弱，先观察或小仓位。'}` : detailHistoryFailed.has(code) ? '历史净值读取失败，可关闭详情后重新点击基金重试。' : '正在自动读取历史净值，完成后会显示近1月/3月/6月/1年和回撤。'}</p>
     ${meta ? `<h3>你的持仓提醒</h3><p>加仓窗口：${fmtMD(meta.nextAddAt)}；${holdText(meta)}；${reviewText(meta)}。</p>` : ''}
-    ${!Number.isFinite(y1) && /^\d{6}$/.test(code) ? '<button class="btn ghost wide" id="detailLoadHistory">加载完整历史净值</button>' : ''}
     <div class="fund-detail-actions">
       <button class="btn ${starred ? 'btn-primary' : 'btn-ghost'}" data-add-watch="${code}">${starred ? '已在自选 · 点击移除' : '+ 加入自选'}</button>
       <a class="btn btn-ghost" href="https://fund.eastmoney.com/${code}.html" target="_blank" rel="noopener">基金公司页面</a>
@@ -4415,32 +4415,16 @@ function openFundDetail(code) {
       if (!$id('modal').classList.contains('is-hidden') && $id('modalTitle').textContent === f.name) openFundDetail(code);
     });
   }
-  if (!Number.isFinite(y1) && !periodCache[code] && /^\d{6}$/.test(code) && !detailPeriodPending.has(code)) {
+  if (!Number.isFinite(y1) && !periodCache[code] && /^\d{6}$/.test(code) && !detailPeriodPending.has(code) && !detailHistoryFailed.has(code)) {
     detailPeriodPending.add(code);
-    fetchFundPeriod(code, true).then(d => {
+    fetchFundPeriod(code, false).then(d => {
       detailPeriodPending.delete(code);
-      if (!d) return;
+      if (!d) { detailHistoryFailed.add(code); if (!$id('modal').classList.contains('is-hidden') && $id('modalTitle').textContent === f.name) openFundDetail(code); return; }
+      detailHistoryFailed.delete(code);
       applyPeriod(code, d);
       if (!$id('modal').classList.contains('is-hidden') && $id('modalTitle').textContent === f.name) openFundDetail(code);
     });
   }
-  const historyBtn = $id('detailLoadHistory');
-  if (historyBtn) historyBtn.addEventListener('click', async () => {
-    if (detailPeriodPending.has(code)) return;
-    detailPeriodPending.add(code);
-    historyBtn.disabled = true;
-    historyBtn.textContent = '读取历史净值中…';
-    const d = await fetchFundPeriod(code);
-    detailPeriodPending.delete(code);
-    if (d) {
-      applyPeriod(code, d);
-      if (!$id('modal').classList.contains('is-hidden') && $id('modalTitle').textContent === f.name) openFundDetail(code);
-    } else {
-      historyBtn.disabled = false;
-      historyBtn.textContent = '读取失败，重试';
-      showToast('历史净值暂时读取失败，基金详情仍可查看。');
-    }
-  });
 }
 
 function fundModalRow(f, rank) {
