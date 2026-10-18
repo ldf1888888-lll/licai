@@ -472,7 +472,7 @@ try { var s = JSON.parse(localStorage.getItem('hengce_v10_state') || 'null'); if
 
   <div class="backend-bar">
     <span id="backendStatus">本地缓存 · 未连接后台</span>
-    <button class="link-btn" id="backendBtn">后台记录</button>
+    <span><button class="link-btn" id="cloudBtn">云同步</button> <button class="link-btn" id="backendBtn">后台记录</button></span>
   </div>
 
   <!-- ================= PAGE 1 ================= -->
@@ -2600,6 +2600,7 @@ function readState() {
 function save() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); localStorage.setItem('lica_local_saved_at', new Date().toISOString()); } catch (e) {}
   try { if (typeof scheduleBackendSave === 'function') scheduleBackendSave(); } catch (e) {}
+  try { if (typeof scheduleCloudPush === 'function') scheduleCloudPush(); } catch (e) {}
 }
 
 function showToast(message) {
@@ -3465,6 +3466,139 @@ function openBackendPanel() {
 }
 
 
+
+/* ============================================================
+   云同步：Cloudflare Worker + KV（可选）
+   ============================================================ */
+const CLOUD_STORAGE_KEY = 'lica_cloud_v1';
+let CLOUD = { endpoint: '', key: '', auto: false, lastSync: '', busy: false, timer: null, restoring: false };
+try {
+  const raw = localStorage.getItem(CLOUD_STORAGE_KEY);
+  if (raw) CLOUD = Object.assign(CLOUD, JSON.parse(raw));
+} catch (e) {}
+function saveCloudSettings() {
+  try {
+    localStorage.setItem(CLOUD_STORAGE_KEY, JSON.stringify({
+      endpoint: CLOUD.endpoint, key: CLOUD.key, auto: CLOUD.auto, lastSync: CLOUD.lastSync
+    }));
+  } catch (e) {}
+}
+function cloudConfigured() { return !!(CLOUD.endpoint && CLOUD.key); }
+function cloudBase() { return String(CLOUD.endpoint || '').replace(/\/+$/, ''); }
+async function cloudRequest(path, options = {}, timeout = 10000) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeout);
+  try {
+    const res = await fetch(cloudBase() + path, {
+      ...options, signal: ctrl.signal, cache: 'no-store',
+      headers: Object.assign({ 'X-Sync-Key': CLOUD.key, 'Content-Type': 'application/json' }, options.headers || {})
+    });
+    const text = await res.text();
+    let data = {};
+    try { data = text ? JSON.parse(text) : {}; } catch (e) { data = { raw: text }; }
+    if (!res.ok) throw new Error((data && (data.error || data.message)) || ('HTTP ' + res.status));
+    return data;
+  } finally { clearTimeout(timer); }
+}
+async function cloudPush(manual = false) {
+  if (!cloudConfigured() || CLOUD.busy) return false;
+  CLOUD.busy = true;
+  try {
+    const savedAt = new Date().toISOString();
+    await cloudRequest('/state', { method: 'POST', body: JSON.stringify({ state, savedAt, device: navigator.platform || 'web' }) });
+    CLOUD.lastSync = savedAt;
+    saveCloudSettings();
+    if (manual) showToast('已上传到云端。');
+    return true;
+  } catch (e) {
+    if (manual) showToast('云同步失败：' + e.message);
+    return false;
+  } finally {
+    CLOUD.busy = false;
+  }
+}
+function scheduleCloudPush() {
+  if (!CLOUD.auto || !cloudConfigured() || CLOUD.restoring) return;
+  clearTimeout(CLOUD.timer);
+  CLOUD.timer = setTimeout(() => { cloudPush(false); }, 1200);
+}
+function applyCloudState(remote) {
+  CLOUD.restoring = true;
+  state = mergeState(defaultState(), remote.state);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  localStorage.setItem('lica_local_saved_at', remote.savedAt || new Date().toISOString());
+  sanitizeWatchlist();
+  generateOneMeal(false);
+  renderFinance(); renderPlate(); renderMarket(); renderStatus();
+  CLOUD.restoring = false;
+}
+async function cloudPull(manual = false) {
+  if (!cloudConfigured() || CLOUD.busy) return false;
+  CLOUD.busy = true;
+  try {
+    const remote = await cloudRequest('/state');
+    if (!remote || !remote.state) {
+      if (manual) showToast('云端还没有记录，先点“上传到云端”。');
+      return false;
+    }
+    const localAt = localStorage.getItem('lica_local_saved_at') || '';
+    if (!manual && remote.savedAt && localAt && remote.savedAt <= localAt) {
+      cloudPush(false);
+      return false;
+    }
+    applyCloudState(remote);
+    CLOUD.lastSync = remote.savedAt || new Date().toISOString();
+    saveCloudSettings();
+    if (manual) showToast('已从云端恢复。');
+    return true;
+  } catch (e) {
+    if (manual) showToast('云同步失败：' + e.message);
+    return false;
+  } finally {
+    CLOUD.busy = false;
+  }
+}
+async function initCloud() {
+  if (!cloudConfigured() || !CLOUD.auto) return;
+  try {
+    const remote = await cloudRequest('/state');
+    const localAt = localStorage.getItem('lica_local_saved_at') || '';
+    if (remote && remote.state && remote.savedAt && remote.savedAt > localAt) {
+      applyCloudState(remote);
+      CLOUD.lastSync = remote.savedAt;
+      saveCloudSettings();
+      showToast('已从云端恢复最新记录。');
+    } else if (remote && !remote.state) {
+      await cloudPush(false);
+    } else {
+      await cloudPush(false);
+    }
+  } catch (e) {}
+}
+function openCloudPanel() {
+  const status = CLOUD.lastSync ? new Date(CLOUD.lastSync).toLocaleString('zh-CN') : '尚未同步';
+  openModal('云同步', `<p>把状态存到你自己的 Cloudflare Worker + KV，手机和电脑共用同一套地址和同步密钥。</p>
+    <div class="field-row"><label>Worker 地址</label><div class="money-input" style="min-width:200px"><input id="cloudEndpoint" placeholder="https://lica-sync.xxx.workers.dev" value="${esc(CLOUD.endpoint || '')}" style="text-align:left;font-size:12px"></div></div>
+    <div class="field-row"><label>同步密钥</label><div class="money-input" style="min-width:200px"><input id="cloudKey" type="password" placeholder="与 Worker 的 SYNC_KEY 一致" value="${esc(CLOUD.key || '')}" style="text-align:left;font-size:12px"></div></div>
+    <label class="hint" style="display:flex;gap:6px;align-items:center"><input id="cloudAuto" type="checkbox" ${CLOUD.auto ? 'checked' : ''}> 自动同步（保存后上传，打开时拉取）</label>
+    <p class="hint">最近同步：${status}。密钥只存本机浏览器，不写进代码，也不上传到云端。</p>
+    <div class="fund-detail-actions">
+      <button class="btn primary" id="cloudSaveBtn">保存设置</button>
+      <button class="btn ghost" id="cloudPushBtn">上传到云端</button>
+      <button class="btn ghost" id="cloudPullBtn">从云端恢复</button>
+    </div>`);
+  $id('cloudSaveBtn').addEventListener('click', () => {
+    CLOUD.endpoint = ($id('cloudEndpoint').value || '').trim();
+    CLOUD.key = ($id('cloudKey').value || '').trim();
+    CLOUD.auto = !!$id('cloudAuto').checked;
+    saveCloudSettings();
+    showToast(cloudConfigured() ? '云同步设置已保存。' : '还缺 Worker 地址或同步密钥。');
+    if (cloudConfigured()) { closeModal(); initCloud(); }
+  });
+  $id('cloudPushBtn').addEventListener('click', () => { CLOUD.endpoint = ($id('cloudEndpoint').value || '').trim(); CLOUD.key = ($id('cloudKey').value || '').trim(); saveCloudSettings(); cloudPush(true); });
+  $id('cloudPullBtn').addEventListener('click', () => { CLOUD.endpoint = ($id('cloudEndpoint').value || '').trim(); CLOUD.key = ($id('cloudKey').value || '').trim(); saveCloudSettings(); cloudPull(true); });
+}
+
 /* ============================================================
    基金申购状态 / 单日限购（真实基金基础信息）
    ============================================================ */
@@ -3483,6 +3617,8 @@ const purchaseFailed = new Map();
 let purchaseActive = 0;
 let purchaseRenderTimer = null;
 let purchaseSaveTimer = null;
+const detailPurchasePending = new Set();
+const detailPeriodPending = new Set();
 
 function purchaseOf(code) {
   return (LIVE.purchase && LIVE.purchase[code]) || (purchaseCache.data && purchaseCache.data[code]) || null;
@@ -4241,22 +4377,40 @@ function openFundDetail(code) {
     ${p && p.suspended ? '<p class="amber">当前暂停申购/封闭，页面 1 不会给它分配本月加仓金额；赎回通常不受影响，以基金公告为准。</p>' : ''}
     ${p && p.max ? `<p class="hint">单日限购 ${money(p.max, 0)}，按每月约 20 个交易日估算，本月最多约 ${money(p.max * 20, 0)}；超过部分需分多日或留现金。</p>` : ''}
     <h3>AI 判断</h3>
-    <p>${Number.isFinite(y1) ? `近1年 ${pct1(y1)}、近6月 ${pct1(m6)}；${(score || 0) >= 65 ? '趋势与稳定性较好，可作为长期定投候选。' : (score || 0) >= 50 ? '中性偏稳，建议分批、不要一次重仓。' : '当前评分偏弱，先观察或小仓位。'}` : '该基金还没有加载长周期历史净值，正在后台读取；读取后会显示近1月/3月/6月/1年与回撤。'}</p>
+    <p>${Number.isFinite(y1) ? `近1年 ${pct1(y1)}、近6月 ${pct1(m6)}；${(score || 0) >= 65 ? '趋势与稳定性较好，可作为长期定投候选。' : (score || 0) >= 50 ? '中性偏稳，建议分批、不要一次重仓。' : '当前评分偏弱，先观察或小仓位。'}` : '长周期历史净值尚未加载。点下方“加载完整历史净值”再读取，不会在点击时自动下载大文件。'}</p>
     ${meta ? `<h3>你的持仓提醒</h3><p>加仓窗口：${fmtMD(meta.nextAddAt)}；${holdText(meta)}；${reviewText(meta)}。</p>` : ''}
+    ${!Number.isFinite(y1) && /^\d{6}$/.test(code) ? '<button class="btn ghost wide" id="detailLoadHistory">加载完整历史净值</button>' : ''}
     <div class="fund-detail-actions">
       <button class="btn ${starred ? 'btn-primary' : 'btn-ghost'}" data-add-watch="${code}">${starred ? '已在自选 · 点击移除' : '+ 加入自选'}</button>
       <a class="btn btn-ghost" href="https://fund.eastmoney.com/${code}.html" target="_blank" rel="noopener">基金公司页面</a>
     </div>
     <p class="modal-disclaimer">净值与历史数据来自腾讯证券/天天基金；基金资料以基金公司公告为准，不构成投资建议。</p>`;
   openModal(f.name, html);
-  if (/^\d{6}$/.test(code) && !purchaseOf(code)) {
-    fetchPurchaseInfo(code).then(() => {
+  if (/^\d{6}$/.test(code) && !purchaseOf(code) && !detailPurchasePending.has(code)) {
+    detailPurchasePending.add(code);
+    fetchPurchaseInfo(code).then(updated => {
+      detailPurchasePending.delete(code);
+      if (!updated) return;
       if (!$id('modal').classList.contains('is-hidden') && $id('modalTitle').textContent === f.name) openFundDetail(code);
     });
   }
-  if (!Number.isFinite(y1) && !periodCache[code] && /^\d{6}$/.test(code)) {
-    fetchFundPeriod(code).then(d => { if (d) { applyPeriod(code, d); renderMarket(); openFundDetail(code); } });
-  }
+  const historyBtn = $id('detailLoadHistory');
+  if (historyBtn) historyBtn.addEventListener('click', async () => {
+    if (detailPeriodPending.has(code)) return;
+    detailPeriodPending.add(code);
+    historyBtn.disabled = true;
+    historyBtn.textContent = '读取历史净值中…';
+    const d = await fetchFundPeriod(code);
+    detailPeriodPending.delete(code);
+    if (d) {
+      applyPeriod(code, d);
+      if (!$id('modal').classList.contains('is-hidden') && $id('modalTitle').textContent === f.name) openFundDetail(code);
+    } else {
+      historyBtn.disabled = false;
+      historyBtn.textContent = '读取失败，重试';
+      showToast('历史净值暂时读取失败，基金详情仍可查看。');
+    }
+  });
 }
 
 function fundModalRow(f, rank) {
@@ -4374,6 +4528,7 @@ function bind() {
   $id('copyListBtn').addEventListener('click', () => copyText(groceryText(), '一周采购单已复制'));
 
   $id('backendBtn').addEventListener('click', openBackendPanel);
+  $id('cloudBtn').addEventListener('click', openCloudPanel);
   $id('notifyBtn').addEventListener('click', requestNotify);
   $id('checkHoldingBtn').addEventListener('click', () => { renderHoldingCheck(true); });
   $id('allFundSearch').addEventListener('input', e => {
@@ -4505,6 +4660,7 @@ function boot() {
     setInterval(checkReminders, 60000);
     setInterval(() => { if (state.watchlist.length) renderHoldingCheck(false); }, 60000);
     setTimeout(initBackend, 1200);
+    setTimeout(initCloud, 1800);
     setInterval(() => { if (!BACKEND.online && backendAvailable()) initBackend(); }, 60000);
     loadAllFundHistory(FUNDS.map(f => f.code), ev => {
       if (ev === 'history-done') {
