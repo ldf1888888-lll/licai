@@ -47,7 +47,7 @@ input,select{background:none;border:0;outline:none}
 :focus-visible{outline:2px solid var(--brand);outline-offset:2px}
 
 .appbar{
-  position:sticky;top:0;z-index:20;
+  position:sticky;top:0;z-index:40;background:var(--bg);
   display:flex;align-items:center;gap:10px;
   min-height:62px;padding:9px 14px;
   padding-top:calc(9px + env(safe-area-inset-top,0px));
@@ -67,7 +67,7 @@ input,select{background:none;border:0;outline:none}
 .icon-btn:hover{color:var(--text);border-color:var(--line-strong)}
 
 .wrap{width:100%;max-width:760px;margin:0 auto;padding:12px 14px 40px}
-.tabs{display:flex;gap:6px;margin:2px 0 10px}
+.tabs{position:sticky;top:calc(62px + env(safe-area-inset-top,0px));z-index:35;display:flex;gap:6px;margin:0 -2px 10px;padding:6px 2px;background:var(--bg);box-shadow:0 6px 12px -10px rgba(0,0,0,.45)}
 .tab{flex:1;height:40px;border:1px solid var(--line);border-radius:10px;background:var(--panel);font-size:13px;font-weight:600;color:var(--muted)}
 .tab.is-active{background:var(--brand-bg);border-color:var(--brand);color:var(--brand)}
 
@@ -344,6 +344,99 @@ input,select{background:none;border:0;outline:none}
 .fund-detail-item b.amber{color:var(--amber)}
 
 .flat{color:var(--muted)}
+.backend-bar{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 8px;padding:0 2px;font-size:9.5px;color:var(--muted)}
+.backend-bar .link-btn{font-size:9.5px}
+.backend-bar.is-online{color:var(--brand)}
+
+.buy-badge{display:inline-block;font-size:7.8px;line-height:1.35;border-radius:4px;padding:0 4px;margin-left:4px;border:1px solid var(--line-strong);white-space:nowrap;vertical-align:1px}
+.buy-open{color:var(--brand);border-color:var(--brand);background:var(--brand-bg)}
+.buy-limited{color:var(--amber);border-color:var(--amber);background:var(--amber-bg)}
+.buy-stop{color:var(--muted);border-color:var(--line-strong);background:var(--panel-2)}
+
+
+.position-list{margin:2px 0 6px}
+.position-empty{font-size:11px;color:var(--muted);padding:8px 0;line-height:1.6}
+.position-row{display:flex;justify-content:space-between;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.position-row:last-child{border-bottom:0}
+.position-main{min-width:0;flex:1}
+.position-main strong{display:block;font-size:11.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.position-main small{display:block;font-size:8.5px;color:var(--muted);font-family:var(--num);margin-top:1px}
+.position-side{text-align:right;white-space:nowrap}
+.position-side b{display:block;font-family:var(--num);font-size:12px}
+.position-side small{display:block;font-size:8px;color:var(--muted);margin-top:1px}
+.position-side .remove{font-size:8px;color:var(--muted-2);margin-top:2px}
+.record-pos{font-size:8px;color:var(--brand);margin-top:2px}
+.holding-summary{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;font-size:10px;color:var(--muted);padding:7px 0 9px;border-top:1px solid var(--line);margin-top:3px}
+.holding-summary b{font-family:var(--num);font-size:12px;margin-left:2px}
+.holding-summary b.blue{color:var(--brand)}
+
+
+.emergency-line{font-size:10px;color:var(--muted);line-height:1.6;margin:2px 0 4px}
+.emergency-line b{font-family:var(--num);color:var(--text)}
+.emergency-line .ok{color:var(--brand)}
+.emergency-line .gap{color:var(--amber)}
+.search-card{padding:10px 12px}
+.fund-search-box{display:flex;align-items:center;gap:6px;border:1px solid var(--line-strong);border-radius:9px;background:var(--input);padding:0 9px;height:40px}
+.fund-search-box .search-icon{color:var(--brand);font-size:18px;line-height:1}
+.fund-search-box input{flex:1;height:100%;font-size:12px;color:var(--text);background:none;border:0}
+#fundSearchResults{margin-top:6px}
+#fundSearchResults .search-head{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:var(--muted);padding:5px 0}
+#fundSearchResults .search-head b{color:var(--brand);font-family:var(--num)}
+#fundSearchResults .fund-row{padding:7px 0}
+@media (max-width:520px){
+  .tabs{top:calc(58px + env(safe-area-inset-top,0px));padding:5px 2px}
+  .appbar{min-height:58px}
+}
+
+
+.alloc-breakdown{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:9px;padding-top:8px;border-top:1px solid var(--line)}
+.alloc-item{border:1px solid var(--line);border-radius:7px;padding:6px 7px;background:var(--panel-2);min-width:0}
+.alloc-item span{display:block;font-size:8.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.alloc-item b{display:block;font-family:var(--num);font-size:11.5px;margin-top:2px;white-space:nowrap}
+.alloc-item b.blue{color:var(--brand)}
+.alloc-item b.amber{color:var(--amber)}
+.alloc-note{font-size:8.5px;color:var(--muted-2);margin:4px 0 0}
+@media (max-width:520px){.alloc-item b{font-size:10.5px}}
+
+
+.money-picks-head{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:10px;font-weight:700;margin:8px 0 2px}
+.money-picks-head span{font-size:8px;color:var(--muted);font-weight:400;text-align:right}
+.money-picks{border:1px solid var(--line);border-radius:8px;background:var(--panel-2);padding:2px 8px}
+.money-pick{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--line)}
+.money-pick:last-child{border-bottom:0}
+.money-pick-main{min-width:0}
+.money-pick-main strong{display:block;font-size:9.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.money-pick-main small{display:block;font-size:8px;color:var(--muted);margin-top:1px}
+.money-pick-side{text-align:right;white-space:nowrap}
+.money-pick-side b{display:block;font-family:var(--num);font-size:11px;color:var(--red)}
+.money-pick-side small{display:block;font-size:7.5px;color:var(--muted)}
+.money-pick-side button{font-size:7.5px;color:var(--brand);margin-top:2px}
+.money-pick.is-best{background:var(--brand-bg);margin:0 -5px;padding-left:5px;padding-right:5px;border-radius:6px}
+
+.money-fund-info{font-size:8.5px;color:var(--muted);margin:2px 0 3px;line-height:1.5}
+
+.ai-filters{display:flex;flex-wrap:wrap;gap:5px;margin:2px 0 6px}
+.ai-filter{font-size:9.5px;line-height:1;padding:6px 8px;border:1px solid var(--line);border-radius:12px;color:var(--muted);background:var(--panel-2)}
+.ai-filter.is-active{border-color:var(--brand);color:var(--brand);background:var(--brand-bg);font-weight:700}
+.risk-badge{display:inline-block;font-size:7.5px;line-height:1.3;padding:0 4px;border-radius:4px;margin-left:4px;border:1px solid var(--line-strong);color:var(--muted);white-space:nowrap}
+.risk-low{color:var(--brand);border-color:var(--brand);background:var(--brand-bg)}
+.risk-mid{color:var(--amber);border-color:var(--amber);background:var(--amber-bg)}
+.risk-high{color:var(--red);border-color:var(--red);background:var(--red-bg)}
+.ai-match-line{font-size:8.5px;color:var(--muted);margin:0 0 5px;line-height:1.5}
+
+
+.ai-custom-panel{margin:2px 0 7px;padding:9px;border:1px solid var(--line);border-radius:9px;background:var(--panel-2)}
+.ai-custom-title{font-size:10px;font-weight:700;margin-bottom:6px}
+.ai-custom-title span{font-size:8px;color:var(--muted);font-weight:400;margin-left:4px}
+.ai-custom-chips{display:flex;flex-wrap:wrap;gap:5px}
+.ai-trait{font-size:9px;padding:6px 8px;border:1px solid var(--line-strong);border-radius:12px;color:var(--muted);background:var(--panel)}
+.ai-trait.is-active{border-color:var(--brand);color:var(--brand);background:var(--brand-bg);font-weight:700}
+.ai-custom-actions{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px;font-size:8px;color:var(--muted)}
+.ai-custom-actions .link-btn{font-size:8px}
+.ai-pick-summary{font-size:8.5px;color:var(--muted);margin:0 0 4px;line-height:1.5}
+
+.money-fund-monthly{font-size:9.5px;color:var(--muted);margin:3px 0 4px;line-height:1.55}
+.money-fund-monthly b{font-family:var(--num);color:var(--brand)}
 @media print{
   .appbar,.tabs,.button-row,.action-row,.footer,.toast,.modal,.icon-btn{display:none!important}
   body{background:#fff;color:#111}
@@ -376,6 +469,11 @@ try { var s = JSON.parse(localStorage.getItem('hengce_v10_state') || 'null'); if
     <button class="tab" data-tab="plate">02 食谱</button>
     <button class="tab" data-tab="market">03 行情</button>
   </nav>
+
+  <div class="backend-bar">
+    <span id="backendStatus">本地缓存 · 未连接后台</span>
+    <button class="link-btn" id="backendBtn">后台记录</button>
+  </div>
 
   <!-- ================= PAGE 1 ================= -->
   <section id="tab-finance">
@@ -413,6 +511,33 @@ try { var s = JSON.parse(localStorage.getItem('hengce_v10_state') || 'null'); if
     </div>
 
     <div class="card">
+      <div class="section-head">
+        <h2>当前持仓</h2>
+        <button class="link-btn" id="addPositionBtn">＋ 添加持仓</button>
+      </div>
+      <div id="positionList" class="position-list"></div>
+      <div class="holding-summary">
+        <span>当前持仓市值 <b class="num blue" id="holdingTotal">¥0.00</b></span>
+        <span>今日收益 <b id="holdingToday">—</b></span>
+        <span>累计收益 <b id="holdingReturn">—</b></span>
+      </div>
+      <div class="field-row">
+        <label for="currentCashInput">活期现金</label>
+        <div class="money-input"><span>¥</span><input class="num" id="currentCashInput" type="number" inputmode="decimal" step="100" min="0" value="0"></div>
+      </div>
+      <div class="field-row">
+        <label for="moneyFundInput">货币基金（余额宝/零钱通）</label>
+        <div class="money-input"><span>¥</span><input class="num" id="moneyFundInput" type="number" inputmode="decimal" step="100" min="0" value="0"></div>
+      </div>
+      <div class="money-picks-head">AI 货币基金参考 <span>按真实 7 日年化 + 可申购筛选</span></div>
+      <div id="moneyFundPicks" class="money-picks"><div class="hint">正在读取货币基金收益…</div></div>
+      <p class="money-fund-info" id="moneyFundInfo"></p>
+      <p class="money-fund-monthly" id="moneyFundMonthly"></p>
+      <p class="emergency-line" id="emergencyLine">应急备用金：计算中…</p>
+      <p class="hint">余额宝、微信零钱通本质都是货币基金，这里填总额即可，按活期资金计入备用金，不参与基金涨跌。持仓市值按最新净值自动更新；场外基金每日更新，ETF/LOF 用实时价。</p>
+    </div>
+
+    <div class="card">
       <h2>行情自动分配：</h2>
       <div class="button-row">
         <button class="btn ghost" id="pickBtn">按行情优选代码</button>
@@ -426,6 +551,7 @@ try { var s = JSON.parse(localStorage.getItem('hengce_v10_state') || 'null'); if
         <div class="advice-head"><span>本月建议</span><span class="badge-blue" id="navStatus">连接行情中</span></div>
         <div class="advice-big num" id="adviceBig">读取真实净值中…</div>
         <p id="adviceMeta">系统会按最新真实行情与净值完成本月分配，不做未来收益预测。</p>
+        <div class="alloc-breakdown" id="allocBreakdown"></div>
       </div>
       <div class="fund-list" id="fundList"></div>
       <p class="source" id="sourceLine">数据源：腾讯证券 / 天天基金 · 更新 --:--:--</p>
@@ -500,6 +626,14 @@ try { var s = JSON.parse(localStorage.getItem('hengce_v10_state') || 'null'); if
     <div class="market-index-cards" id="marketIndexCards"></div>
     <p class="source" id="marketUpdated">行情更新 —</p>
 
+    <div class="card search-card">
+      <div class="fund-search-box">
+        <span class="search-icon">⌕</span>
+        <input id="fundSearch" type="search" placeholder="搜索基金代码 / 名称 / 关键词，如 纳斯达克、红利、医药、半导体" autocomplete="off">
+      </div>
+      <div id="fundSearchResults"></div>
+    </div>
+
     <div class="card">
       <div class="section-head">
         <h2>基金涨跌分布</h2>
@@ -521,6 +655,14 @@ try { var s = JSON.parse(localStorage.getItem('hengce_v10_state') || 'null'); if
 
     <div class="card">
       <div class="section-head"><h2>AI 超强算法优选</h2><span class="small">真实净值 + 动量 + 回撤</span></div>
+      <div class="ai-filters" id="aiFilters"></div>
+      <div class="ai-custom-panel is-hidden" id="aiCustomPanel">
+        <div class="ai-custom-title">自定义搭配 <span>可多选，选好后自动按板块匹配</span></div>
+        <div class="ai-custom-chips" id="aiCustomChips"></div>
+        <div class="ai-custom-actions"><span><button class="link-btn" id="aiCustomClear">清空</button> <button class="link-btn" id="aiCustomAll">全选</button></span><span id="aiCustomHint">至少选一个条件</span></div>
+      </div>
+      <p class="source" id="aiFilterNote">按你的风险偏好智能匹配。</p>
+      <p class="ai-pick-summary" id="aiPickSummary"></p>
       <div id="aiPickList" class="fund-list"></div>
       <p class="source">按真实历史净值计算，添加自选后才会在页面 1 出现。</p>
     </div>
@@ -863,6 +1005,7 @@ const LIVE = {
   allFunds: [],              // 全市场场外基金（真实净值/日涨跌）
   allFundsAt: null,
   allFundsLoading: false,
+  purchase: {},
   us: [],
   gold: [],
   etfs: [],
@@ -1479,7 +1622,11 @@ function defaultState() {
       expenses: 900,
       spent: 0,
       currentCash: 0,
+      moneyFund: 0,
+      moneyFundCode: '',
+      moneyFundYield: null,
       currentLong: 0,
+      positions: [],
       risk: 'balanced',
       allowRebalance: true,
       maxRebalance: 0.08,
@@ -1789,7 +1936,9 @@ function computeFinance() {
   const fixedBills = Math.max(0, num(f.fixedBills));
   const expenses = Math.max(0, num(f.expenses));
   const spent = Math.max(0, num(f.spent));
-  const currentCash = Math.max(0, num(f.currentCash));
+  const cashOnly = Math.max(0, num(f.currentCash));
+  const moneyFund = Math.max(0, num(f.moneyFund));
+  const currentCash = cashOnly + moneyFund;
   const currentLong = Math.max(0, num(f.currentLong));
   const investable = roundTo(Math.max(0, salary - fixedBills - expenses), 1);
   const remaining = Math.max(0, expenses - spent);
@@ -1835,6 +1984,8 @@ function computeFinance() {
     longAction = -currentLong;
     cashAction = roundTo(investable - longAction, 10);
   }
+  const reserveGap = Math.max(0, reserveTarget - currentCash);
+  const moneyFundAction = cashAction;
   const finalCash = Math.max(0, currentCash + cashAction);
   const finalLong = Math.max(0, currentLong + longAction);
   const actualRebalance = cashAction - contributionCash;
@@ -1851,8 +2002,15 @@ function computeFinance() {
     dailyFixed,
     investable,
     savingsRate,
+    cashOnly,
+    moneyFund,
     currentCash,
     currentLong,
+    reserveTarget,
+    reserveGap,
+    reserveMonths,
+    emergencyMonths,
+    moneyFundAction,
     totalPortfolio,
     cashPct,
     longPct,
@@ -1878,24 +2036,6 @@ function computeFinance() {
     allow: f.allowRebalance, cap: f.maxRebalance, live: marketLive, updatedAt: state.market.updatedAt
   }));
 
-  const expectedReturn = { steady: 0.048, balanced: 0.065, aggressive: 0.085 }[f.risk] || 0.065;
-  const start = currentCash + currentLong;
-  const project = rate => {
-    let balance = start;
-    const arr = [balance];
-    for (let m = 1; m <= 12; m++) {
-      balance = (balance + investable) * (1 + rate / 12);
-      arr.push(balance);
-    }
-    return arr;
-  };
-  plan.expectedReturn = expectedReturn;
-  plan.projection = {
-    base: project(expectedReturn),
-    low: project(Math.max(-0.02, expectedReturn - 0.035)),
-    high: project(expectedReturn + 0.035),
-    invested: start + investable * 12
-  };
   return plan;
 }
 
@@ -2408,6 +2548,34 @@ function findCraving(query) {
    真实数据：腾讯证券实时行情 + 天天基金历史净值
    ============================================================ */
 const MONTH_DAYS = 30;
+const FUND_SEARCH_ALIASES = [
+  ['纳指', '纳斯达克', 'nasdaq'],
+  ['标普', 's&p', 'sp500', '标普500'],
+  ['红利', '股息', '低波'],
+  ['债', '债券', '纯债', '短债', '中短债'],
+  ['医药', '医疗', '创新药', '生物医药'],
+  ['半导体', '芯片', '集成电路'],
+  ['AI', '人工智能', '软件', '云计算'],
+  ['机器人', '自动化', '智能制造'],
+  ['黄金', '贵金属', '有色'],
+  ['美股', '美国', 'QDII', '海外'],
+  ['港股', '恒生', '恒指'],
+  ['军工', '国防', '航天', '航空'],
+  ['消费', '白酒', '食品饮料'],
+  ['货币', '现金', '理财'],
+  ['新能源', '光伏', '电池', '储能']
+];
+const MONEY_FUNDS = [
+  { code: '000198', name: '天弘余额宝货币', platform: '余额宝' },
+  { code: '000359', name: '易方达易理财货币A', platform: '零钱通常见' },
+  { code: '000509', name: '广发钱袋子货币A', platform: '货币基金' },
+  { code: '000600', name: '汇添富和聚宝货币A', platform: '货币基金' },
+  { code: '000638', name: '富国富钱包货币A', platform: '货币基金' },
+  { code: '001211', name: '中欧滚钱宝货币A', platform: '货币基金' },
+  { code: '000604', name: '银华多利宝货币A', platform: '货币基金' },
+  { code: '000719', name: '南方现金通E', platform: '零钱通常见' }
+];
+
 let selectedDay = 0;
 let plateMenuTimer = null;
 
@@ -2430,7 +2598,8 @@ function readState() {
 }
 
 function save() {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); localStorage.setItem('lica_local_saved_at', new Date().toISOString()); } catch (e) {}
+  try { if (typeof scheduleBackendSave === 'function') scheduleBackendSave(); } catch (e) {}
 }
 
 function showToast(message) {
@@ -2512,23 +2681,199 @@ function renderIndices() {
 }
 
 /* ---------------- 页面1：理财 ---------------- */
+
+/* ============================================================
+   当前持仓：按份额 × 最新净值自动更新
+   ============================================================ */
+function latestNavFor(code) {
+  const q = LIVE.fundQuotes && LIVE.fundQuotes[code];
+  if (q && Number.isFinite(q.nav)) return { nav: q.nav, chg: Number(q.chgPct) || 0, name: q.name, date: q.date };
+  const a = LIVE.allFunds && LIVE.allFunds.find(f => f.code === code);
+  if (a && Number.isFinite(a.nav) && a.nav > 0) return { nav: a.nav, chg: Number(a.chg) || 0, name: a.name, date: a.date };
+  return null;
+}
+function syncPositions() {
+  const f = state.finance;
+  if (!Array.isArray(f.positions)) f.positions = [];
+  if (!f.positions.length && Number(f.currentLong) > 0) {
+    f.positions.push({ code: '', name: '未分配持仓', units: 0, cost: Number(f.currentLong), staticValue: Number(f.currentLong), legacy: true });
+  }
+  let total = 0, cost = 0, today = 0, hasToday = false;
+  f.positions.forEach(p => {
+    const q = p.code ? latestNavFor(p.code) : null;
+    if (q && q.nav > 0) {
+      if ((!Number.isFinite(p.units) || p.units <= 0) && Number(p.staticValue) > 0) {
+        p.units = Number(p.staticValue) / q.nav;
+        p.cost = Number(p.cost) || Number(p.staticValue);
+        p.staticValue = 0;
+      }
+      if (Number.isFinite(p.units) && p.units > 0) {
+        p.value = p.units * q.nav;
+        p.lastNav = q.nav;
+        p.lastChg = q.chg;
+        p.date = q.date || '';
+        if (!Number.isFinite(p.cost) || p.cost <= 0) p.cost = p.value;
+        const prev = q.nav / (1 + (Number(q.chg) || 0) / 100);
+        p.today = p.units * (q.nav - prev);
+        total += p.value; cost += p.cost; today += p.today; hasToday = true;
+        return;
+      }
+    }
+    const value = Number(p.staticValue) || Number(p.value) || 0;
+    p.value = value;
+    total += value;
+    cost += Number(p.cost) || value;
+  });
+  f.currentLong = Math.round(total * 100) / 100;
+  return { total: f.currentLong, cost, today, hasToday };
+}
+function positionValue(p) { return Number(p.value) || Number(p.staticValue) || 0; }
+function renderHoldings(summary) {
+  const s = summary || syncPositions();
+  const list = $id('positionList');
+  if (!list) return;
+  $id('holdingTotal').textContent = money(s.total, 2);
+  $id('holdingToday').innerHTML = s.hasToday
+    ? `<span class="${chgClass(s.today)}">${signedMoney(s.today, 2)}</span>`
+    : '<span class="flat">—</span>';
+  $id('holdingReturn').innerHTML = s.cost > 0
+    ? `<span class="${chgClass(s.total - s.cost)}">${signedMoney(s.total - s.cost, 2)}</span>`
+    : '<span class="flat">—</span>';
+  const positions = state.finance.positions || [];
+  if (!positions.length) {
+    list.innerHTML = '<div class="position-empty">还没有录入当前持仓。点右上角「＋ 添加持仓」，输入基金代码和现在持有的金额，系统会按真实净值每天自动更新。</div>';
+    return;
+  }
+  list.innerHTML = positions.map(p => {
+    const value = positionValue(p);
+    const day = Number(p.today) || 0;
+    const canOpen = p.code && /^\d{6}$/.test(p.code);
+    return `<div class="position-row" ${canOpen ? `data-fund-open="${p.code}"` : ''}>
+      <div class="position-main"><strong>${esc(p.name || p.code || '未分配持仓')}</strong><small>${esc(p.code || '手动录入')}${p.units ? ` · ${Number(p.units).toFixed(2)} 份` : ''}${p.cost ? ` · 成本 ${money(p.cost, 2)}` : ''}</small></div>
+      <div class="position-side"><b class="blue">${money(value, 2)}</b><small class="${chgClass(day)}">今日 ${signedMoney(day, 2)}</small><button class="remove" data-remove-position="${esc(p.code || '')}">删除</button></div>
+    </div>`;
+  }).join('');
+}
+
+function renderMoneyPicks() {
+  const box = $id('moneyFundPicks');
+  if (!box) return;
+  const picks = MONEY_FUNDS.map(m => {
+    const p = purchaseOf(m.code);
+    return { ...m, p, sevenDay: p && Number.isFinite(p.sevenDay) ? p.sevenDay : null };
+  });
+  const known = picks.filter(x => x.sevenDay !== null && !(x.p && x.p.suspended));
+  const best = known.slice().sort((a, b) => b.sevenDay - a.sevenDay)[0];
+  const selected = picks.find(x => x.code === state.finance.moneyFundCode && x.sevenDay !== null) || best || null;
+  if (selected && state.finance.moneyFundCode !== selected.code) state.finance.moneyFundCode = selected.code;
+  const show = known.slice().sort((a, b) => b.sevenDay - a.sevenDay).slice(0, 4);
+  if (selected && !show.some(x => x.code === selected.code)) show.unshift(selected);
+  if (!show.length) {
+    box.innerHTML = '<div class="hint">正在读取货币基金 7 日年化和申购状态…</div>';
+    queuePurchaseLookup(MONEY_FUNDS.map(m => m.code));
+    return;
+  }
+  const balance = Number(state.finance.moneyFund) || 0;
+  const yield7 = selected && Number.isFinite(selected.sevenDay) ? selected.sevenDay : null;
+  const daily = yield7 !== null ? balance * yield7 / 100 / 365 : null;
+  box.innerHTML = show.map(x => {
+    const isBest = best && x.code === best.code;
+    const isSel = selected && x.code === selected.code;
+    const day = balance * x.sevenDay / 100 / 365;
+    return `<div class="money-pick ${isBest ? 'is-best' : ''}">
+      <div class="money-pick-main"><strong>${esc(x.p && x.p.name ? x.p.name : x.name)} ${isSel ? '· 当前参考' : ''}</strong><small>${esc(x.platform)} · 7日年化 ${x.sevenDay.toFixed(3)}% · 万份收益 ${x.p && Number.isFinite(x.p.wan) ? '¥' + x.p.wan.toFixed(4) : '—'}</small></div>
+      <div class="money-pick-side"><b>${x.sevenDay.toFixed(3)}%</b><small>预估日收益 ${money(day, 2)}</small><button data-money-pick="${x.code}">${isSel ? '当前参考' : '选为参考'}</button></div>
+    </div>`;
+  }).join('');
+  const note = $id('moneyFundInfo');
+  if (note) note.textContent = selected
+    ? `参考：${selected.p && selected.p.name ? selected.p.name : selected.name} · 7日年化 ${yield7 !== null ? yield7.toFixed(3) + '%' : '—'} · 预估日收益 ${daily !== null ? money(daily, 2) : '—'}`
+    : '';
+  queuePurchaseLookup(MONEY_FUNDS.map(m => m.code));
+}
+
+function openAddPosition(prefillCode = '') {
+  const opts = state.watchlist.map(code => {
+    const m = state.watchMeta[code];
+    return m ? `<option value="${code}">${esc(m.name)}</option>` : '';
+  }).join('');
+  const existing = prefillCode ? (state.finance.positions || []).find(p => p.code === prefillCode) : null;
+  openModal(existing ? '修改 / 追加持仓' : '记录已购买', `<p>输入基金代码和现在持有的金额。系统按“金额 ÷ 最新净值”记录份额，之后每天按真实净值涨跌自动更新市值。</p>
+    <div class="field-row"><label>基金代码</label><div class="money-input" style="min-width:180px"><input id="positionCode" list="positionFunds" placeholder="如 040046" inputmode="numeric" maxlength="6" value="${esc(prefillCode || '')}" style="text-align:left;font-size:15px"></div></div>
+    <datalist id="positionFunds">${opts}</datalist>
+    <div class="field-row"><label>${existing ? '本次追加金额' : '当前持有金额'}</label><div class="money-input"><span>¥</span><input class="num" id="positionAmount" type="number" min="1" step="100" placeholder="0"></div></div>
+    ${existing ? `<p class="hint">已记录 ${money(positionValue(existing), 2)}，这次输入的是追加金额；想改总额请先删除再重新记录。</p>` : ''}
+    <button class="btn primary wide" id="positionSave">${existing ? '追加持仓' : '保存持仓'}</button>
+    <p class="hint">如果基金暂停申购，不影响这里记录已有持仓；页面 1 只是不会继续给它分配新的加仓金额。</p>`);
+  const btn = $id('positionSave');
+  if (btn) btn.addEventListener('click', () => {
+    const code = String($id('positionCode').value || '').trim();
+    const amount = numOf($id('positionAmount').value);
+    if (!/^\d{6}$/.test(code)) { showToast('请输入 6 位基金代码。'); return; }
+    if (!(amount > 0)) { showToast('请输入当前持有金额。'); return; }
+    const q = latestNavFor(code);
+    if (!q || !(q.nav > 0)) { showToast('还没读到这只基金的净值，请等行情加载后再试。'); return; }
+    if (!state.finance.positions) state.finance.positions = [];
+    const old = state.finance.positions.find(p => p.code === code);
+    if (old) {
+      old.units = (Number(old.units) || 0) + amount / q.nav;
+      old.cost = (Number(old.cost) || 0) + amount;
+      old.staticValue = 0; old.name = q.name || old.name;
+    } else {
+      state.finance.positions.push({ code, name: q.name || code, units: amount / q.nav, cost: amount, addedAt: new Date().toISOString() });
+    }
+    if (!state.watchlist.includes(code)) { state.watchlist.push(code); ensureWatchMeta(code); }
+    save(); closeModal(); renderFinance();
+    showToast(`已记录 ${q.name || code} 当前持仓 ${money(amount, 2)}。`);
+  });
+}
+function removePosition(code) {
+  state.finance.positions = (state.finance.positions || []).filter(p => (p.code || '') !== code);
+  save(); renderFinance();
+}
+
 function renderFinance() {
   if (!marketModel) buildMarketModel();
+  const holdingSummary = syncPositions();
   const plan = computeFinance();
   window.__plan = plan;
   syncInput('salaryInput', state.finance.salary);
   syncInput('rentInput', state.finance.fixedBills);
   syncInput('dailyInput', Math.round(dailyLiving()));
+  syncInput('currentCashInput', state.finance.currentCash);
+  syncInput('moneyFundInput', state.finance.moneyFund);
   $id('monthlyLiving').textContent = money(plan.expenses, 2);
+  renderHoldings(holdingSummary);
+  renderMoneyPicks();
+  const gap = Math.max(0, plan.reserveTarget - plan.currentCash);
+  $id('emergencyLine').innerHTML = `应急备用金目标 <b>${money(plan.reserveTarget, 0)}</b>（${plan.reserveMonths} 个月） · 已有 <b>${money(plan.currentCash, 0)}</b> · ${gap > 0 ? `<span class="gap">缺口 ${money(gap, 0)}</span>` : '<span class="ok">已覆盖</span>'}`;
   $id('investable').textContent = money(plan.investable, 2);
   $id('newInvest').textContent = money(plan.investable, 2);
 
   const live = plan.marketLive;
   const navStatus = $id('navStatus');
+  const navDate = (marketModel.summary && marketModel.summary.navDate) || (Object.values(LIVE.fundQuotes)[0] && Object.values(LIVE.fundQuotes)[0].date) || '';
+  const confirmedCount = Object.keys(LIVE.fundQuotes || {}).length;
+  const allNavCount = (LIVE.allFunds || []).length;
   navStatus.className = live ? 'badge-blue' : 'badge-amber';
-  navStatus.textContent = live ? '真实确认净值已读取' : '行情连接中';
+  if (!live) {
+    navStatus.textContent = '行情连接中';
+    navStatus.title = '行情尚未连接，不生成模拟净值';
+  } else if (allNavCount && navDate) {
+    navStatus.textContent = `全市场净值 ${navDate}`;
+    navStatus.title = `已载入 ${allNavCount.toLocaleString()} 只场外基金最新净值（净值日 ${navDate}）；历史净值按需复核`;
+  } else if (confirmedCount && navDate) {
+    navStatus.textContent = `确认净值 ${navDate} · ${confirmedCount}只`;
+    navStatus.title = `已确认 ${confirmedCount} 只基金净值；全市场列表仍在加载`;
+  } else {
+    navStatus.textContent = '行情已连 · 净值待确认';
+    navStatus.title = '指数行情已连接，但基金净值尚未确认';
+  }
 
   const watchCount = state.watchlist.length;
+  const watchRows = watchCount ? watchAllocations(plan) : [];
+  const actualAdd = Math.max(0, watchRows.reduce((a, r) => a + (r.amount || 0), 0));
+  const allSuspended = plan.longAction > 1 && watchRows.length > 0 && watchRows.every(r => r.suspended);
   let title = '等待真实行情…';
   let meta = '系统正在读取腾讯证券与天天基金的真实行情，未连接时不会给出任何模拟建议。';
   let uninvested = plan.investable;
@@ -2542,10 +2887,17 @@ function renderFinance() {
     } else if (plan.investable <= 0) {
       title = '本月不追加';
       meta = '没有新增可投资金，维持现有配置。';
+    } else if (allSuspended) {
+      title = '自选暂停申购';
+      meta = '当前自选基金全部暂停/关闭申购，本月不追加；先换一只可申购基金，或把资金留在货币基金。';
+      uninvested = plan.investable;
     } else if (plan.longAction > 1) {
-      title = `追加 / 定投 ${money(plan.longAction, 2)}`;
-      uninvested = Math.max(0, plan.investable - plan.longAction);
-      meta = `已按最新确认净值完成本月分配（非未来收益预测） · 自选 ${watchCount} 只 · 新增未投入资金 ${money(uninvested, 2)} · 风险档 ${riskTier(plan)}`;
+      const capped = actualAdd < plan.longAction - 1;
+      title = actualAdd > 1 ? `追加 / 定投 ${money(actualAdd, 2)}` : '本月暂不追加';
+      uninvested = Math.max(0, plan.investable - actualAdd);
+      meta = capped
+        ? `本月目标 ${money(plan.longAction, 2)}，但自选基金有单日限购/暂停，按可买上限估算实际可投 ${money(actualAdd, 2)} · 剩余 ${money(uninvested, 2)} 留现金`
+        : `已按最新确认净值完成本月分配（非未来收益预测） · 自选 ${watchCount} 只 · 新增未投入资金 ${money(uninvested, 2)} · 风险档 ${riskTier(plan)}`;
     } else if (plan.longAction < -1) {
       title = `减仓 ${money(Math.abs(plan.longAction), 2)}`;
       uninvested = plan.investable;
@@ -2558,6 +2910,17 @@ function renderFinance() {
   }
   $id('adviceBig').textContent = title;
   $id('adviceMeta').textContent = meta;
+  const reduce = plan.longAction < -1;
+  const allocLong = reduce ? -Math.abs(plan.longAction) : actualAdd;
+  const allocCash = reduce ? Math.abs(plan.longAction) : Math.max(0, plan.investable - actualAdd);
+  $id('allocBreakdown').innerHTML = `
+    <div class="alloc-item"><span>货币基金 / 现金</span><b class="blue">${signedMoney(allocCash, 0)}</b></div>
+    <div class="alloc-item"><span>长期基金${reduce ? '减仓' : '加仓'}</span><b class="blue">${signedMoney(allocLong, 0)}</b></div>
+    <div class="alloc-item"><span>当前持仓</span><b>${money(plan.currentLong || 0, 0)}</b></div>
+    <p class="alloc-note">${reduce ? '减仓资金转入货币基金/现金；不含存量再平衡。' : '本月新增资金分配；不含存量再平衡。'}</p>`;
+  $id('moneyFundMonthly').innerHTML = reduce
+    ? `减仓资金建议转入货币基金/现金 <b>${money(allocCash, 0)}</b> · 当前货基余额 ${money(plan.moneyFund || 0, 0)}`
+    : `本月工资建议存入货币基金/备用金 <b>${money(allocCash, 0)}</b> · 当前货基余额 ${money(plan.moneyFund || 0, 0)}`;
 
   // 页面1 只展示“已添加自选”的基金；未加自选时只给提示
   const fundList = $id('fundList');
@@ -2567,28 +2930,36 @@ function renderFinance() {
       <button class="btn ghost" id="gotoMarketBtn">去 03 行情添加自选 →</button>
     </div>`;
   } else {
-    const rows = watchAllocations(plan);
+    const rows = watchRows;
     fundList.innerHTML = rows.length ? rows.map(row => {
       const m = row.meta;
+      const p = row.purchase;
       const timing = marketClosedNow() ? '建议下一个交易日 09:45 后' : '今日 09:45–10:30 可分批';
+      const days = p && p.max && row.amount > 0 ? Math.ceil(row.amount / p.max) : 0;
+      const held = row.position ? positionValue(row.position) : 0;
       return `<div class="watch-row" data-fund-open="${row.code}">
         <div class="watch-main">
           <strong>${esc(row.name)}</strong>
-          <small>${row.code} · ${esc(m.group || '自选')}</small>
+          <small>${row.code} · ${esc(m.group || '自选')} ${purchaseBadge(row.code)}</small>
           <div class="watch-tags">
             <span class="watch-tag">${timing}</span>
             <span class="watch-tag">${holdText(m)}</span>
             <span class="watch-tag">${reviewText(m)}</span>
+            ${row.position ? `<span class="buy-badge buy-open">已购买 ${money(held, 0)}</span>` : '<span class="buy-badge buy-stop">未记录持仓</span>'}
+            ${p && p.max ? `<span class="watch-tag">单日上限 ${money(p.max, 0)}${days > 1 ? ` · 约 ${days} 个交易日` : ''}</span>` : ''}
+            ${row.suspended ? '<span class="buy-badge buy-stop">暂停申购</span>' : ''}
           </div>
         </div>
         <div class="watch-side">
-          <b class="${row.amount < 0 ? 'amber' : 'blue'}">${live ? signedMoney(row.amount, 2) : '—'}</b>
-          <span class="due">${plan.longAction >= 0 ? '本月加仓' : '本月减仓'}</span>
+          <b class="${row.suspended ? 'flat' : row.amount < 0 ? 'amber' : 'blue'}">${!live || row.suspended ? '—' : signedMoney(row.amount, 2)}</b>
+          <span class="due">${row.suspended ? '暂停申购' : plan.longAction >= 0 ? '本月加仓' : '本月减仓'}</span>
+          <button class="record-pos" data-record-position="${row.code}">${row.position ? '修改持仓' : '记录已购买'}</button>
           <button class="remove" data-remove-watch="${row.code}">移除</button>
         </div>
       </div>`;
     }).join('') : '<div class="hint">自选数据加载中…</div>';
   }
+  queuePurchaseLookup(state.watchlist);
 
   $id('sourceLine').textContent = `数据源：腾讯证券 / 天天基金 · 更新 ${LIVE.updatedAt ? timeFullCN(LIVE.updatedAt) : '--:--:--'} · 净值日期 ${marketModel.summary.navDate || '—'}`;
 
@@ -2935,6 +3306,296 @@ function findAnyFund(code) {
   if (idx) return { code, name: idx.name, nav: idx.price, chg: idx.chgPct, price: idx.price };
   return { code, name: code, nav: null, chg: null };
 }
+
+/* ============================================================
+   本地后台缓存同步（仅 http://127.0.0.1 等本地服务可用）
+   ============================================================ */
+const BACKEND = { online: false, timer: null, lastSaved: '', restoring: false };
+function backendAvailable() {
+  return /^https?:$/.test(location.protocol) && /^(127\.0\.0\.1|localhost)$/.test(location.hostname);
+}
+async function backendFetch(path, options = {}, timeout = 6000) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeout);
+  try {
+    const res = await fetch(path, { ...options, signal: ctrl.signal, cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
+  } finally { clearTimeout(timer); }
+}
+function setBackendStatus(text, online) {
+  BACKEND.online = !!online;
+  const el = $id('backendStatus');
+  const bar = document.querySelector('.backend-bar');
+  if (el) el.textContent = text;
+  if (bar) bar.classList.toggle('is-online', !!online);
+}
+function scheduleBackendSave() {
+  if (!BACKEND.online || BACKEND.restoring) return;
+  clearTimeout(BACKEND.timer);
+  BACKEND.timer = setTimeout(async () => {
+    if (!BACKEND.online) return;
+    try {
+      const savedAt = new Date().toISOString();
+      const res = await backendFetch('/api/state', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ state, savedAt, version: 12 })
+      });
+      BACKEND.lastSaved = res.savedAt || savedAt;
+      localStorage.setItem('lica_local_saved_at', savedAt);
+      setBackendStatus(`后台已备份 ${new Date().toLocaleTimeString('zh-CN', { hour12: false })}`, true);
+    } catch (e) {
+      setBackendStatus('后台连接中断 · 已回退本地缓存', false);
+    }
+  }, 650);
+}
+async function initBackend() {
+  if (!backendAvailable()) { setBackendStatus('本地缓存 · 后台请从 127.0.0.1:8787 打开', false); return; }
+  try {
+    await backendFetch('/api/health', {}, 2500);
+    setBackendStatus('后台已连接 · 正在读取备份', true);
+    const remote = await backendFetch('/api/state', {}, 4000);
+    const localAt = localStorage.getItem('lica_local_saved_at') || '';
+    if (remote && remote.state && remote.savedAt && remote.savedAt > localAt) {
+      BACKEND.restoring = true;
+      state = mergeState(defaultState(), remote.state);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem('lica_local_saved_at', remote.savedAt);
+      sanitizeWatchlist();
+      generateOneMeal(false);
+      renderFinance(); renderPlate(); renderMarket(); renderStatus();
+      BACKEND.restoring = false;
+      setBackendStatus(`已从后台恢复 ${new Date(remote.savedAt).toLocaleString('zh-CN')}`, true);
+      showToast('已从本地后台恢复最新记录。');
+    } else {
+      setBackendStatus(`后台已连接 · ${localAt ? '本地记录较新' : '等待首次备份'}`, true);
+      scheduleBackendSave();
+    }
+  } catch (e) {
+    setBackendStatus('本地缓存 · 后台未启动', false);
+  }
+}
+async function cacheAllFundsToBackend() {
+  if (!BACKEND.online || !LIVE.allFunds.length) return;
+  const day = new Date().toISOString().slice(0, 10);
+  if (localStorage.getItem('lica_backend_fund_day') === day) return;
+  try {
+    const payload = {
+      day, savedAt: new Date().toISOString(), count: LIVE.allFunds.length,
+      funds: LIVE.allFunds.map(f => [f.code, f.name, f.nav, f.chg, f.y1, f.m6, f.m3, f.aiScore])
+    };
+    await backendFetch('/api/cache/allfunds', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }, 15000);
+    localStorage.setItem('lica_backend_fund_day', day);
+  } catch (e) {}
+}
+
+function exportLocalState() {
+  const payload = { app: 'Lica', version: 12, savedAt: new Date().toISOString(), state };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `lica_state_${new Date().toISOString().slice(0, 10)}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  showToast('已导出本机记录，可导入到后台页面。');
+}
+function importLocalState(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const obj = JSON.parse(String(reader.result || '{}'));
+      const src = obj.state || obj;
+      if (!src || typeof src !== 'object') throw new Error('bad state');
+      state = mergeState(defaultState(), src);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem('lica_local_saved_at', new Date().toISOString());
+      save();
+      sanitizeWatchlist(); generateOneMeal(false); renderFinance(); renderPlate(); renderMarket(); renderStatus();
+      closeModal();
+      showToast('记录已导入，并会在后台上次备份。');
+    } catch (e) { showToast('导入失败：不是有效的记录文件。'); }
+  };
+  reader.readAsText(file);
+}
+
+function openBackendPanel() {
+  openModal('后台缓存记录', `<p>后台只监听本机 <b>127.0.0.1</b>，不会上传任何数据到第三方。</p>
+    <div class="fund-detail-grid">
+      <div class="fund-detail-item"><span>连接状态</span><b>${BACKEND.online ? '已连接' : '未连接'}</b></div>
+      <div class="fund-detail-item"><span>最近备份</span><b>${BACKEND.lastSaved ? new Date(BACKEND.lastSaved).toLocaleString('zh-CN') : '—'}</b></div>
+    </div>
+    <p class="hint">启动后台：双击项目文件夹里的「启动后台.bat」，然后访问 http://127.0.0.1:8787/。后台会保存 state.json、history.jsonl 和全市场基金缓存。</p>
+    <div class="fund-detail-actions">
+      <button class="btn primary" id="backendSaveNow">立即备份</button>
+      <button class="btn ghost" id="backendRestoreBtn">从后台恢复</button>
+      <button class="btn ghost" id="backendExportBtn">导出本机记录</button>
+      <label class="btn ghost" style="text-align:center">导入记录<input id="backendImportFile" type="file" accept="application/json,.json" hidden></label>
+    </div>`);
+  const saveNow = document.getElementById('backendSaveNow');
+  if (saveNow) saveNow.addEventListener('click', async () => {
+    if (!BACKEND.online) { showToast('后台未连接，请先双击启动后台.bat'); return; }
+    BACKEND.timer = null;
+    try {
+      const savedAt = new Date().toISOString();
+      await backendFetch('/api/state', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ state, savedAt, version: 12 }) });
+      BACKEND.lastSaved = savedAt;
+      localStorage.setItem('lica_local_saved_at', savedAt);
+      showToast('已备份到本地后台。');
+      setBackendStatus(`后台已备份 ${new Date().toLocaleTimeString('zh-CN', { hour12: false })}`, true);
+    } catch (e) { showToast('备份失败：后台没有启动。'); }
+  });
+  const restore = document.getElementById('backendRestoreBtn');
+  if (restore) restore.addEventListener('click', async () => {
+    if (!BACKEND.online) { showToast('后台未连接，请先双击启动后台.bat'); return; }
+    try {
+      const remote = await backendFetch('/api/state');
+      if (!remote || !remote.state) { showToast('后台还没有备份记录。'); return; }
+      state = mergeState(defaultState(), remote.state);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      localStorage.setItem('lica_local_saved_at', remote.savedAt || new Date().toISOString());
+      sanitizeWatchlist(); generateOneMeal(false); renderFinance(); renderPlate(); renderMarket(); renderStatus();
+      closeModal(); showToast('已从后台恢复记录。');
+    } catch (e) { showToast('恢复失败。'); }
+  });
+  const exp = document.getElementById('backendExportBtn');
+  if (exp) exp.addEventListener('click', exportLocalState);
+  const imp = document.getElementById('backendImportFile');
+  if (imp) imp.addEventListener('change', e => importLocalState(e.target.files && e.target.files[0]));
+}
+
+
+/* ============================================================
+   基金申购状态 / 单日限购（真实基金基础信息）
+   ============================================================ */
+const PURCHASE_CACHE_KEY = 'lica_purchase_v3';
+let purchaseCache = { day: new Date().toISOString().slice(0, 10), data: {} };
+try {
+  const raw = localStorage.getItem(PURCHASE_CACHE_KEY);
+  if (raw) {
+    const obj = JSON.parse(raw);
+    if (obj && obj.day === new Date().toISOString().slice(0, 10) && obj.data) purchaseCache = obj;
+  }
+} catch (e) {}
+const purchaseQueue = [];
+const purchasePending = new Set();
+const purchaseFailed = new Map();
+let purchaseActive = 0;
+let purchaseRenderTimer = null;
+let purchaseSaveTimer = null;
+
+function purchaseOf(code) {
+  return (LIVE.purchase && LIVE.purchase[code]) || (purchaseCache.data && purchaseCache.data[code]) || null;
+}
+function parsePurchase(code, d) {
+  if (!d) return null;
+  const status = String(d.SGZT || '').trim() || '未知';
+  const buy = d.BUY === true && String(d.ISBUY) !== '4';
+  const suspended = !buy || /暂停|封闭/.test(status);
+  const min = Number(d.MINSG);
+  const rawMax = Number(d.MAXSG);
+  const max = Number.isFinite(rawMax) && rawMax > 0 && rawMax < 100000000 ? rawMax : null;
+  const limited = !suspended && (/限/.test(status) || !!max);
+  return {
+    code, name: d.SHORTNAME || '', status, buy, suspended, limited,
+    min: Number.isFinite(min) ? min : null, max,
+    fee: d.RATE || '', sourceFee: d.SOURCERATE || '',
+    ftype: d.FTYPE || '',
+    sevenDay: /货币/.test(String(d.FTYPE || '')) && Number.isFinite(Number(d.LJJZ)) ? Number(d.LJJZ) : null,
+    wan: /货币/.test(String(d.FTYPE || '')) && Number.isFinite(Number(d.DWJZ)) ? Number(d.DWJZ) : null,
+    updatedAt: new Date().toISOString()
+  };
+}
+function parseJinaPurchase(code, text) {
+  const m = String(text || '').match(/交易状态：\s*([^\s(（\n]+)\s*(?:[（(]单日累计购买上限\s*([\d.]+)\s*元[)）])?/);
+  if (!m) return null;
+  const status = m[1];
+  const max = m[2] ? Number(m[2]) : null;
+  const suspended = /暂停|封闭/.test(status);
+  const limited = !suspended && (/限/.test(status) || !!max);
+  return {
+    code, name: '', status, buy: !suspended, suspended, limited,
+    min: null, max: Number.isFinite(max) ? max : null,
+    fee: '', sourceFee: '', updatedAt: new Date().toISOString(), source: 'jina'
+  };
+}
+async function fetchPurchaseInfo(code) {
+  if (!/^\d{6}$/.test(code)) return null;
+  const cached = purchaseOf(code);
+  if (cached && cached.updatedAt && cached.updatedAt.slice(0, 10) === new Date().toISOString().slice(0, 10)) return cached;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 12000);
+  try {
+    let p = null;
+    if (backendAvailable() && BACKEND.online) {
+      const res = await fetch(`/api/fundinfo?code=${code}`, { signal: ctrl.signal, cache: 'no-store' });
+      if (!res.ok) return null;
+      const json = await res.json();
+      p = parsePurchase(code, json && json.Datas);
+    } else if (location.protocol === 'file:') {
+      const res = await fetch(`https://r.jina.ai/http://fund.eastmoney.com/${code}.html`, { signal: ctrl.signal, cache: 'no-store' });
+      if (!res.ok) return null;
+      p = parseJinaPurchase(code, await res.text());
+    } else {
+      return null;
+    }
+    if (!p) return null;
+    if (!LIVE.purchase) LIVE.purchase = {};
+    LIVE.purchase[code] = p;
+    purchaseCache.data[code] = p;
+    clearTimeout(purchaseSaveTimer);
+    purchaseSaveTimer = setTimeout(() => {
+      try { localStorage.setItem(PURCHASE_CACHE_KEY, JSON.stringify(purchaseCache)); } catch (e) {}
+    }, 800);
+    return p;
+  } catch (e) { return null; }
+  finally { clearTimeout(timer); }
+}
+function pumpPurchaseQueue() {
+  while (purchaseActive < 4 && purchaseQueue.length) {
+    const code = purchaseQueue.shift();
+    if (purchasePending.has(code) || purchaseOf(code)) continue;
+    purchasePending.add(code);
+    purchaseActive++;
+    fetchPurchaseInfo(code).then(p => {
+      if (p) purchaseFailed.delete(code); else purchaseFailed.set(code, Date.now());
+    }).finally(() => {
+      purchaseActive--;
+      purchasePending.delete(code);
+      if (purchaseActive === 0 && purchaseQueue.length === 0) {
+        clearTimeout(purchaseRenderTimer);
+        purchaseRenderTimer = setTimeout(() => {
+          if (document.body.dataset.currentTab === 'market') renderMarket();
+          if (document.body.dataset.currentTab === 'finance') renderFinance();
+        }, 700);
+      }
+      pumpPurchaseQueue();
+    });
+  }
+}
+function queuePurchaseLookup(codes) {
+  const uniq = Array.from(new Set((codes || []).filter(c => /^\d{6}$/.test(c))));
+  uniq.slice(0, 80).forEach(code => {
+    if (purchaseOf(code) || purchasePending.has(code) || purchaseQueue.includes(code)) return;
+    if (Date.now() - (purchaseFailed.get(code) || 0) < 600000) return;
+    purchaseQueue.push(code);
+  });
+  pumpPurchaseQueue();
+}
+function purchaseBadge(code) {
+  const p = purchaseOf(code);
+  if (!p) return '';
+  if (p.suspended) return `<span class="buy-badge buy-stop">暂停申购</span>`;
+  if (p.max) return `<span class="buy-badge buy-limited">限购 ${money(p.max, 0)}/日</span>`;
+  if (p.limited) return `<span class="buy-badge buy-limited">限大额</span>`;
+  return `<span class="buy-badge buy-open">可申购</span>`;
+}
+function purchaseMonthlyCap(p) {
+  if (!p || p.suspended) return 0;
+  if (!p.max) return Infinity;
+  return p.max * 20; // 按一个月约 20 个交易日估算
+}
+
 function chgClass(v) { return Number(v) > 0 ? 'red' : Number(v) < 0 ? 'green' : 'flat'; }
 function fundGroupName(name) {
   const g = groupForName(name);
@@ -2979,10 +3640,21 @@ function watchAllocations(plan) {
   const rows = state.watchlist.map(code => {
     const meta = state.watchMeta[code] || ensureWatchMeta(code);
     const f = findAnyFund(code);
-    return { code, name: meta.name || f.name, meta, weight: Math.max(10, Number(meta.score) || 50) };
+    const purchase = purchaseOf(code);
+    const suspended = !!(purchase && purchase.suspended);
+    const position = (state.finance.positions || []).find(p => p.code === code);
+    return { code, name: meta.name || f.name, meta, purchase, suspended, position, weight: suspended ? 0 : Math.max(10, Number(meta.score) || 50) };
   });
-  const totalW = rows.reduce((a, r) => a + r.weight, 0) || 1;
-  return rows.map(r => ({ ...r, amount: (plan.longAction || 0) * r.weight / totalW }));
+  const buyable = rows.filter(r => !r.suspended);
+  const totalW = buyable.reduce((a, r) => a + r.weight, 0) || 1;
+  return rows.map(r => {
+    let amount = 0;
+    if (!r.suspended) {
+      amount = (plan.longAction || 0) * r.weight / totalW;
+      if (plan.longAction > 0 && r.purchase) amount = Math.min(amount, purchaseMonthlyCap(r.purchase));
+    }
+    return { ...r, amount };
+  });
 }
 
 function computeGroups() {
@@ -3124,6 +3796,157 @@ function renderDistribution() {
   $id('distSource').textContent = `全市场 ${all.length.toLocaleString()} 只场外基金 · 数据源：天天基金`;
 }
 
+
+function expandFundSearch(q) {
+  const raw = String(q || '').trim().toLowerCase();
+  if (!raw) return [];
+  const terms = new Set([raw]);
+  FUND_SEARCH_ALIASES.forEach(group => {
+    if (group.some(x => x.toLowerCase().includes(raw) || raw.includes(x.toLowerCase()))) {
+      group.forEach(x => terms.add(x.toLowerCase()));
+    }
+  });
+  return Array.from(terms).filter(Boolean).slice(0, 10);
+}
+function renderFundSearch() {
+  const box = $id('fundSearchResults');
+  const input = $id('fundSearch');
+  if (!box) return;
+  const q = String((input && input.value) || state.fundQuery || '').trim();
+  if (!q) { box.innerHTML = ''; return; }
+  const terms = expandFundSearch(q);
+  if (!LIVE.allFunds.length) { box.innerHTML = '<div class="hint">全市场基金加载中…</div>'; return; }
+  let list = LIVE.allFunds.filter(f => {
+    const name = String(f.name || '').toLowerCase();
+    const code = String(f.code || '');
+    const group = fundGroupName(f.name).toLowerCase();
+    return terms.some(t => code.includes(t) || name.includes(t) || group.includes(t));
+  });
+  list = list.sort((a, b) => (b.aiScore || 0) - (a.aiScore || 0) || (b.chg || 0) - (a.chg || 0)).slice(0, 20);
+  if (!list.length) { box.innerHTML = `<div class="hint">没有找到「${esc(q)}」相关基金，试试代码、名称或“纳斯达克/红利/医药”。</div>`; return; }
+  box.innerHTML = `<div class="search-head"><span>匹配 <b>${list.length}</b> 只 · 相关词：${esc(terms.slice(0, 5).join(' / '))}</span><span>点基金看详情</span></div>` +
+    list.map(f => `<div class="fund-row" data-fund-open="${f.code}">
+      <div class="f-name"><strong>${esc(f.name)}</strong><small><span class="fund-sector-badge">${esc(fundGroupName(f.name))}</span>${f.code} · 近1年 ${pct1(f.y1)} · AI ${Math.round(f.aiScore || 0)}${purchaseBadge(f.code)}</small></div>
+      <div class="f-amt ${chgClass(f.chg)}">${pct2(f.chg)}<button class="add-btn ${state.watchlist.includes(f.code) ? 'is-added' : ''}" data-add-watch="${f.code}">${state.watchlist.includes(f.code) ? '已自选' : '+ 自选'}</button></div>
+    </div>`).join('');
+  queuePurchaseLookup(list.slice(0, 10).map(f => f.code));
+}
+
+
+function buyabilityRank(f) {
+  const p = purchaseOf(f.code);
+  if (p && p.suspended) return -100;
+  if (p && p.max && p.max < 100) return -8;
+  if (p && p.limited) return -2;
+  if (p) return 2;
+  return 0;
+}
+const AI_FILTERS = [
+  ['smart', '智能匹配'],
+  ['low', '低风险'],
+  ['mid', '中风险'],
+  ['high', '高风险'],
+  ['stable', '稳定收益'],
+  ['return', '收益高']
+];
+const AI_TRAITS = [
+  ['stable', '稳定收益'],
+  ['low', '低风险'],
+  ['mid', '中风险'],
+  ['high', '高风险'],
+  ['return', '收益高']
+];
+function fundRiskLevel(f) {
+  const name = String(f.name || '');
+  const vol = Number(f.vol);
+  let r = 50;
+  if (Number.isFinite(vol) && vol > 0) r = clamp((vol - 4) * 3, 0, 100);
+  else if (/债|货币|短债|纯债|低波|红利|理财|稳健|定期开放/.test(name)) r = 24;
+  else if (/半导体|芯片|新能源|光伏|军工|机器人|人工智能|成长|QDII|纳斯达克|标普|海外|创新药/.test(name)) r = 74;
+  const dd = Number(f.maxDD);
+  if (Number.isFinite(dd)) r += clamp((-dd - 8) * 0.9, 0, 18);
+  if (Number.isFinite(f.stability)) r += (50 - f.stability) * 0.25;
+  return clamp(r, 0, 100);
+}
+function riskMeta(f) {
+  const r = fundRiskLevel(f);
+  if (r < 38) return { key: 'low', label: '低风险', cls: 'risk-low' };
+  if (r > 62) return { key: 'high', label: '高风险', cls: 'risk-high' };
+  return { key: 'mid', label: '中风险', cls: 'risk-mid' };
+}
+function smartRiskKey() {
+  const profile = state.finance.risk || 'balanced';
+  return profile === 'steady' ? 'low' : profile === 'aggressive' ? 'high' : 'mid';
+}
+function aiFilterState() {
+  const key = state.aiFilter || 'smart';
+  const effective = key === 'smart' ? smartRiskKey() : key;
+  const profile = state.finance.risk || 'balanced';
+  const profileLabel = { steady: '稳健型', balanced: '均衡型', aggressive: '进取型' }[profile] || '均衡型';
+  return { key, effective, profile, profileLabel };
+}
+function aiFilterMatch(f, effective) {
+  const risk = riskMeta(f);
+  if (effective === 'low' || effective === 'mid' || effective === 'high') return risk.key === effective;
+  if (effective === 'stable') return Number.isFinite(f.y1) && (Number(f.stability) || 0) >= 50 && riskMeta(f).key !== 'high';
+  if (effective === 'return') return Number.isFinite(f.y1) && ((Number(f.strength) || 0) >= 50 || Number(f.y1) > 8);
+  return true;
+}
+function aiFilterSort(f, effective) {
+  if (effective === 'low') return (Number(f.stability) || 0) * 0.7 + (100 - fundRiskLevel(f)) * 0.3;
+  if (effective === 'high') return (Number(f.strength) || 0) * 0.65 + (Number(f.y1) || 0) * 0.35 + (Number.isFinite(f.y1) ? 10 : 0);
+  if (effective === 'stable') return (Number(f.stability) || 0) * 1.2 + (Number(f.y1) || 0) * 0.2;
+  if (effective === 'return') return (Number(f.strength) || 0) * 1.1 + (Number(f.y1) || 0) * 0.2;
+  return (Number(f.aiScore) || 0) + buyabilityRank(f) + (Number.isFinite(f.y1) ? 8 : 0) + (Number.isFinite(f.m6) ? 2 : 0);
+}
+
+function customTraits() { return Array.isArray(state.aiCustom) ? state.aiCustom : []; }
+function customMatch(f) {
+  const traits = customTraits();
+  const risks = traits.filter(x => ['low', 'mid', 'high'].includes(x));
+  const risk = riskMeta(f);
+  if (risks.length && !risks.includes(risk.key)) return false;
+  if ((traits.includes('stable') || traits.includes('return')) && !Number.isFinite(f.y1)) return false;
+  return true;
+}
+function customScore(f) {
+  const traits = customTraits();
+  const risk = riskMeta(f);
+  let score = (Number(f.aiScore) || 0) + buyabilityRank(f) + (Number.isFinite(f.y1) ? 8 : 0);
+  if (traits.includes('stable')) score += (Number(f.stability) || 0) * 1.1;
+  if (traits.includes('return')) score += (Number(f.strength) || 0) * 1.1 + (Number(f.y1) || 0) * 0.15;
+  if (traits.includes(risk.key)) score += 8;
+  return score;
+}
+function customTraitLabel() {
+  return AI_TRAITS.filter(([k]) => customTraits().includes(k)).map(([, label]) => label).join(' + ') || '未选择条件';
+}
+function renderCustomChips() {
+  const box = $id('aiCustomChips');
+  if (!box) return;
+  const selected = customTraits();
+  box.innerHTML = AI_TRAITS.map(([k, label]) => `<button class="ai-trait ${selected.includes(k) ? 'is-active' : ''}" data-ai-trait="${k}">${label}</button>`).join('');
+  const hint = $id('aiCustomHint');
+  if (hint) hint.textContent = selected.length ? `已选 ${selected.length} 项 · 自动按板块分散` : '至少选一个条件';
+}
+
+function renderAiFilters() {
+  const box = $id('aiFilters');
+  if (!box) return;
+  const { key, effective, profileLabel } = aiFilterState();
+  box.innerHTML = AI_FILTERS.map(([k, label]) => `<button class="ai-filter ${k === key ? 'is-active' : ''}" data-ai-filter="${k}">${label}</button>`).join('') +
+    `<button class="ai-filter ${key === 'custom' ? 'is-active' : ''}" data-ai-filter="custom">自定义搭配</button>`;
+  const panel = $id('aiCustomPanel');
+  if (panel) panel.classList.toggle('is-hidden', key !== 'custom');
+  renderCustomChips();
+  const label = { low: '低风险', mid: '中风险', high: '高风险', stable: '稳定收益（需真实1年数据）', return: '收益高（需真实1年数据）' }[effective] || '中风险';
+  $id('aiFilterNote').textContent = key === 'custom'
+    ? `自定义搭配：${customTraitLabel()}；按组合权重排序，风险条件是筛选，稳定/收益是加分项，并按板块分散。`
+    : key === 'smart'
+      ? `智能匹配：你的风险偏好是${profileLabel}，当前优先 ${label}，并叠加申购状态/限购与真实收益稳定性。`
+      : `当前筛选：${label}；按真实净值、风险、稳定性和申购状态排序。`;
+}
+
 function renderMarket() {
   const cards = [['sh000001', '上证指数'], ['sz399001', '深证成指'], ['sz399006', '创业板指']];
   $id('marketIndexCards').innerHTML = cards.map(([code, label]) => {
@@ -3147,14 +3970,41 @@ function renderMarket() {
     </div>`).join('') : '<div class="hint">全市场基金加载中…</div>';
 
   const aiPool = LIVE.allFunds.length
-    ? LIVE.allFunds.slice().sort((a, b) => b.aiScore - a.aiScore)
+    ? LIVE.allFunds.slice().sort((a, b) => ((b.aiScore || 0) + buyabilityRank(b)) - ((a.aiScore || 0) + buyabilityRank(a)))
     : marketModel.funds.filter(f => f.score !== null).slice().sort((a, b) => b.score - a.score);
-  const ai = aiPool.slice(0, 5);
-  $id('aiPickList').innerHTML = ai.length ? ai.map(f => `
-    <div class="fund-row" data-fund-open="${f.code}">
-      <div class="f-name"><strong>${esc(f.name)}</strong><small><span class="fund-sector-badge">${esc(fundGroupName(f.name))}</span>${f.code} · 近1年 ${pct1(f.y1)} · 近6月 ${pct1(f.m6)} · AI ${Number(f.aiScore || f.score || 0).toFixed(0)}</small></div>
+  renderAiFilters();
+  const aiState = aiFilterState();
+  const isCustom = aiState.key === 'custom';
+  let aiFiltered = isCustom
+    ? aiPool.filter(customMatch)
+    : aiPool.filter(f => aiFilterMatch(f, aiState.effective));
+  if (!aiFiltered.length && (aiState.effective === 'stable' || aiState.effective === 'return')) aiFiltered = aiPool.filter(f => Number.isFinite(f.y1));
+  if (!aiFiltered.length) aiFiltered = aiPool.slice();
+  aiFiltered.sort((a, b) => (isCustom ? customScore(b) - customScore(a) : aiFilterSort(b, aiState.effective) - aiFilterSort(a, aiState.effective)));
+  const aiCandidates = aiFiltered.slice(0, 16);
+  const aiBuyable = aiCandidates.filter(f => !(purchaseOf(f.code) || {}).suspended);
+  let ai = [];
+  if (isCustom) {
+    const seenSectors = new Set();
+    for (const f of (aiBuyable.length ? aiBuyable : aiCandidates)) {
+      const g = fundGroupName(f.name);
+      if (seenSectors.has(g)) continue;
+      seenSectors.add(g);
+      ai.push(f);
+      if (ai.length >= 6) break;
+    }
+    $id('aiPickSummary').textContent = ai.length ? `已匹配 ${ai.length} 个板块 · 每个板块 1 只参考基金 · ${customTraitLabel()}` : '当前条件太窄，暂无匹配结果。';
+  } else {
+    ai = (aiBuyable.length ? aiBuyable : aiCandidates).slice(0, 5);
+    $id('aiPickSummary').textContent = '';
+  }
+  $id('aiPickList').innerHTML = ai.length ? ai.map(f => {
+    const rm = riskMeta(f);
+    return `<div class="fund-row" data-fund-open="${f.code}">
+      <div class="f-name"><strong>${esc(f.name)}</strong><small><span class="fund-sector-badge">${esc(fundGroupName(f.name))}</span><span class="risk-badge ${rm.cls}">${rm.label}</span>${f.code} · 近1年 ${pct1(f.y1)} · 近6月 ${pct1(f.m6)} · AI ${Number(f.aiScore || f.score || 0).toFixed(0)}${purchaseBadge(f.code)}</small></div>
       <div class="f-amt ${chgClass(f.chg)}">${pct2(f.chg)}<button class="add-btn ${state.watchlist.includes(f.code) ? 'is-added' : ''}" data-add-watch="${f.code}">${state.watchlist.includes(f.code) ? '已自选' : '+ 自选'}</button></div>
-    </div>`).join('') : '<div class="hint">全市场基金加载中…</div>';
+    </div>`;
+  }).join('') : '<div class="hint">全市场基金加载中…</div>';
 
   const q = (state.fundQuery || '').trim().toLowerCase();
   const srcAll = q ? LIVE.allFunds.filter(f => f.code.includes(q) || f.name.toLowerCase().includes(q)) : LIVE.allFunds;
@@ -3162,7 +4012,7 @@ function renderMarket() {
   $id('offFundList').innerHTML = off.length ? off.map(f => {
     const g = groupForName(f.name);
     return `<div class="fund-row" data-fund-open="${f.code}">
-      <div class="f-name"><strong>${esc(f.name)}</strong><small><span class="fund-sector-badge">${g ? esc(g.name) : '其他'}</span>${f.code} · 净值 ${f.nav ? f.nav.toFixed(4) : '—'}</small></div>
+      <div class="f-name"><strong>${esc(f.name)}</strong><small><span class="fund-sector-badge">${g ? esc(g.name) : '其他'}</span>${f.code} · 净值 ${f.nav ? f.nav.toFixed(4) : '—'}${purchaseBadge(f.code)}</small></div>
       <div class="f-amt ${chgClass(f.chg)}">${pct2(f.chg)}<button class="add-btn ${state.watchlist.includes(f.code) ? 'is-added' : ''}" data-add-watch="${f.code}">${state.watchlist.includes(f.code) ? '已自选' : '+ 自选'}</button></div>
     </div>`;
   }).join('') : '<div class="hint">正在加载全市场场外基金…</div>';
@@ -3171,8 +4021,8 @@ function renderMarket() {
     const m = state.watchMeta[code] || ensureWatchMeta(code);
     const f = findAnyFund(code);
     return `<div class="watch-row" data-fund-open="${code}">
-      <div class="watch-main"><strong>${esc(m.name)}</strong><small>${code} · ${esc(m.group || '自选')}</small>
-        <div class="watch-tags"><span class="watch-tag">加仓 ${fmtMD(m.nextAddAt)}</span><span class="watch-tag">${holdText(m)}</span><span class="watch-tag">${reviewText(m)}</span></div>
+      <div class="watch-main"><strong>${esc(m.name)}</strong><small>${code} · ${esc(m.group || '自选')} ${purchaseBadge(code)}</small>
+        <div class="watch-tags"><span class="watch-tag">加仓 ${fmtMD(m.nextAddAt)}</span><span class="watch-tag">${holdText(m)}</span><span class="watch-tag">${reviewText(m)}</span>${(state.finance.positions || []).some(p => p.code === code) ? `<span class="buy-badge buy-open">已持有 ${money(positionValue((state.finance.positions || []).find(p => p.code === code)), 0)}</span>` : '<span class="buy-badge buy-stop">未记录持仓</span>'}${purchaseOf(code) && purchaseOf(code).max ? `<span class="watch-tag">单日上限 ${money(purchaseOf(code).max, 0)}</span>` : ''}</div>
       </div>
       <div class="watch-side"><b class="${chgClass(f.chg)}">${pct2(f.chg)}</b><button class="remove" data-remove-watch="${code}">移除</button></div>
     </div>`;
@@ -3196,7 +4046,7 @@ function renderMarket() {
   $id('themeSections').innerHTML = themeGroups.length ? themeGroups.map(g => `
     <div class="theme-group" id="group-${g.id}">
       <b class="group-title"><span>${esc(g.name)} <em>${pct2(g.avg)} · ${g.count}只</em></span><button class="more-btn" data-more-group="${g.id}">更多 ${g.count} 只 ›</button></b>
-      ${g.top.slice(0, 6).map(f => `<div class="theme-fund" data-fund-open="${f.code}"><span class="tf-name">${esc(f.name)}<small>${f.code}</small></span><span class="tf-right"><b class="${chgClass(f.chg)}">${pct2(f.chg)}</b><button class="add-btn ${state.watchlist.includes(f.code) ? 'is-added' : ''}" data-add-watch="${f.code}">${state.watchlist.includes(f.code) ? '已自选' : '+ 自选'}</button></span></div>`).join('')}
+      ${g.top.slice(0, 6).map(f => `<div class="theme-fund" data-fund-open="${f.code}"><span class="tf-name">${esc(f.name)}<small>${f.code}${purchaseBadge(f.code)}</small></span><span class="tf-right"><b class="${chgClass(f.chg)}">${pct2(f.chg)}</b><button class="add-btn ${state.watchlist.includes(f.code) ? 'is-added' : ''}" data-add-watch="${f.code}">${state.watchlist.includes(f.code) ? '已自选' : '+ 自选'}</button></span></div>`).join('')}
     </div>`).join('') : '<div class="hint">全市场基金加载中…</div>';
 
   const champs = groups.map(g => {
@@ -3204,9 +4054,11 @@ function renderMarket() {
     if (!pool.length) return null;
     const withPeriod = pool.filter(f => Number.isFinite(f.y1));
     const strongPool = withPeriod.length ? withPeriod : pool;
-    const strong = strongPool.slice().sort((a, b) => (b.strength || 0) - (a.strength || 0) || b.chg - a.chg)[0];
-    const stablePool = strongPool.filter(f => f.code !== strong.code);
-    const stable = (stablePool.length ? stablePool : strongPool).slice().sort((a, b) => (b.stability || 0) - (a.stability || 0) || b.chg - a.chg)[0];
+    const buyable = strongPool.filter(f => !(purchaseOf(f.code) || {}).suspended);
+    const pickPool = buyable.length ? buyable : strongPool;
+    const strong = pickPool.slice().sort((a, b) => (b.strength || 0) - (a.strength || 0) || b.chg - a.chg)[0];
+    const stablePool = pickPool.filter(f => f.code !== strong.code);
+    const stable = (stablePool.length ? stablePool : pickPool).slice().sort((a, b) => (b.stability || 0) - (a.stability || 0) || b.chg - a.chg)[0];
     return { g, strong, stable, deep: withPeriod.length > 0 };
   }).filter(Boolean);
   renderHoldingCheck(false);
@@ -3214,8 +4066,8 @@ function renderMarket() {
     <div class="champ-row">
       <div class="champ-sector">${esc(c.g.name)} <span>${c.g.count}只 · 均 ${pct2(c.g.avg)} · ${c.deep ? '已复核' : '初筛'}</span></div>
       <div class="champ-picks">
-        <div class="champ-pick" data-fund-open="${c.strong.code}"><em>最强</em><strong title="${esc(c.strong.name)}">${esc(c.strong.name)}</strong><small>${c.strong.code} · 近1年 ${pct1(c.strong.y1)}</small><div class="pick-actions"><span class="small">AI ${Math.round(c.strong.strength || 0)}</span><button data-add-watch="${c.strong.code}">${state.watchlist.includes(c.strong.code) ? '已自选' : '+ 自选'}</button></div></div>
-        <div class="champ-pick" data-fund-open="${c.stable.code}"><em>最稳</em><strong title="${esc(c.stable.name)}">${esc(c.stable.name)}</strong><small>${c.stable.code} · 近1年 ${pct1(c.stable.y1)}</small><div class="pick-actions"><span class="small">稳定 ${Math.round(c.stable.stability || 0)}</span><button data-add-watch="${c.stable.code}">${state.watchlist.includes(c.stable.code) ? '已自选' : '+ 自选'}</button></div></div>
+        <div class="champ-pick" data-fund-open="${c.strong.code}"><em>最强</em><strong title="${esc(c.strong.name)}">${esc(c.strong.name)}</strong><small>${c.strong.code} · 近1年 ${pct1(c.strong.y1)}${purchaseBadge(c.strong.code)}</small><div class="pick-actions"><span class="small">AI ${Math.round(c.strong.strength || 0)}</span><button data-add-watch="${c.strong.code}">${state.watchlist.includes(c.strong.code) ? '已自选' : '+ 自选'}</button></div></div>
+        <div class="champ-pick" data-fund-open="${c.stable.code}"><em>最稳</em><strong title="${esc(c.stable.name)}">${esc(c.stable.name)}</strong><small>${c.stable.code} · 近1年 ${pct1(c.stable.y1)}${purchaseBadge(c.stable.code)}</small><div class="pick-actions"><span class="small">稳定 ${Math.round(c.stable.stability || 0)}</span><button data-add-watch="${c.stable.code}">${state.watchlist.includes(c.stable.code) ? '已自选' : '+ 自选'}</button></div></div>
       </div>
       <button class="link-btn deepen-btn" data-deepen="${c.g.id}">${c.deep ? '重新复核' : 'AI 深度复核本板块'} ›</button>
     </div>`).join('') : '<div class="hint">全市场基金加载中…</div>';
@@ -3226,6 +4078,12 @@ function renderMarket() {
   const vals = Object.values(LIVE.indices).filter(x => Number.isFinite(x.pe) && x.pe > 0).sort((a, b) => a.pe - b.pe);
   $id('valuationList').innerHTML = vals.length ? vals.map(x => `
     <div class="fund-row" data-fund-open="${x.code}"><div class="f-name"><strong>${esc(x.name)}</strong><small>${x.code}</small></div><div class="f-amt">PE ${x.pe.toFixed(1)}<small class="${chgClass(x.chgPct)}">${pct2(x.chgPct)}</small></div></div>`).join('') : '<div class="hint">等待指数 PE 数据…</div>';
+
+  renderFundSearch();
+  const purchaseCodes = BACKEND.online
+    ? [...state.watchlist, ...aiCandidates.map(f => f.code), ...off.map(f => f.code), ...champs.flatMap(c => [c.strong.code, c.stable.code])]
+    : [...state.watchlist, ...ai.slice(0, 5).map(f => f.code)];
+  queuePurchaseLookup(purchaseCodes);
 }
 
 function checkReminders() {
@@ -3253,7 +4111,7 @@ function switchTab(tab) {
   $id('tab-market').hidden = tab !== 'market';
   if (tab === 'plate') renderPlate();
   document.body.dataset.currentTab = tab;
-  if (tab === 'market') { renderMarket(); loadAllFunds(() => { mergeTrackedMetrics(); applyCachedPeriods(); renderMarket(); }); }
+  if (tab === 'market') { renderMarket(); loadAllFunds(() => { mergeTrackedMetrics(); applyCachedPeriods(); renderMarket(); renderFinance(); }); }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -3317,6 +4175,7 @@ function renderHoldingCheck(manual = false) {
     const m1 = pc.m1 ?? (mf ? mf.r1m : null);
     const dd = pc.maxDD ?? (mf ? mf.dd : null);
     const score = f.aiScore ?? (mf ? mf.score : 50);
+    const p = purchaseOf(code);
     let action = '持有';
     let reason = '趋势未破坏，继续按计划持有。';
     if (LIVE.status === 'offline') { action = '等待行情'; reason = '行情离线，暂不做动作。'; }
@@ -3324,6 +4183,7 @@ function renderHoldingCheck(manual = false) {
     else if (Number.isFinite(y1) && y1 < -15) { action = '减仓/复查'; reason = `近1年 ${pct1(y1)}，长周期趋势偏弱。`; }
     else if (Number.isFinite(dd) && dd < -25) { action = '减仓/复查'; reason = `最大回撤 ${dd.toFixed(0)}%，先控制仓位。`; }
     else if (Number.isFinite(m1) && m1 < -8) { action = '减仓/复查'; reason = `近1月 ${pct1(m1)}，短期动量转弱。`; }
+    else if (p && p.suspended) { action = '持有 · 暂停申购'; reason = '当前暂停申购，不能加仓；已有持仓可继续持有，赎回以公告为准。'; }
     else if (score >= 62 && summary.risk < 55) { action = '可加仓'; reason = `AI ${Math.round(score)}，风险温度 ${Math.round(summary.risk)}°，可按计划分批。`; }
     else { reason = `AI ${Math.round(score)}，风险温度 ${Math.round(summary.risk)}°，维持现有节奏。`; }
     return { code, name: f.name, group: fundGroupName(f.name), chg: f.chg, action, reason, y1 };
@@ -3354,10 +4214,12 @@ function openFundDetail(code) {
   const score = f.aiScore ?? (mf ? mf.score : null);
   const group = fundGroupName(f.name);
   const starred = state.watchlist.includes(code);
+  const p = purchaseOf(code);
   const html = `
     <div class="tag-list" style="margin-top:0">
       <span>${esc(group)}</span><span>${code}</span>${q ? `<span>净值 ${q.nav.toFixed(4)}</span><span>${q.date}</span>` : ''}
       ${Number.isFinite(score) ? `<span>AI ${Math.round(score)}</span>` : ''}
+      ${purchaseBadge(code)}
     </div>
     <div class="fund-detail-grid">
       <div class="fund-detail-item"><span>最新净值</span><b>${q ? q.nav.toFixed(4) : (f.nav ? f.nav.toFixed(4) : '—')}</b></div>
@@ -3369,6 +4231,15 @@ function openFundDetail(code) {
       <div class="fund-detail-item"><span>最大回撤</span><b class="amber">${Number.isFinite(maxDD) ? maxDD.toFixed(1) + '%' : '待复核'}</b></div>
       <div class="fund-detail-item"><span>年化波动</span><b>${Number.isFinite(vol) ? vol.toFixed(0) + '%' : '待复核'}</b></div>
     </div>
+    <h3>申购信息</h3>
+    <div class="fund-detail-grid">
+      <div class="fund-detail-item"><span>申购状态</span><b>${p ? esc(p.status) : '查询中…'}</b></div>
+      <div class="fund-detail-item"><span>起购金额</span><b>${p && p.min ? money(p.min, 0) : '—'}</b></div>
+      <div class="fund-detail-item"><span>单日上限</span><b>${p && p.max ? money(p.max, 0) : p && !p.suspended ? '不限' : '—'}</b></div>
+      <div class="fund-detail-item"><span>申购费率</span><b>${p && p.fee ? esc(p.fee) : '—'}</b></div>
+    </div>
+    ${p && p.suspended ? '<p class="amber">当前暂停申购/封闭，页面 1 不会给它分配本月加仓金额；赎回通常不受影响，以基金公告为准。</p>' : ''}
+    ${p && p.max ? `<p class="hint">单日限购 ${money(p.max, 0)}，按每月约 20 个交易日估算，本月最多约 ${money(p.max * 20, 0)}；超过部分需分多日或留现金。</p>` : ''}
     <h3>AI 判断</h3>
     <p>${Number.isFinite(y1) ? `近1年 ${pct1(y1)}、近6月 ${pct1(m6)}；${(score || 0) >= 65 ? '趋势与稳定性较好，可作为长期定投候选。' : (score || 0) >= 50 ? '中性偏稳，建议分批、不要一次重仓。' : '当前评分偏弱，先观察或小仓位。'}` : '该基金还没有加载长周期历史净值，正在后台读取；读取后会显示近1月/3月/6月/1年与回撤。'}</p>
     ${meta ? `<h3>你的持仓提醒</h3><p>加仓窗口：${fmtMD(meta.nextAddAt)}；${holdText(meta)}；${reviewText(meta)}。</p>` : ''}
@@ -3378,6 +4249,11 @@ function openFundDetail(code) {
     </div>
     <p class="modal-disclaimer">净值与历史数据来自腾讯证券/天天基金；基金资料以基金公司公告为准，不构成投资建议。</p>`;
   openModal(f.name, html);
+  if (/^\d{6}$/.test(code) && !purchaseOf(code)) {
+    fetchPurchaseInfo(code).then(() => {
+      if (!$id('modal').classList.contains('is-hidden') && $id('modalTitle').textContent === f.name) openFundDetail(code);
+    });
+  }
   if (!Number.isFinite(y1) && !periodCache[code] && /^\d{6}$/.test(code)) {
     fetchFundPeriod(code).then(d => { if (d) { applyPeriod(code, d); renderMarket(); openFundDetail(code); } });
   }
@@ -3386,7 +4262,7 @@ function openFundDetail(code) {
 function fundModalRow(f, rank) {
   const day = Number.isFinite(f.chg) ? f.chg : null;
   return `<div class="fund-row group-full-row" data-fund-open="${f.code}">
-    <div class="f-name"><strong><span class="rank-num">${rank}</span>${esc(f.name)}</strong><small><span class="fund-sector-badge">${esc(fundGroupName(f.name))}</span>${f.code} · 近1年 ${pct1(f.y1)} · 近6月 ${pct1(f.m6)} · AI ${Math.round(f.aiScore || 0)}</small></div>
+    <div class="f-name"><strong><span class="rank-num">${rank}</span>${esc(f.name)}</strong><small><span class="fund-sector-badge">${esc(fundGroupName(f.name))}</span>${f.code} · 近1年 ${pct1(f.y1)} · 近6月 ${pct1(f.m6)} · AI ${Math.round(f.aiScore || 0)}${purchaseBadge(f.code)}</small></div>
     <div class="f-amt ${chgClass(day)}">${pct2(day)}<button class="add-btn ${state.watchlist.includes(f.code) ? 'is-added' : ''}" data-add-watch="${f.code}">${state.watchlist.includes(f.code) ? '已自选' : '+ 自选'}</button></div>
   </div>`;
 }
@@ -3462,6 +4338,13 @@ function bind() {
     showToast(LIVE.status === 'live' ? `真实行情已连接 · 更新 ${timeFullCN(LIVE.updatedAt)}` : (LIVE.lastError || '行情连接中…'));
   });
 
+  $id('addPositionBtn').addEventListener('click', openAddPosition);
+  $id('currentCashInput').addEventListener('input', e => {
+    state.finance.currentCash = Math.max(0, numOf(e.target.value)); save(); renderFinance();
+  });
+  $id('moneyFundInput').addEventListener('input', e => {
+    state.finance.moneyFund = Math.max(0, numOf(e.target.value)); save(); renderFinance();
+  });
   ['salaryInput', 'rentInput'].forEach(id => $id(id).addEventListener('input', e => {
     state.finance[id === 'salaryInput' ? 'salary' : 'fixedBills'] = Math.max(0, numOf(e.target.value));
     save(); renderFinance();
@@ -3490,9 +4373,19 @@ function bind() {
   $id('copyMenuBtn').addEventListener('click', () => copyText(menuText(), '7 日食谱已复制'));
   $id('copyListBtn').addEventListener('click', () => copyText(groceryText(), '一周采购单已复制'));
 
+  $id('backendBtn').addEventListener('click', openBackendPanel);
   $id('notifyBtn').addEventListener('click', requestNotify);
   $id('checkHoldingBtn').addEventListener('click', () => { renderHoldingCheck(true); });
-  $id('allFundSearch').addEventListener('input', e => { state.fundQuery = e.target.value; renderMarket(); });
+  $id('allFundSearch').addEventListener('input', e => {
+    state.fundQuery = e.target.value;
+    const gs = $id('fundSearch'); if (gs) gs.value = e.target.value;
+    renderFundSearch(); renderMarket();
+  });
+  $id('fundSearch').addEventListener('input', e => {
+    state.fundQuery = e.target.value;
+    const os = $id('allFundSearch'); if (os) os.value = e.target.value;
+    renderFundSearch();
+  });
   $id('moreAllFundsBtn').addEventListener('click', openAllFundsModal);
   $id('addSectorBtn').addEventListener('click', addCustomSector);
 
@@ -3511,6 +4404,30 @@ function bind() {
     if (add) { toggleWatch(add.dataset.addWatch); return; }
     const rem = e.target.closest('[data-remove-watch]');
     if (rem) { toggleWatch(rem.dataset.removeWatch); return; }
+    const aiFilter = e.target.closest('[data-ai-filter]');
+    if (aiFilter) {
+      state.aiFilter = aiFilter.dataset.aiFilter;
+      if (state.aiFilter === 'custom' && (!Array.isArray(state.aiCustom) || !state.aiCustom.length)) state.aiCustom = ['stable', 'low', 'mid'];
+      save(); renderMarket(); return;
+    }
+    const aiTrait = e.target.closest('[data-ai-trait]');
+    if (aiTrait) {
+      if (!Array.isArray(state.aiCustom)) state.aiCustom = [];
+      const k = aiTrait.dataset.aiTrait;
+      state.aiCustom = state.aiCustom.includes(k) ? state.aiCustom.filter(x => x !== k) : state.aiCustom.concat(k);
+      state.aiFilter = 'custom';
+      save(); renderMarket(); return;
+    }
+    const aiClear = e.target.closest('#aiCustomClear');
+    if (aiClear) { state.aiCustom = []; state.aiFilter = 'custom'; save(); renderMarket(); return; }
+    const aiAll = e.target.closest('#aiCustomAll');
+    if (aiAll) { state.aiCustom = AI_TRAITS.map(([k]) => k); state.aiFilter = 'custom'; save(); renderMarket(); return; }
+    const moneyPick = e.target.closest('[data-money-pick]');
+    if (moneyPick) { state.finance.moneyFundCode = moneyPick.dataset.moneyPick; save(); renderFinance(); showToast('已设为货币基金参考。'); return; }
+    const recordPos = e.target.closest('[data-record-position]');
+    if (recordPos) { openAddPosition(recordPos.dataset.recordPosition); return; }
+    const removePos = e.target.closest('[data-remove-position]');
+    if (removePos) { removePosition(removePos.dataset.removePosition); return; }
     const fundOpen = e.target.closest('[data-fund-open]');
     if (fundOpen) { openFundDetail(fundOpen.dataset.fundOpen); return; }
     const openGroup = e.target.closest('[data-open-group]');
@@ -3532,6 +4449,13 @@ function bind() {
     }
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  window.addEventListener('beforeunload', () => {
+    if (!BACKEND.online) return;
+    try {
+      const blob = new Blob([JSON.stringify({ state, savedAt: new Date().toISOString(), version: 12 })], { type: 'application/json' });
+      navigator.sendBeacon('/api/state', blob);
+    } catch (e) {}
+  });
 }
 
 function refreshAll() {
@@ -3569,7 +4493,7 @@ function boot() {
     renderPlate();
     renderMarket();
     renderStatus();
-    loadAllFunds(() => { mergeTrackedMetrics(); applyCachedPeriods(); renderMarket(); });
+    loadAllFunds(() => { mergeTrackedMetrics(); applyCachedPeriods(); renderMarket(); renderFinance(); cacheAllFundsToBackend(); });
     loadStockRanking().then(() => { if (document.body.dataset.currentTab === 'market') renderMarket(); });
     setInterval(() => { loadStockRanking().then(() => { if (document.body.dataset.currentTab === 'market') renderMarket(); }); }, 60000);
     startLiveLoop(30000, () => {
@@ -3580,6 +4504,8 @@ function boot() {
     });
     setInterval(checkReminders, 60000);
     setInterval(() => { if (state.watchlist.length) renderHoldingCheck(false); }, 60000);
+    setTimeout(initBackend, 1200);
+    setInterval(() => { if (!BACKEND.online && backendAvailable()) initBackend(); }, 60000);
     loadAllFundHistory(FUNDS.map(f => f.code), ev => {
       if (ev === 'history-done') {
         buildMarketModel();
